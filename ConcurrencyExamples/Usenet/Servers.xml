@@ -1,0 +1,3327 @@
+<?xml version="1.0" standalone="yes"?>
+<newzbot url="http://www.newzbot.com/servers.xml" generated="Sat Feb  2 09:00:02 2013" rows="180" argv0="/jsi/projects/newzbot/bin/gen-xml">
+  <hostinfo id="5014">
+    <id>5014</id>
+    <banner>201 news.cambrium.nl NNRP Service Ready (no posting).</banner>
+    <created>2005-08-16 10:19:11</created>
+    <domloc>disabled</domloc>
+    <groupcount>215127</groupcount>
+    <hostname>textnews.news.cambrium.nl</hostname>
+    <ip>82.197.221.30</ip>
+    <kps>280.36</kps>
+    <listcount>486793038</listcount>
+    <maxgroup>alt.sex.telephone.ads</maxgroup>
+    <modified>2013-02-02 00:55:20</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting Not Allowed.</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5485">
+    <id>5485</id>
+    <banner>200 aspen.stu.neva.ru InterNetNews NNRP server INN 2.5.1 ready (posting ok)</banner>
+    <created>2009-11-23 05:25:01</created>
+    <domloc>disabled</domloc>
+    <groupcount>58281</groupcount>
+    <hostname>news2.neva.ru</hostname>
+    <ip>195.208.113.10</ip>
+    <kps>265.44</kps>
+    <listcount>138447112</listcount>
+    <maxgroup>alt.sex.telephone</maxgroup>
+    <modified>2013-01-21 03:05:01</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>599 newzbot detected false positive [340 Ok, recommended message-ID &lt;kdj7cs$grp$1@aspen.stu.neva.ru&gt;/441 You are not allowed to post to alt.test]</post>
+    <postcode>3</postcode>
+    <sslbanner>
+      200 aspen.stu.neva.ru InterNetNews NNRP server INN 2.5.1 ready (posting ok)
+      205 Bye!
+    </sslbanner>
+  </hostinfo>
+  <hostinfo id="5513">
+    <id>5513</id>
+    <banner>200 news.grnet.gr InterNetNews NNRP server INN 2.5.2 ready (no posting)</banner>
+    <created>2010-06-02 09:19:22</created>
+    <domloc>disabled</domloc>
+    <groupcount>57003</groupcount>
+    <hostname>news.grnet.gr</hostname>
+    <ip>194.177.210.144</ip>
+    <kps>227.83</kps>
+    <listcount>18429985</listcount>
+    <maxgroup>free.usenet</maxgroup>
+    <modified>2013-01-17 11:40:08</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>480 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5569">
+    <id>5569</id>
+    <banner>200 Willkommen beim SynServer News System news.synserver.de,  5.7e1,, S0</banner>
+    <created>2011-06-22 09:01:46</created>
+    <domloc>disabled</domloc>
+    <groupcount>53667</groupcount>
+    <hostname>news.synserver.de</hostname>
+    <ip>217.119.49.38</ip>
+    <kps>89.20</kps>
+    <listcount>12077548</listcount>
+    <maxgroup>rec.sport.football.college</maxgroup>
+    <modified>2013-01-17 05:10:17</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;50f7f80b@news.synserver.de&gt;</post>
+    <postcode>2</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5421">
+    <id>5421</id>
+    <banner>201 news.club.cc.cmu.edu NNRP Service Ready - gripe@club.cc.cmu.edu (no posting).</banner>
+    <created>2009-02-22 01:12:00</created>
+    <domloc>disabled</domloc>
+    <groupcount>50866</groupcount>
+    <hostname>rutherfordium.club.cc.cmu.edu</hostname>
+    <ip>128.237.157.139</ip>
+    <kps>187.70</kps>
+    <listcount>23124558</listcount>
+    <maxgroup>alt.sex.telephone</maxgroup>
+    <modified>2013-02-01 20:27:17</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting Not Allowed.</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5021">
+    <id>5021</id>
+    <banner>201 news.task.gda.pl InterNetNews NNRP server INN 2.4.6 ready (no posting).</banner>
+    <created>2005-09-01 07:36:01</created>
+    <domloc>disabled</domloc>
+    <groupcount>47544</groupcount>
+    <hostname>news.task.gda.pl</hostname>
+    <ip>153.19.250.122</ip>
+    <kps>323.97</kps>
+    <listcount>61358117</listcount>
+    <maxgroup>alt.binaries.boneless</maxgroup>
+    <modified>2013-01-31 11:35:35</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4299">
+    <id>4299</id>
+    <banner>200 news.netfront.net InterNetNews NNRP server INN 2.4.6 (20090602 snapshot) ready (posting ok).</banner>
+    <created>2003-06-23 18:23:41</created>
+    <domloc>disabled</domloc>
+    <groupcount>46776</groupcount>
+    <hostname>202.177.16.121</hostname>
+    <ip>202.177.16.121</ip>
+    <kps>310.49</kps>
+    <listcount>52313024</listcount>
+    <maxgroup>alt.sex.telephone</maxgroup>
+    <modified>2013-02-01 20:18:11</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;kei423$25da$1@adenine.netfront.net&gt;</post>
+    <postcode>2</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5570">
+    <id>5570</id>
+    <banner>200 news.tsu.ru InterNetNews NNRP server INN 2.5.2 ready (no posting)</banner>
+    <created>2011-06-22 14:41:45</created>
+    <domloc>disabled</domloc>
+    <groupcount>45563</groupcount>
+    <hostname>mail.tsu.ru</hostname>
+    <ip>82.200.70.2</ip>
+    <kps>140.62</kps>
+    <listcount>652508</listcount>
+    <maxgroup>relcom.hot-news</maxgroup>
+    <modified>2013-02-01 23:50:38</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>480 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5461">
+    <id>5461</id>
+    <banner>200 news.mixmin.net InterNetNews NNRP server INN 2.6.0 (20120622 prerelease) ready (posting ok)</banner>
+    <created>2009-08-15 03:28:14</created>
+    <domloc>disabled</domloc>
+    <groupcount>42206</groupcount>
+    <hostname>snorky.mixmin.net</hostname>
+    <ip>188.40.76.149</ip>
+    <kps>221.61</kps>
+    <listcount>18452096</listcount>
+    <maxgroup>free.usenet</maxgroup>
+    <modified>2013-02-02 02:02:50</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>599 newzbot detected false positive [340 Ok, recommended message-ID &lt;keio89$lei$1@snorky.mixmin.net&gt;/441 You are not allowed to post to alt.test]</post>
+    <postcode>3</postcode>
+    <sslbanner>
+      200 news.mixmin.net InterNetNews NNRP server INN 2.6.0 (20120622 prerelease) ready (posting ok)
+      205 Bye!
+    </sslbanner>
+  </hostinfo>
+  <hostinfo id="5560">
+    <id>5560</id>
+    <banner>200 news.solani.org InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2011-06-19 09:16:08</created>
+    <domloc>disabled</domloc>
+    <groupcount>30636</groupcount>
+    <hostname>aquila.v.weretis.net</hostname>
+    <ip>46.4.82.166</ip>
+    <kps>294.17</kps>
+    <listcount>10582301</listcount>
+    <maxgroup>free.usenet</maxgroup>
+    <modified>2013-01-18 18:34:02</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;kdd0mo$lbt$1@solani.org&gt;</post>
+    <postcode>2</postcode>
+    <sslbanner>
+      200 news.solani.org InterNetNews NNRP server INN 2.5.2 ready (posting ok)
+      205 Bye!
+    </sslbanner>
+  </hostinfo>
+  <hostinfo id="5596">
+    <id>5596</id>
+    <banner>200 news.solani.org InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2012-01-21 05:28:57</created>
+    <domloc>disabled</domloc>
+    <groupcount>30636</groupcount>
+    <hostname>news.solani.org</hostname>
+    <ip>46.4.82.189</ip>
+    <kps>196.12</kps>
+    <listcount>10536366</listcount>
+    <maxgroup>free.usenet</maxgroup>
+    <modified>2013-01-26 14:39:20</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;ke1lum$s4b$1@solani.org&gt;</post>
+    <postcode>2</postcode>
+    <sslbanner>
+      200 news.solani.org InterNetNews NNRP server INN 2.5.2 ready (posting ok)
+      205 Bye!
+    </sslbanner>
+  </hostinfo>
+  <hostinfo id="5494">
+    <id>5494</id>
+    <banner>200 news.aioe.org InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2010-01-04 02:06:28</created>
+    <domloc>disabled</domloc>
+    <groupcount>29425</groupcount>
+    <hostname>newsfeed.aioe.org</hostname>
+    <ip>94.75.214.39</ip>
+    <kps>348.69</kps>
+    <listcount>6666422</listcount>
+    <maxgroup>it.sport.calcio.milan</maxgroup>
+    <modified>2013-01-31 18:56:06</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>599 newzbot detected false positive [340 Ok, recommended message-ID &lt;kefas4$ftm$1@speranza.aioe.org&gt;/441 Date/time in header over one hour old]</post>
+    <postcode>3</postcode>
+    <sslbanner>
+      200 news.aioe.org InterNetNews NNRP server INN 2.5.2 ready (posting ok)
+      205 Bye!
+    </sslbanner>
+  </hostinfo>
+  <hostinfo id="5495">
+    <id>5495</id>
+    <banner>200 nntp.aioe.org InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2010-01-04 10:57:55</created>
+    <domloc>disabled</domloc>
+    <groupcount>29425</groupcount>
+    <hostname>nntp.aioe.org</hostname>
+    <ip>94.75.214.90</ip>
+    <kps>295.04</kps>
+    <listcount>6634838</listcount>
+    <maxgroup>it.sport.calcio.milan</maxgroup>
+    <modified>2013-01-22 19:15:31</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>599 newzbot detected false positive [340 Ok, recommended message-ID &lt;kdnkke$a95$1@speranza.aioe.org&gt;/441 Date/time in header over one hour old]</post>
+    <postcode>3</postcode>
+    <sslbanner>
+      200 nntp.aioe.org InterNetNews NNRP server INN 2.5.2 ready (posting ok)
+      205 Bye!
+    </sslbanner>
+  </hostinfo>
+  <hostinfo id="5479">
+    <id>5479</id>
+    <banner>200 news.snarked.org InterNetNews NNRP server INN 2.5.3 ready (posting ok)</banner>
+    <created>2009-10-21 18:53:05</created>
+    <domloc>disabled</domloc>
+    <groupcount>26208</groupcount>
+    <hostname>news.snarked.org</hostname>
+    <ip>67.43.172.252</ip>
+    <kps>81.07</kps>
+    <listcount>41283328</listcount>
+    <maxgroup>rec.arts.sf.written</maxgroup>
+    <modified>2013-02-01 22:26:14</modified>
+    <os>disabled</os>
+    <platency>279998</platency>
+    <post>340 Ok, recommended message-ID &lt;keibi6$8fl$1@newzbot.com&gt;</post>
+    <postcode>2</postcode>
+    <sslbanner>
+      200 news.snarked.org InterNetNews NNRP server INN 2.5.3 ready (posting ok)
+      205 Bye!
+    </sslbanner>
+  </hostinfo>
+  <hostinfo id="5380">
+    <id>5380</id>
+    <banner>201 news.bu.edu InterNetNews NNRP server INN 2.4.3 ready (no posting).</banner>
+    <created>2008-09-02 16:34:30</created>
+    <domloc>disabled</domloc>
+    <groupcount>26019</groupcount>
+    <hostname>news.bu.edu</hostname>
+    <ip>128.197.27.149</ip>
+    <kps>130.17</kps>
+    <listcount>11081316</listcount>
+    <maxgroup>alt.sex.telephone</maxgroup>
+    <modified>2013-02-01 20:42:13</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5585">
+    <id>5585</id>
+    <banner>200 cs.uu.nl InterNetNews NNRP server INN 2.5.1 ready (no posting)</banner>
+    <created>2011-11-03 21:00:17</created>
+    <domloc>disabled</domloc>
+    <groupcount>25339</groupcount>
+    <hostname>dawn.dmz.cs.uu.nl</hostname>
+    <ip>131.211.84.183</ip>
+    <kps>320.77</kps>
+    <listcount>20855374</listcount>
+    <maxgroup>alt.atheism</maxgroup>
+    <modified>2013-01-17 02:35:08</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5540">
+    <id>5540</id>
+    <banner>200 newsfeed.x-privat.org InterNetNews NNRP server INN 2.4.3 ready (posting ok).</banner>
+    <created>2011-02-17 12:11:21</created>
+    <domloc>disabled</domloc>
+    <groupcount>22483</groupcount>
+    <hostname>newsfeed.x-privat.org</hostname>
+    <ip>95.141.36.27</ip>
+    <kps>319.01</kps>
+    <listcount>15310765</listcount>
+    <maxgroup>it.sport.calcio.milan</maxgroup>
+    <modified>2013-02-02 03:55:57</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>599 newzbot detected false positive [340 Ok, recommended ID &lt;keiusc$4ri$1@newsfeed.x-privat.org&gt;/441 You are not allowed to post to alt.test]</post>
+    <postcode>3</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5586">
+    <id>5586</id>
+    <banner>200 news.uni-stuttgart.de InterNetNews NNRP server INN 2.5.2 ready (no posting)</banner>
+    <created>2011-11-17 20:44:17</created>
+    <domloc>disabled</domloc>
+    <groupcount>21319</groupcount>
+    <hostname>news2.informatik.uni-stuttgart.de</hostname>
+    <ip>129.69.206.30</ip>
+    <kps>237.99</kps>
+    <listcount>45063033</listcount>
+    <maxgroup>alt.politics</maxgroup>
+    <modified>2013-02-02 01:53:12</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>480 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5335">
+    <id>5335</id>
+    <banner>200 news.ett.com.ua InterNetNews NNRP server INN 2.4.3 ready (posting ok).</banner>
+    <created>2007-12-22 12:27:43</created>
+    <domloc>disabled</domloc>
+    <groupcount>16702</groupcount>
+    <hostname>news.ett.com.ua</hostname>
+    <ip>80.93.112.4</ip>
+    <kps>106.55</kps>
+    <listcount>23978922</listcount>
+    <maxgroup>free.usenet</maxgroup>
+    <modified>2013-02-02 08:45:45</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>599 newzbot detected false positive [340 Ok, recommended ID &lt;kejfrm$17u9$1@news.ett.com.ua&gt;/441 Message rejected]</post>
+    <postcode>3</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5087">
+    <id>5087</id>
+    <banner>201 csnews.cs.nctu.edu.tw InterNetNews NNRP server INN 2.5.2 ready (no posting)</banner>
+    <created>2006-02-21 12:56:57</created>
+    <domloc>disabled</domloc>
+    <groupcount>13999</groupcount>
+    <hostname>csnews1.cs.nctu.edu.tw</hostname>
+    <ip>140.113.235.108</ip>
+    <kps>187.50</kps>
+    <listcount>298783</listcount>
+    <maxgroup>mailing.freebsd.ports-bugs</maxgroup>
+    <modified>2013-01-18 06:48:09</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5511">
+    <id>5511</id>
+    <banner>201 csnews2 InterNetNews NNRP server INN 2.5.2 ready (no posting)</banner>
+    <created>2010-06-02 00:15:55</created>
+    <domloc>disabled</domloc>
+    <groupcount>13991</groupcount>
+    <hostname>csnews2.cs.nctu.edu.tw</hostname>
+    <ip>140.113.235.121</ip>
+    <kps>124.96</kps>
+    <listcount>156291</listcount>
+    <maxgroup>mailing.freebsd.ports-bugs</maxgroup>
+    <modified>2013-01-18 11:31:39</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4026">
+    <id>4026</id>
+    <banner>201 news.gwdg.de InterNetNews NNRP server INN 2.5.2 ready (no posting)</banner>
+    <created>2003-01-11 10:31:08</created>
+    <domloc>disabled</domloc>
+    <groupcount>12213</groupcount>
+    <hostname>gwdu112.gwdg.de</hostname>
+    <ip>134.76.10.112</ip>
+    <kps>111.46</kps>
+    <listcount>505224</listcount>
+    <maxgroup>linux.kernel</maxgroup>
+    <modified>2013-02-02 05:36:19</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="1152">
+    <id>1152</id>
+    <banner>201 diesel.cu.mi.it InterNetNews NNRP server INN 2.4.3 ready (no posting).</banner>
+    <created>1998-05-22 00:00:00</created>
+    <domloc>disabled</domloc>
+    <groupcount>11593</groupcount>
+    <hostname>diesel.cu.mi.it</hostname>
+    <ip>193.43.96.1</ip>
+    <kps>186.92</kps>
+    <listcount>2949217</listcount>
+    <maxgroup>it.comp.console</maxgroup>
+    <modified>2013-02-01 23:07:47</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5066">
+    <id>5066</id>
+    <banner>201 news.antakira.com InterNetNews NNRP server INN 2.4.5 ready (no posting).</banner>
+    <created>2006-01-02 22:59:49</created>
+    <domloc>disabled</domloc>
+    <groupcount>7152</groupcount>
+    <hostname>correo.antakira.com</hostname>
+    <ip>194.149.210.130</ip>
+    <kps>117.18</kps>
+    <listcount>889680</listcount>
+    <maxgroup>rec.arts.tv</maxgroup>
+    <modified>2013-02-02 07:20:52</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4944">
+    <id>4944</id>
+    <banner>200 ladem InterNetNews NNRP server INN 2.4.2 ready (posting ok).</banner>
+    <created>2005-05-06 15:40:41</created>
+    <domloc>disabled</domloc>
+    <groupcount>6334</groupcount>
+    <hostname>ns.tlt.ru</hostname>
+    <ip>217.113.115.150</ip>
+    <kps>55.34</kps>
+    <listcount>3606</listcount>
+    <maxgroup>lada.talk</maxgroup>
+    <modified>2013-01-17 23:01:05</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;kdarvh$n72$1@ladem.tlt.ru&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5471">
+    <id>5471</id>
+    <banner>200 news.internetdienste.de InterNetNews NNRP server INN 2.5.3 ready (no posting)</banner>
+    <created>2009-09-01 01:19:09</created>
+    <domloc>disabled</domloc>
+    <groupcount>5201</groupcount>
+    <hostname>news.internetdienste.de</hostname>
+    <ip>85.195.64.253</ip>
+    <kps>179.08</kps>
+    <listcount>11140413</listcount>
+    <maxgroup>fr.soc.politique</maxgroup>
+    <modified>2013-02-02 07:41:50</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>480 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5104">
+    <id>5104</id>
+    <banner>200 oeiizk.waw.pl InterNetNews NNRP server INN 2.5.1 ready (posting ok)</banner>
+    <created>2006-04-22 03:33:44</created>
+    <domloc>disabled</domloc>
+    <groupcount>4389</groupcount>
+    <hostname>jack.oeiizk.waw.pl</hostname>
+    <ip>212.244.131.3</ip>
+    <kps>79.80</kps>
+    <listcount>72073</listcount>
+    <maxgroup>sbs</maxgroup>
+    <modified>2013-01-19 18:24:41</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>599 newzbot detected false positive [340 Ok, recommended message-ID &lt;kdfkh9$in7$1@jack.oeiizk.waw.pl&gt;/441 You are not allowed to post to misc.test]</post>
+    <postcode>3</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5573">
+    <id>5573</id>
+    <banner>200 news2.tolcom.ru InterNetNews NNRP server INN 2.4.3 ready (posting ok).</banner>
+    <created>2011-07-21 06:05:34</created>
+    <domloc>disabled</domloc>
+    <groupcount>3440</groupcount>
+    <hostname>news.tolcom.ru</hostname>
+    <ip>88.200.223.12</ip>
+    <kps>36.57</kps>
+    <listcount>58986</listcount>
+    <maxgroup>lada.talk</maxgroup>
+    <modified>2013-02-02 01:07:39</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;keil2n$1bkh$1@ns.tolcom.ru&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5188">
+    <id>5188</id>
+    <banner>200 Leafnode NNTP Daemon, version 1.11.7.rc1 running at mx.sotcom.ru (my fqdn: news.sotcom.ru)</banner>
+    <created>2006-11-15 17:31:05</created>
+    <domloc>disabled</domloc>
+    <groupcount>3273</groupcount>
+    <hostname>80.72.112.9</hostname>
+    <ip>80.72.112.9</ip>
+    <kps>57.16</kps>
+    <listcount>574334</listcount>
+    <maxgroup>alt.russian.z1</maxgroup>
+    <modified>2013-02-02 06:53:23</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;lqlvt9-3un2.ln1@news.sotcom.ru&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5603">
+    <id>5603</id>
+    <banner>200 Leafnode NNTP Daemon, version 1.11.7.rc1 running at mx.sotcom.ru (my fqdn: news.sotcom.ru)</banner>
+    <created>2012-03-18 18:53:21</created>
+    <domloc>disabled</domloc>
+    <groupcount>3273</groupcount>
+    <hostname>80.72.112.14</hostname>
+    <ip>80.72.112.14</ip>
+    <kps>57.16</kps>
+    <listcount>574347</listcount>
+    <maxgroup>alt.russian.z1</maxgroup>
+    <modified>2013-02-02 07:20:51</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;tenvt9-b3o2.ln1@news.sotcom.ru&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="2201">
+    <id>2201</id>
+    <banner>200 ddt.demos.su InterNetNews NNRP server INN 2.4.0 (20001110 prerelease) ready (posting ok).</banner>
+    <created>2000-07-15 13:13:58</created>
+    <domloc>disabled</domloc>
+    <groupcount>3256</groupcount>
+    <hostname>ddt.demos.su</hostname>
+    <ip>194.87.13.37</ip>
+    <kps>66.56</kps>
+    <listcount>66431</listcount>
+    <maxgroup>fido7.su.hardw.other</maxgroup>
+    <modified>2013-01-18 04:56:32</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;kdbgpv$2qap$1@ddt.demos.su&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5402">
+    <id>5402</id>
+    <banner>200 news.tambov.ru InterNetNews NNRP server INN 2.4.6 ready (posting ok).</banner>
+    <created>2008-11-22 20:55:23</created>
+    <domloc>disabled</domloc>
+    <groupcount>2996</groupcount>
+    <hostname>news.tambov.ru</hostname>
+    <ip>82.179.158.9</ip>
+    <kps>64.04</kps>
+    <listcount>58189</listcount>
+    <maxgroup>sci.physics</maxgroup>
+    <modified>2013-02-02 08:30:03</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;kejeub$sku$1@irc.tambov.ru&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4764">
+    <id>4764</id>
+    <banner>200 news.man.rzeszow.pl InterNetNews NNRP server INN 2.5.2 ready (no posting)</banner>
+    <created>2004-07-16 12:11:40</created>
+    <domloc>disabled</domloc>
+    <groupcount>2668</groupcount>
+    <hostname>news.man.rzeszow.pl</hostname>
+    <ip>62.93.32.45</ip>
+    <kps>57.89</kps>
+    <listcount>25344</listcount>
+    <maxgroup>pl.soc.polityka</maxgroup>
+    <modified>2013-01-18 03:51:05</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>480 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5633">
+    <id>5633</id>
+    <banner>200 gandalf.srv.welterde.de InterNetNews NNRP server INN 2.5.2 ready (no posting)</banner>
+    <created>2013-01-02 07:05:46</created>
+    <domloc>disabled</domloc>
+    <groupcount>2638</groupcount>
+    <hostname>gandalf.srv.welterde.de</hostname>
+    <ip>89.238.79.246</ip>
+    <kps>80.53</kps>
+    <listcount>3248854</listcount>
+    <maxgroup>alt.atheism</maxgroup>
+    <modified>2013-02-01 20:20:22</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>480 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="3442">
+    <id>3442</id>
+    <banner>201 news.amu.edu.pl InterNetNews NNRP server INN 2.5.2 ready (no posting)</banner>
+    <created>2001-08-07 06:25:36</created>
+    <domloc>disabled</domloc>
+    <groupcount>2250</groupcount>
+    <hostname>sodden.amu.edu.pl</hostname>
+    <ip>150.254.65.23</ip>
+    <kps>27.60</kps>
+    <listcount>2985949</listcount>
+    <maxgroup>linux.kernel</maxgroup>
+    <modified>2013-01-17 01:28:42</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5619">
+    <id>5619</id>
+    <banner>200 usenet.killfile.org InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2012-06-23 09:47:33</created>
+    <domloc>disabled</domloc>
+    <groupcount>1996</groupcount>
+    <hostname>flea.killfile.org</hostname>
+    <ip>166.84.7.89</ip>
+    <kps>107.55</kps>
+    <listcount>3231216</listcount>
+    <maxgroup>talk.politics.guns</maxgroup>
+    <modified>2013-01-19 21:41:00</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>599 newzbot detected false positive [340 Ok, recommended message-ID &lt;kdg01c$n5a$1@flea.killfile.org&gt;/441 You are not allowed to post to misc.test]</post>
+    <postcode>3</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5517">
+    <id>5517</id>
+    <banner>200 fido.ext.by InterNetNews NNRP server INN 2.4.5 ready (posting ok).</banner>
+    <created>2010-07-03 07:38:54</created>
+    <domloc>disabled</domloc>
+    <groupcount>1432</groupcount>
+    <hostname>electra.etm063.nl.ded.neolocation.net</hostname>
+    <ip>85.17.146.145</ip>
+    <kps>19.69</kps>
+    <listcount>80</listcount>
+    <maxgroup>local.test</maxgroup>
+    <modified>2013-02-01 22:45:01</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;keicle$1u0$1@electra.neolocation.net&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5499">
+    <id>5499</id>
+    <banner>200 thue.elzevir.fr InterNetNews NNRP server INN 2.5.2 ready (no posting)</banner>
+    <created>2010-02-21 15:25:46</created>
+    <domloc>disabled</domloc>
+    <groupcount>1182</groupcount>
+    <hostname>thue.elzevir.fr</hostname>
+    <ip>88.165.216.11</ip>
+    <kps>63.07</kps>
+    <listcount>396883</listcount>
+    <maxgroup>linux.kernel</maxgroup>
+    <modified>2013-02-02 05:29:25</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>480 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4292">
+    <id>4292</id>
+    <banner>201 news-archive.icm.edu.pl InterNetNews NNRP server INN 2.5.2 ready (no posting)</banner>
+    <created>2003-06-04 09:54:28</created>
+    <domloc>disabled</domloc>
+    <groupcount>1077</groupcount>
+    <hostname>news-archive.icm.edu.pl</hostname>
+    <ip>193.219.28.147</ip>
+    <kps>26.54</kps>
+    <listcount>58711206</listcount>
+    <maxgroup>pl.misc.samochody</maxgroup>
+    <modified>2013-02-01 20:04:07</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4567">
+    <id>4567</id>
+    <banner>200 news.icpnet.pl InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2004-03-02 19:59:05</created>
+    <domloc>disabled</domloc>
+    <groupcount>1036</groupcount>
+    <hostname>opal.icpnet.pl</hostname>
+    <ip>62.21.96.10</ip>
+    <kps>23.55</kps>
+    <listcount>8530005</listcount>
+    <maxgroup>pl.pregierz</maxgroup>
+    <modified>2013-02-01 20:06:00</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;kei39r$9s0$1@news.icpnet.pl&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5632">
+    <id>5632</id>
+    <banner>200 news.icpnet.pl InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2012-12-21 08:09:13</created>
+    <domloc>disabled</domloc>
+    <groupcount>1036</groupcount>
+    <hostname>newsfeed.icp.pl</hostname>
+    <ip>62.21.96.18</ip>
+    <kps>23.55</kps>
+    <listcount>8530007</listcount>
+    <maxgroup>pl.pregierz</maxgroup>
+    <modified>2013-02-01 20:15:59</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;kei3sh$ajr$1@news.icpnet.pl&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5631">
+    <id>5631</id>
+    <banner>200 news.chmurka.net InterNetNews NNRP server INN 2.5.3 ready (no posting)</banner>
+    <created>2012-12-21 07:34:33</created>
+    <domloc>disabled</domloc>
+    <groupcount>990</groupcount>
+    <hostname>87-206-21-50.dynamic.chello.pl</hostname>
+    <ip>87.206.21.50</ip>
+    <kps>5.53</kps>
+    <listcount>91833</listcount>
+    <maxgroup>pl.soc.polityka</maxgroup>
+    <modified>2013-01-18 06:44:31</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>480 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5543">
+    <id>5543</id>
+    <banner>201 news.open-news.com InterNetNews NNRP server INN 2.4.1 ready (no posting).</banner>
+    <created>2011-03-21 07:39:47</created>
+    <domloc>disabled</domloc>
+    <groupcount>967</groupcount>
+    <hostname>open-news.com</hostname>
+    <ip>114.179.2.9</ip>
+    <kps>45.88</kps>
+    <listcount>449041</listcount>
+    <maxgroup>fj.soc.politics</maxgroup>
+    <modified>2013-01-19 13:56:53</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5127">
+    <id>5127</id>
+    <banner>200 ipx11873 NNTP[auth] server version 1.5.12.2 (9 Jan 1996) ready at Thu Jan 17 15:31:37 2013 (posting ok).</banner>
+    <created>2006-07-13 03:52:29</created>
+    <domloc>disabled</domloc>
+    <groupcount>961</groupcount>
+    <hostname>www.lugnet.com</hostname>
+    <ip>212.112.227.14</ip>
+    <kps>18.20</kps>
+    <listcount>714736</listcount>
+    <maxgroup>lugnet.general</maxgroup>
+    <modified>2013-01-17 06:31:41</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4384">
+    <id>4384</id>
+    <banner>200 news.ccsf.jp InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2003-10-15 18:32:56</created>
+    <domloc>disabled</domloc>
+    <groupcount>956</groupcount>
+    <hostname>ccsf.as.wakwak.ne.jp</hostname>
+    <ip>61.205.237.177</ip>
+    <kps>30.35</kps>
+    <listcount>1600156</listcount>
+    <maxgroup>fj.life.in-japan</maxgroup>
+    <modified>2013-02-02 01:45:35</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;kein7v$30t2$1@sakura.ccsf.jp&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4905">
+    <id>4905</id>
+    <banner>200 news.woody.ch InterNetNews NNRP server INN 2.5.3 ready (no posting)</banner>
+    <created>2005-03-03 22:48:18</created>
+    <domloc>disabled</domloc>
+    <groupcount>842</groupcount>
+    <hostname>magma.woody.ch</hostname>
+    <ip>157.161.57.1</ip>
+    <kps>16.36</kps>
+    <listcount>55256</listcount>
+    <maxgroup>linux.kernel</maxgroup>
+    <modified>2013-01-18 05:18:30</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>480 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="27">
+    <id>27</id>
+    <banner>201 rumours.uwaterloo.ca InterNetNews NNRP server INN 2.5.3 (20110719 snapshot) ready (no posting)</banner>
+    <created>2000-02-06 15:49:24</created>
+    <domloc>disabled</domloc>
+    <groupcount>807</groupcount>
+    <hostname>rumours.uwaterloo.ca</hostname>
+    <ip>129.97.128.186</ip>
+    <kps>28.11</kps>
+    <listcount>986</listcount>
+    <maxgroup>uw.talks</maxgroup>
+    <modified>2013-01-17 23:37:47</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4737">
+    <id>4737</id>
+    <banner>200 news.supermedia.pl InterNetNews NNRP server INN 2.5.2 ready (no posting)</banner>
+    <created>2004-06-22 04:24:40</created>
+    <domloc>disabled</domloc>
+    <groupcount>803</groupcount>
+    <hostname>212.75.96.7</hostname>
+    <ip>212.75.96.7</ip>
+    <kps>24.41</kps>
+    <listcount>887123</listcount>
+    <maxgroup>pl.soc.polityka</maxgroup>
+    <modified>2013-01-18 00:14:07</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>480 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5606">
+    <id>5606</id>
+    <banner>200 csiph.com InterNetNews NNRP server INN 2.5.3 ready (no posting)</banner>
+    <created>2012-03-22 08:16:46</created>
+    <domloc>disabled</domloc>
+    <groupcount>686</groupcount>
+    <hostname>csiph.com</hostname>
+    <ip>69.160.37.58</ip>
+    <kps>314.18</kps>
+    <listcount>996002</listcount>
+    <maxgroup>comp.os.linux.advocacy</maxgroup>
+    <modified>2013-02-01 23:44:32</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>480 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5281">
+    <id>5281</id>
+    <banner>200 news.trigofacile.com InterNetNews NNRP server INN 2.6.0 (20120528 prerelease) ready (no posting)</banner>
+    <created>2007-05-23 15:57:02</created>
+    <domloc>disabled</domloc>
+    <groupcount>596</groupcount>
+    <hostname>news.trigofacile.com</hostname>
+    <ip>91.121.26.68</ip>
+    <kps>21.76</kps>
+    <listcount>5967213</listcount>
+    <maxgroup>fr.soc.politique</maxgroup>
+    <modified>2013-01-19 09:55:02</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>480 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner>
+      200 news.trigofacile.com InterNetNews NNRP server INN 2.6.0 (20120528 prerelease) ready (no posting)
+      205 Bye!
+    </sslbanner>
+  </hostinfo>
+  <hostinfo id="4936">
+    <id>4936</id>
+    <banner>201 newsarchiv01 NNRP Service Ready - adm-news@arcor.de (no posting).</banner>
+    <created>2005-04-23 05:52:12</created>
+    <domloc>disabled</domloc>
+    <groupcount>562</groupcount>
+    <hostname>newsarchiv01.arcor-online.net</hostname>
+    <ip>151.189.20.70</ip>
+    <kps>14.45</kps>
+    <listcount>15557423</listcount>
+    <maxgroup>de.soc.politik.misc</maxgroup>
+    <modified>2013-01-17 09:52:55</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting Not Allowed.</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5544">
+    <id>5544</id>
+    <banner>200 The Retro Archive News (Synchronet 3.15a-Win32 NNTP Service 1.108)</banner>
+    <created>2011-03-26 02:55:58</created>
+    <domloc>disabled</domloc>
+    <groupcount>526</groupcount>
+    <hostname>svcs.simpits.org</hostname>
+    <ip>75.145.20.97</ip>
+    <kps>18.97</kps>
+    <listcount>244468</listcount>
+    <maxgroup>FidoNet.ALL-POLITICS</maxgroup>
+    <modified>2013-02-01 22:52:57</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5533">
+    <id>5533</id>
+    <banner>200 inn3.news.alteholz.net InterNetNews NNRP server INN 2.5.2 ready (no posting)</banner>
+    <created>2010-10-22 18:48:50</created>
+    <domloc>disabled</domloc>
+    <groupcount>505</groupcount>
+    <hostname>84.38.66.78</hostname>
+    <ip>84.38.66.78</ip>
+    <kps>16.88</kps>
+    <listcount>29703</listcount>
+    <maxgroup>de.etc.sprache.deutsch</maxgroup>
+    <modified>2013-02-02 06:41:26</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>480 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5602">
+    <id>5602</id>
+    <banner>200 inn4.news.alteholz.net InterNetNews NNRP server INN 2.5.2 ready (no posting)</banner>
+    <created>2012-03-18 08:55:43</created>
+    <domloc>disabled</domloc>
+    <groupcount>505</groupcount>
+    <hostname>piripiri065.server4you.de</hostname>
+    <ip>80.86.81.75</ip>
+    <kps>25.31</kps>
+    <listcount>207260</listcount>
+    <maxgroup>de.soc.politik.misc</maxgroup>
+    <modified>2013-02-02 03:47:55</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>480 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5243">
+    <id>5243</id>
+    <banner>200 MapleBBS NNTP server ready (read only)</banner>
+    <created>2007-01-18 03:31:03</created>
+    <domloc>disabled</domloc>
+    <groupcount>457</groupcount>
+    <hostname>bbs.math.ncu.edu.tw</hostname>
+    <ip>140.115.25.20</ip>
+    <kps>7.86</kps>
+    <listcount>468529</listcount>
+    <maxgroup>Math_91</maxgroup>
+    <modified>2013-01-21 05:38:19</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>500 Bad command use</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5094">
+    <id>5094</id>
+    <banner>200 ·s»D²Õ°Õ news.newsgroup.la, 6.0a1, S0</banner>
+    <created>2006-03-09 16:43:28</created>
+    <domloc>disabled</domloc>
+    <groupcount>361</groupcount>
+    <hostname>59.188.5.218</hostname>
+    <ip>59.188.5.218</ip>
+    <kps>6.61</kps>
+    <listcount>1021722</listcount>
+    <maxgroup>newsgroup.soccer.bet</maxgroup>
+    <modified>2013-01-18 15:40:07</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;50fabe29@news.newsgroup.la&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5339">
+    <id>5339</id>
+    <banner>200 Welcome to forums.novell.com! (Typhoon v2.1.2.394)</banner>
+    <created>2008-02-17 15:42:16</created>
+    <domloc>disabled</domloc>
+    <groupcount>357</groupcount>
+    <hostname>130.57.5.50</hostname>
+    <ip>130.57.5.50</ip>
+    <kps>11.36</kps>
+    <listcount>2205189</listcount>
+    <maxgroup>opensuse.org.help.applications</maxgroup>
+    <modified>2013-02-01 23:01:19</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Send Article to be Posted</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5625">
+    <id>5625</id>
+    <banner>200 Welcome to forums.novell.com! (Typhoon v2.1.2.394)</banner>
+    <created>2012-11-01 17:52:24</created>
+    <domloc>disabled</domloc>
+    <groupcount>357</groupcount>
+    <hostname>www.novell.com</hostname>
+    <ip>130.57.66.5</ip>
+    <kps>11.36</kps>
+    <listcount>2205288</listcount>
+    <maxgroup>opensuse.org.help.applications</maxgroup>
+    <modified>2013-02-02 08:14:44</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Send Article to be Posted</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5609">
+    <id>5609</id>
+    <banner>200 Welcome to forums.novell.com! (Typhoon v2.1.2.394)</banner>
+    <created>2012-05-01 06:52:26</created>
+    <domloc>disabled</domloc>
+    <groupcount>355</groupcount>
+    <hostname>130.57.5.118</hostname>
+    <ip>130.57.5.118</ip>
+    <kps>11.29</kps>
+    <listcount>2199300</listcount>
+    <maxgroup>opensuse.org.help.applications</maxgroup>
+    <modified>2013-01-18 07:21:51</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Send Article to be Posted</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5334">
+    <id>5334</id>
+    <banner>200 news1.CARNet.hr InterNetNews NNRP server INN 2.5.2 ready (no posting)</banner>
+    <created>2007-12-19 11:30:07</created>
+    <domloc>disabled</domloc>
+    <groupcount>332</groupcount>
+    <hostname>news1.carnet.hr</hostname>
+    <ip>161.53.160.64</ip>
+    <kps>10.05</kps>
+    <listcount>54252</listcount>
+    <maxgroup>hr.soc.politika</maxgroup>
+    <modified>2013-02-02 06:49:58</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>480 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner>
+      200 news1.CARNet.hr InterNetNews NNRP server INN 2.5.2 ready (no posting)
+      205 Bye!
+    </sslbanner>
+  </hostinfo>
+  <hostinfo id="5280">
+    <id>5280</id>
+    <banner>200 news.ntu-kpi.kiev.ua InterNetNews NNRP server INN 2.4.1 ready (posting ok).</banner>
+    <created>2007-05-23 00:09:42</created>
+    <domloc>disabled</domloc>
+    <groupcount>327</groupcount>
+    <hostname>news.ntu-kpi.kiev.ua</hostname>
+    <ip>77.47.128.140</ip>
+    <kps>9.65</kps>
+    <listcount>2332565</listcount>
+    <maxgroup>relcom.hot-news</maxgroup>
+    <modified>2013-02-01 20:21:29</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;kei488$cjp$1@news.ntu-kpi.kiev.ua&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5074">
+    <id>5074</id>
+    <banner>200 news.mozilla.org</banner>
+    <created>2006-01-17 13:20:29</created>
+    <domloc>disabled</domloc>
+    <groupcount>280</groupcount>
+    <hostname>news.mozilla.giganews.com</hostname>
+    <ip>216.196.97.169</ip>
+    <kps>364.04</kps>
+    <listcount>1122054</listcount>
+    <maxgroup>mozilla.support.firefox</maxgroup>
+    <modified>2013-01-17 07:54:22</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 send article</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5453">
+    <id>5453</id>
+    <banner>200 nntp.klen.dk InterNetNews NNRP server INN 2.5.1 ready (no posting)</banner>
+    <created>2009-07-17 10:00:34</created>
+    <domloc>disabled</domloc>
+    <groupcount>240</groupcount>
+    <hostname>katie.klen.dk</hostname>
+    <ip>188.40.40.69</ip>
+    <kps>5.43</kps>
+    <listcount>8399674</listcount>
+    <maxgroup>dk.politik</maxgroup>
+    <modified>2013-02-01 22:32:35</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5472">
+    <id>5472</id>
+    <banner>200 Vertrauen News (Synchronet 3.16a-Win32 NNTP Service 1.112)</banner>
+    <created>2009-09-02 04:43:46</created>
+    <domloc>disabled</domloc>
+    <groupcount>226</groupcount>
+    <hostname>vert.synchro.net</hostname>
+    <ip>64.148.159.105</ip>
+    <kps>1.37</kps>
+    <listcount>292019</listcount>
+    <maxgroup>FidoNet.COOKING</maxgroup>
+    <modified>2013-02-01 20:12:57</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5571">
+    <id>5571</id>
+    <banner>200 news.tugraz.at InterNetNews NNRP server INN 2.4.3 ready (posting ok).</banner>
+    <created>2011-07-01 23:18:09</created>
+    <domloc>disabled</domloc>
+    <groupcount>224</groupcount>
+    <hostname>jabber.tu-graz.ac.at</hostname>
+    <ip>129.27.80.148</ip>
+    <kps>0.09</kps>
+    <listcount>46945</listcount>
+    <maxgroup>tu-graz.lv.rechnernetze</maxgroup>
+    <modified>2013-02-02 08:25:16</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;kejejl$e4f$1@news.tugraz.at&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5578">
+    <id>5578</id>
+    <banner>201 news.kw.ukrtel.net InterNetNews NNRP server INN 2.5.2 ready (no posting)</banner>
+    <created>2011-09-21 17:49:54</created>
+    <domloc>disabled</domloc>
+    <groupcount>222</groupcount>
+    <hostname>great.kw.ukrtel.net</hostname>
+    <ip>195.5.59.4</ip>
+    <kps>5.07</kps>
+    <listcount>507308</listcount>
+    <maxgroup>alt.test</maxgroup>
+    <modified>2013-02-02 07:16:27</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5506">
+    <id>5506</id>
+    <banner>200 Jive News: server ready - posting allowed</banner>
+    <created>2010-04-17 10:20:15</created>
+    <domloc>disabled</domloc>
+    <groupcount>183</groupcount>
+    <hostname>207.211.86.145</hostname>
+    <ip>207.211.86.145</ip>
+    <kps>9.85</kps>
+    <listcount>470908</listcount>
+    <maxgroup>embarcadero.public.delphi.non-technical</maxgroup>
+    <modified>2013-02-01 20:12:55</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>480 Authentication required</post>
+    <postcode>0</postcode>
+    <sslbanner>
+      200 Jive News: server ready - posting allowed
+      205 Jive NNTP/Forums closing connection. Goodbye.
+    </sslbanner>
+  </hostinfo>
+  <hostinfo id="5013">
+    <id>5013</id>
+    <banner>200 sol01.ashbva.gweep.ca InterNetNews NNRP server INN 2.4.3 (20050407 prerelease) ready (posting ok).</banner>
+    <created>2005-08-05 03:07:07</created>
+    <domloc>disabled</domloc>
+    <groupcount>164</groupcount>
+    <hostname>sol01.ashbva.gweep.ca</hostname>
+    <ip>206.55.71.10</ip>
+    <kps>5.76</kps>
+    <listcount>10581</listcount>
+    <maxgroup>can.politics</maxgroup>
+    <modified>2013-02-02 01:22:22</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;keilse$k16$1@sol01.ashbva.gweep.ca&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4957">
+    <id>4957</id>
+    <banner>201 unknown InterNetNews NNRP server INN 2.4.4 (20060818 snapshot) ready (no posting).</banner>
+    <created>2005-05-07 04:39:55</created>
+    <domloc>disabled</domloc>
+    <groupcount>152</groupcount>
+    <hostname>news.ovh.net</hostname>
+    <ip>213.186.33.25</ip>
+    <kps>3.31</kps>
+    <listcount>698574</listcount>
+    <maxgroup>ovh.fr.serveurs-dedies</maxgroup>
+    <modified>2013-02-01 20:07:59</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4205">
+    <id>4205</id>
+    <banner>200 forums-1-dub DNEWS Version  5.7c1,, S0, posting OK </banner>
+    <created>2003-03-17 07:56:23</created>
+    <domloc>disabled</domloc>
+    <groupcount>142</groupcount>
+    <hostname>vip106.sybase.com</hostname>
+    <ip>192.138.151.106</ip>
+    <kps>10.32</kps>
+    <listcount>1129498</listcount>
+    <maxgroup>sybase.public.powerbuilder.general</maxgroup>
+    <modified>2013-01-19 03:17:38</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;50fa80a5@forums-1-dub&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4620">
+    <id>4620</id>
+    <banner>200 forums-1-dub DNEWS Version  5.7c1,, S0, posting OK </banner>
+    <created>2004-03-14 19:59:06</created>
+    <domloc>disabled</domloc>
+    <groupcount>142</groupcount>
+    <hostname>forums-1-dub.sybase.com</hostname>
+    <ip>192.138.151.41</ip>
+    <kps>5.16</kps>
+    <listcount>1129488</listcount>
+    <maxgroup>sybase.public.powerbuilder.general</maxgroup>
+    <modified>2013-01-18 09:16:24</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;50f9833b@forums-1-dub&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5526">
+    <id>5526</id>
+    <banner>200 cnews DNEWS Version 5.4g5, S2, posting OK 10.249.5.196</banner>
+    <created>2010-09-01 14:44:48</created>
+    <domloc>disabled</domloc>
+    <groupcount>131</groupcount>
+    <hostname>66-46-204-223.dedicated.allstream.net</hostname>
+    <ip>66.46.204.223</ip>
+    <kps>6.74</kps>
+    <listcount>19523</listcount>
+    <maxgroup>corel.PaintShopPro_Photography</maxgroup>
+    <modified>2013-01-18 00:11:18</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;50f8fe9d_2@cnews&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="2202">
+    <id>2202</id>
+    <banner>201 news.ntu.edu.tw InterNetNews NNRP server INN 2.5.3 ready (no posting)</banner>
+    <created>2000-07-15 13:59:40</created>
+    <domloc>disabled</domloc>
+    <groupcount>121</groupcount>
+    <hostname>news.ntu.edu.tw</hostname>
+    <ip>140.112.254.2</ip>
+    <kps>4.65</kps>
+    <listcount>33</listcount>
+    <maxgroup>ntu.library</maxgroup>
+    <modified>2013-02-01 23:47:13</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5291">
+    <id>5291</id>
+    <banner>200 reader2.news.tin.it NNRP reader2.news.tin.it newsmaster@tin.it (posting ok)</banner>
+    <created>2007-06-15 20:42:01</created>
+    <domloc>disabled</domloc>
+    <groupcount>108</groupcount>
+    <hostname>news.tin.it</hostname>
+    <ip>62.211.73.198</ip>
+    <kps>4.24</kps>
+    <listcount>5046</listcount>
+    <maxgroup>tin.it.sport.calcio</maxgroup>
+    <modified>2013-01-17 09:33:02</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 340 &lt;50f835a0$0$13280$4fafbaef@reader2.news.tin.it&gt; (desired)</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4906">
+    <id>4906</id>
+    <banner>200 news.stben.net DNEWS Version  5.7e1,, S0, posting OK </banner>
+    <created>2005-03-05 10:59:52</created>
+    <domloc>disabled</domloc>
+    <groupcount>94</groupcount>
+    <hostname>ns.stben.net</hostname>
+    <ip>212.68.197.108</ip>
+    <kps>1.19</kps>
+    <listcount>4729</listcount>
+    <maxgroup>alt.binaries.fonts</maxgroup>
+    <modified>2013-02-02 07:16:36</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;510d2dd3@news.stben.net&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4459">
+    <id>4459</id>
+    <banner>200 news DNEWS Version  5.7b1,, S0, posting OK </banner>
+    <created>2004-01-01 03:15:25</created>
+    <domloc>disabled</domloc>
+    <groupcount>91</groupcount>
+    <hostname>64.90.235.36</hostname>
+    <ip>64.90.235.36</ip>
+    <kps>0.10</kps>
+    <listcount>373390</listcount>
+    <maxgroup>bentley.microstation.v8.general</maxgroup>
+    <modified>2013-01-17 17:13:17</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;50f8a173@news.prod-bent.dmz&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="2246">
+    <id>2246</id>
+    <banner>200 news.mt.net.mk DNEWS Version  5.7e1,, S0, posting OK </banner>
+    <created>2000-07-24 13:46:30</created>
+    <domloc>disabled</domloc>
+    <groupcount>83</groupcount>
+    <hostname>news.mt.net.mk</hostname>
+    <ip>195.26.152.30</ip>
+    <kps>1.19</kps>
+    <listcount>10533</listcount>
+    <maxgroup>mk.comp.os.linux</maxgroup>
+    <modified>2013-01-18 18:25:55</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;50fa03e0@news.mt.net.mk&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="2394">
+    <id>2394</id>
+    <banner>201 cache.uni-koblenz.de InterNetNews NNRP server INN 2.4.2 ready (no posting).</banner>
+    <created>2000-08-10 17:29:13</created>
+    <domloc>disabled</domloc>
+    <groupcount>81</groupcount>
+    <hostname>news.uni-koblenz.de</hostname>
+    <ip>141.26.64.5</ip>
+    <kps>2.96</kps>
+    <listcount>183794</listcount>
+    <maxgroup>infko.general</maxgroup>
+    <modified>2013-01-18 03:54:30</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner>
+      201 cache.uni-koblenz.de InterNetNews NNRP server INN 2.4.2 ready (no posting).
+      205 .
+    </sslbanner>
+  </hostinfo>
+  <hostinfo id="5400">
+    <id>5400</id>
+    <banner>200 news.tnfsh.tn.edu.tw InterNetNews NNRP server INN 2.4.6 ready (posting ok).</banner>
+    <created>2008-11-15 14:04:37</created>
+    <domloc>disabled</domloc>
+    <groupcount>81</groupcount>
+    <hostname>bbs.tnfsh.tn.edu.tw</hostname>
+    <ip>210.70.137.5</ip>
+    <kps>3.49</kps>
+    <listcount>8773</listcount>
+    <maxgroup>wolf.Club.TNAB</maxgroup>
+    <modified>2013-01-17 13:28:59</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;kd9qde$2e2v$1@bbs.tnfsh.tn.edu.tw&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="3089">
+    <id>3089</id>
+    <banner>200 trimpas.omnitel.net InterNetNews NNRP server INN 2.4.2 ready (posting ok).</banner>
+    <created>2001-02-02 01:09:46</created>
+    <domloc>disabled</domloc>
+    <groupcount>80</groupcount>
+    <hostname>trimpas.omnitel.net</hostname>
+    <ip>194.176.32.141</ip>
+    <kps>3.27</kps>
+    <listcount>67990</listcount>
+    <maxgroup>omnitel.comp.hardware</maxgroup>
+    <modified>2013-01-18 07:26:57</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;kdbpik$i6$1@trimpas.omnitel.net&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5062">
+    <id>5062</id>
+    <banner>200 tradindexed InterNetNews NNRP server INN 2.4.5 ready (posting ok).</banner>
+    <created>2005-12-03 03:46:23</created>
+    <domloc>disabled</domloc>
+    <groupcount>77</groupcount>
+    <hostname>news.kraft-s.ru</hostname>
+    <ip>213.156.203.16</ip>
+    <kps>1.55</kps>
+    <listcount>19022</listcount>
+    <maxgroup>kraft.vehicles</maxgroup>
+    <modified>2013-01-17 05:12:59</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;kd8tcn$3of$1@news.kraft-s.ru&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5547">
+    <id>5547</id>
+    <banner>200 hi-gy29hfm4f5rg DNEWS Version 5.5d1, S0, posting OK </banner>
+    <created>2011-04-24 17:26:54</created>
+    <domloc>disabled</domloc>
+    <groupcount>77</groupcount>
+    <hostname>189.72.251.227</hostname>
+    <ip>189.72.251.227</ip>
+    <kps>1.02</kps>
+    <listcount>242340</listcount>
+    <maxgroup>trollnet.cinema</maxgroup>
+    <modified>2013-02-02 08:42:11</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;510d9455@hi-gy29hfm4f5rg.&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5159">
+    <id>5159</id>
+    <banner>201 news2.lut.fi InterNetNews NNRP server INN 2.3.5 ready (no posting).</banner>
+    <created>2006-09-29 11:47:12</created>
+    <domloc>disabled</domloc>
+    <groupcount>74</groupcount>
+    <hostname>news2.lut.fi</hostname>
+    <ip>157.24.2.61</ip>
+    <kps>3.01</kps>
+    <listcount>2613</listcount>
+    <maxgroup>lut.tyopaikat</maxgroup>
+    <modified>2013-02-02 01:06:48</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4213">
+    <id>4213</id>
+    <banner>201 bob.ijs.si InterNetNews NNRP server INN 2.4.6 ready (no posting).</banner>
+    <created>2003-04-19 11:31:24</created>
+    <domloc>disabled</domloc>
+    <groupcount>70</groupcount>
+    <hostname>news.ijs.si</hostname>
+    <ip>193.2.4.158</ip>
+    <kps>2.94</kps>
+    <listcount>8973</listcount>
+    <maxgroup>si.test</maxgroup>
+    <modified>2013-01-26 08:56:10</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4090">
+    <id>4090</id>
+    <banner>200 news.vsi.ru InterNetNews NNRP server INN 2.3.3 ready (posting ok).</banner>
+    <created>2003-02-16 15:20:33</created>
+    <domloc>disabled</domloc>
+    <groupcount>66</groupcount>
+    <hostname>serv3.vsi.ru</hostname>
+    <ip>80.82.32.24</ip>
+    <kps>1.22</kps>
+    <listcount>232</listcount>
+    <maxgroup>n5025.robot</maxgroup>
+    <modified>2013-02-01 22:38:41</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;keic84$94r$1@serv3.vsi.ru&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4676">
+    <id>4676</id>
+    <banner>200 hkhosting.com InterNetNews NNRP server INN 2.2.2 13-Dec-1999 ready (posting ok).</banner>
+    <created>2004-04-30 09:58:56</created>
+    <domloc>disabled</domloc>
+    <groupcount>60</groupcount>
+    <hostname>hkhosting.com</hostname>
+    <ip>202.181.134.8</ip>
+    <kps>2.21</kps>
+    <listcount>11053</listcount>
+    <maxgroup>it.certificate</maxgroup>
+    <modified>2013-02-01 01:12:47</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5220">
+    <id>5220</id>
+    <banner>200 hkhosting.com InterNetNews NNRP server INN 2.2.2 13-Dec-1999 ready (posting ok).</banner>
+    <created>2006-12-20 01:37:59</created>
+    <domloc>disabled</domloc>
+    <groupcount>60</groupcount>
+    <hostname>202.181.134.10</hostname>
+    <ip>202.181.134.10</ip>
+    <kps>2.21</kps>
+    <listcount>11053</listcount>
+    <maxgroup>it.certificate</maxgroup>
+    <modified>2013-01-17 11:23:09</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5180">
+    <id>5180</id>
+    <banner>200 quimby.gnus.org InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2006-10-21 23:29:15</created>
+    <domloc>disabled</domloc>
+    <groupcount>55</groupcount>
+    <hostname>quimby.gnus.org</hostname>
+    <ip>80.91.231.51</ip>
+    <kps>2.57</kps>
+    <listcount>782539</listcount>
+    <maxgroup>gnus.ding-announce</maxgroup>
+    <modified>2013-01-19 04:04:26</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;kde249$5s4$1@quimby.gnus.org&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5285">
+    <id>5285</id>
+    <banner>200 quimby.gnus.org InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2007-06-01 10:03:54</created>
+    <domloc>disabled</domloc>
+    <groupcount>55</groupcount>
+    <hostname>ingebrigtsen.no</hostname>
+    <ip>80.91.231.52</ip>
+    <kps>2.57</kps>
+    <listcount>783589</listcount>
+    <maxgroup>gnus.ding-announce</maxgroup>
+    <modified>2013-02-02 00:51:31</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;keik2i$o6r$1@quimby.gnus.org&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="3329">
+    <id>3329</id>
+    <banner>201 news.ikk.sztaki.hu InterNetNews NNRP server INN 2.4.3 (20050407 prerelease) ready (no posting).</banner>
+    <created>2001-05-24 16:09:51</created>
+    <domloc>disabled</domloc>
+    <groupcount>53</groupcount>
+    <hostname>turmix.ikk.sztaki.hu</hostname>
+    <ip>193.6.16.69</ip>
+    <kps>2.55</kps>
+    <listcount>37706</listcount>
+    <maxgroup>hun.lists.elektro</maxgroup>
+    <modified>2013-01-19 02:59:38</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4382">
+    <id>4382</id>
+    <banner>201 newsfeed.iif.hu InterNetNews NNRP server INN 2.4.3 ready (no posting).</banner>
+    <created>2003-10-15 12:42:18</created>
+    <domloc>disabled</domloc>
+    <groupcount>53</groupcount>
+    <hostname>newsfeed.iif.hu</hostname>
+    <ip>193.225.14.150</ip>
+    <kps>5.28</kps>
+    <listcount>151808</listcount>
+    <maxgroup>hun.lists.elektro</maxgroup>
+    <modified>2013-02-02 06:44:16</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4394">
+    <id>4394</id>
+    <banner>201 newsfeed.iif.hu InterNetNews NNRP server INN 2.4.3 ready (no posting).</banner>
+    <created>2003-11-01 04:03:43</created>
+    <domloc>disabled</domloc>
+    <groupcount>53</groupcount>
+    <hostname>news.sztaki.hu</hostname>
+    <ip>193.225.14.46</ip>
+    <kps>5.28</kps>
+    <listcount>151791</listcount>
+    <maxgroup>hun.lists.elektro</maxgroup>
+    <modified>2013-01-17 02:27:18</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="1732">
+    <id>1732</id>
+    <banner>201 Hi, you can\'t post (sn version 0.3.8)</banner>
+    <created>2000-03-08 06:15:22</created>
+    <domloc>disabled</domloc>
+    <groupcount>52</groupcount>
+    <hostname>infa.abo.fi</hostname>
+    <ip>130.232.208.126</ip>
+    <kps>1.27</kps>
+    <listcount>66535</listcount>
+    <maxgroup>mailing-lists.linux-kernel</maxgroup>
+    <modified>2013-02-02 00:50:40</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5113">
+    <id>5113</id>
+    <banner>200 news.simpol.com InterNetNews NNRP server INN 2.5.2 ready (no posting)</banner>
+    <created>2006-05-16 10:58:18</created>
+    <domloc>disabled</domloc>
+    <groupcount>52</groupcount>
+    <hostname>ipx22096.ipxserver.de</hostname>
+    <ip>212.112.241.95</ip>
+    <kps>2.70</kps>
+    <listcount>25904</listcount>
+    <maxgroup>sbv3.programming</maxgroup>
+    <modified>2013-02-02 08:44:09</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>480 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5634">
+    <id>5634</id>
+    <banner>200 dogagent.com InterNetNews NNRP server INN 2.4.4 ready (posting ok).</banner>
+    <created>2013-01-18 02:42:50</created>
+    <domloc>disabled</domloc>
+    <groupcount>50</groupcount>
+    <hostname>dogagent.com</hostname>
+    <ip>46.65.179.212</ip>
+    <kps>1.79</kps>
+    <listcount>13623</listcount>
+    <maxgroup>ServerStatistics</maxgroup>
+    <modified>2013-02-02 00:53:02</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;keik3n$ki6$1@dogagent.com&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="3819">
+    <id>3819</id>
+    <banner>200 news.intellij.net InterNetNews NNRP server INN 2.4.3 ready (posting ok).</banner>
+    <created>2002-08-13 09:25:13</created>
+    <domloc>disabled</domloc>
+    <groupcount>48</groupcount>
+    <hostname>213.182.181.98</hostname>
+    <ip>213.182.181.98</ip>
+    <kps>1.21</kps>
+    <listcount>505092</listcount>
+    <maxgroup>jetbrains.intellij.jira.idea</maxgroup>
+    <modified>2013-01-19 13:00:51</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;kdf1i2$3sj$1@nntp-server.labs.intellij.net&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner>
+      200 news.intellij.net InterNetNews NNRP server INN 2.4.3 ready (posting ok).
+      205 .
+    </sslbanner>
+  </hostinfo>
+  <hostinfo id="5229">
+    <id>5229</id>
+    <banner>200 news1.autistici.org InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2006-12-27 02:56:09</created>
+    <domloc>disabled</domloc>
+    <groupcount>47</groupcount>
+    <hostname>latitanza.investici.org</hostname>
+    <ip>82.94.249.234</ip>
+    <kps>1.17</kps>
+    <listcount>75854</listcount>
+    <maxgroup>cybernet.taz.ordanomade</maxgroup>
+    <modified>2013-01-19 11:05:11</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;kdeqp5$v86$1@latitanza.investici.org&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner>
+      200 news1.autistici.org InterNetNews NNRP server INN 2.5.2 ready (posting ok)
+      205 Bye!
+    </sslbanner>
+  </hostinfo>
+  <hostinfo id="5481">
+    <id>5481</id>
+    <banner>200 news.fh-wedel.de InterNetNews NNRP server INN 2.4.4 (20070806 snapshot) ready (posting ok).</banner>
+    <created>2009-11-16 00:25:41</created>
+    <domloc>disabled</domloc>
+    <groupcount>47</groupcount>
+    <hostname>vsrv-stud.fh-wedel.de</hostname>
+    <ip>213.39.232.215</ip>
+    <kps>0.83</kps>
+    <listcount>1951</listcount>
+    <maxgroup>fhw.c</maxgroup>
+    <modified>2013-01-18 09:14:14</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;kdbvrp$vu3$1@vsrv-stud.fh-wedel.de&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5591">
+    <id>5591</id>
+    <banner>200 news5.autistici.org InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2011-12-21 11:06:48</created>
+    <domloc>disabled</domloc>
+    <groupcount>47</groupcount>
+    <hostname>contumacia.investici.org</hostname>
+    <ip>178.255.144.35</ip>
+    <kps>1.17</kps>
+    <listcount>1543</listcount>
+    <maxgroup>cybernet.taz.ordanomade</maxgroup>
+    <modified>2013-02-02 07:20:09</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;kejar8$khp$1@contumacia.investici.org&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner>
+      200 news5.autistici.org InterNetNews NNRP server INN 2.5.2 ready (posting ok)
+      205 Bye!
+    </sslbanner>
+  </hostinfo>
+  <hostinfo id="2068">
+    <id>2068</id>
+    <banner>201 nimloth NNTP server version 1.5.12.2-stream (12 Jan 1996) ready at Sat Feb  2 07:40:46 2013 (no posting).</banner>
+    <created>2000-06-12 02:49:27</created>
+    <domloc>disabled</domloc>
+    <groupcount>42</groupcount>
+    <hostname>nimloth.ics.muni.cz</hostname>
+    <ip>147.251.3.15</ip>
+    <kps>0.98</kps>
+    <listcount>2449</listcount>
+    <maxgroup>cz.muni.fi-unix-old</maxgroup>
+    <modified>2013-02-01 22:40:50</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Sorry, you\'re not allowed to post.</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="2276">
+    <id>2276</id>
+    <banner>200 news.stack.nl InterNetNews NNRP server INN 2.5.3 ready (no posting)</banner>
+    <created>2000-08-07 23:40:17</created>
+    <domloc>disabled</domloc>
+    <groupcount>41</groupcount>
+    <hostname>outerspace.stack.nl</hostname>
+    <ip>131.155.141.98</ip>
+    <kps>1.69</kps>
+    <listcount>13890</listcount>
+    <maxgroup>undercover.onzin</maxgroup>
+    <modified>2013-02-02 01:43:25</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>480 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner>
+      200 news.stack.nl InterNetNews NNRP server INN 2.5.3 ready (no posting)
+      205 Bye!
+    </sslbanner>
+  </hostinfo>
+  <hostinfo id="3917">
+    <id>3917</id>
+    <banner>200 news.stack.nl InterNetNews NNRP server INN 2.5.3 ready (no posting)</banner>
+    <created>2002-10-17 05:00:03</created>
+    <domloc>disabled</domloc>
+    <groupcount>41</groupcount>
+    <hostname>mud.stack.nl</hostname>
+    <ip>131.155.141.70</ip>
+    <kps>1.69</kps>
+    <listcount>13371</listcount>
+    <maxgroup>undercover.onzin</maxgroup>
+    <modified>2013-01-18 17:18:30</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>480 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner>
+      200 news.stack.nl InterNetNews NNRP server INN 2.5.3 ready (no posting)
+      205 Bye!
+    </sslbanner>
+  </hostinfo>
+  <hostinfo id="4976">
+    <id>4976</id>
+    <banner>200 news.stack.nl InterNetNews NNRP server INN 2.5.3 ready (no posting)</banner>
+    <created>2005-05-21 19:32:32</created>
+    <domloc>disabled</domloc>
+    <groupcount>41</groupcount>
+    <hostname>news.stack.nl</hostname>
+    <ip>131.155.141.97</ip>
+    <kps>1.69</kps>
+    <listcount>13403</listcount>
+    <maxgroup>undercover.onzin</maxgroup>
+    <modified>2013-01-19 10:18:52</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>480 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner>
+      200 news.stack.nl InterNetNews NNRP server INN 2.5.3 ready (no posting)
+      205 Bye!
+    </sslbanner>
+  </hostinfo>
+  <hostinfo id="5354">
+    <id>5354</id>
+    <banner>200 news.opera.com InterNetNews NNRP server INN 2.4.3 (20050407 prerelease) ready (posting ok).</banner>
+    <created>2008-04-02 08:22:30</created>
+    <domloc>disabled</domloc>
+    <groupcount>41</groupcount>
+    <hostname>195.189.143.126</hostname>
+    <ip>195.189.143.126</ip>
+    <kps>3.51</kps>
+    <listcount>472513</listcount>
+    <maxgroup>opera.general</maxgroup>
+    <modified>2013-02-02 06:46:21</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;kej8qg$eic$1@news.opera.com&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="1757">
+    <id>1757</id>
+    <banner>200 Bienvenue à news.ac-versailles.fr Dnews,  5.7e1,, S0</banner>
+    <created>2000-03-14 07:25:18</created>
+    <domloc>disabled</domloc>
+    <groupcount>39</groupcount>
+    <hostname>richelieu.ac-versailles.fr</hostname>
+    <ip>195.221.97.9</ip>
+    <kps>2.42</kps>
+    <listcount>90324</listcount>
+    <maxgroup>ac-versailles.securite.incidents-renater</maxgroup>
+    <modified>2013-01-17 23:02:01</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;50f8f33c@ac-versailles.fr&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5627">
+    <id>5627</id>
+    <banner>200 dakota.dakotabcn.net InterNetNews NNRP server INN 2.5.3 ready (posting ok)</banner>
+    <created>2012-12-02 18:46:38</created>
+    <domloc>disabled</domloc>
+    <groupcount>37</groupcount>
+    <hostname>81.184.6.59.static.user.ono.com</hostname>
+    <ip>81.184.6.59</ip>
+    <kps>1.68</kps>
+    <listcount>346002</listcount>
+    <maxgroup>cotopaxi.publico.cafe_nocturno</maxgroup>
+    <modified>2013-02-01 20:05:25</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;kei38n$qac$1@news.dakotabcn.net&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5260">
+    <id>5260</id>
+    <banner>200 digitalmars.com InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2007-03-06 00:28:44</created>
+    <domloc>disabled</domloc>
+    <groupcount>36</groupcount>
+    <hostname>digitalmars.com</hostname>
+    <ip>65.204.18.192</ip>
+    <kps>0.33</kps>
+    <listcount>358676</listcount>
+    <maxgroup>digitalmars.D</maxgroup>
+    <modified>2013-01-17 09:29:25</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;kd9cc6$12n7$1@digitalmars.com&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4988">
+    <id>4988</id>
+    <banner>200 news.grc.com InterNetNews NNRP server INN 2.3.2 ready (posting ok).</banner>
+    <created>2005-06-17 13:25:49</created>
+    <domloc>disabled</domloc>
+    <groupcount>33</groupcount>
+    <hostname>news.grc.com</hostname>
+    <ip>4.79.142.203</ip>
+    <kps>2.78</kps>
+    <listcount>925022</listcount>
+    <maxgroup>grc.techtalk</maxgroup>
+    <modified>2013-01-18 03:31:50</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;kdbbr5$297r$1@news.grc.com&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner>-1</sslbanner>
+  </hostinfo>
+  <hostinfo id="5542">
+    <id>5542</id>
+    <banner>200 news.critter.net InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2011-03-20 11:50:15</created>
+    <domloc>disabled</domloc>
+    <groupcount>32</groupcount>
+    <hostname>cornix.critter.net</hostname>
+    <ip>46.4.24.15</ip>
+    <kps>119.35</kps>
+    <listcount>198765</listcount>
+    <maxgroup>fur.artwork.erotica</maxgroup>
+    <modified>2013-01-18 03:15:16</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;kdbaqn$313j$1@cornix.critter.net&gt;</post>
+    <postcode>2</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4379">
+    <id>4379</id>
+    <banner>200 news.hub.org InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2003-10-15 06:08:07</created>
+    <domloc>disabled</domloc>
+    <groupcount>30</groupcount>
+    <hostname>news.hub.org</hostname>
+    <ip>200.46.204.72</ip>
+    <kps>0.60</kps>
+    <listcount>119640</listcount>
+    <maxgroup>pgsql.general</maxgroup>
+    <modified>2013-02-02 07:18:46</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;kejaom$em7$1@news.hub.org&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5584">
+    <id>5584</id>
+    <banner>201 saria.nerim.net InterNetNews NNRP server INN 2.4.3 ready (no posting).</banner>
+    <created>2011-10-21 03:49:04</created>
+    <domloc>disabled</domloc>
+    <groupcount>30</groupcount>
+    <hostname>saria.nerim.net</hostname>
+    <ip>178.132.16.110</ip>
+    <kps>1.74</kps>
+    <listcount>3234</listcount>
+    <maxgroup>nerim.support</maxgroup>
+    <modified>2013-01-19 21:30:24</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5459">
+    <id>5459</id>
+    <banner>200 Alaska Software News news server (MPNews 4.0.1.61) ready - posting allowed</banner>
+    <created>2009-08-01 15:08:00</created>
+    <domloc>disabled</domloc>
+    <groupcount>29</groupcount>
+    <hostname>news.alaska-software.com</hostname>
+    <ip>87.106.143.233</ip>
+    <kps>1.42</kps>
+    <listcount>153842</listcount>
+    <maxgroup>public.xbase++.generic</maxgroup>
+    <modified>2013-01-19 03:05:34</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Send article to be posted</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4815">
+    <id>4815</id>
+    <banner>200 pnews.thedbcommunity.com DNEWS Version  5.7e1,, S0, posting OK </banner>
+    <created>2004-10-19 08:43:38</created>
+    <domloc>disabled</domloc>
+    <groupcount>28</groupcount>
+    <hostname>freedommail.novaithelp.com</hostname>
+    <ip>209.203.225.138</ip>
+    <kps>0.67</kps>
+    <listcount>159248</listcount>
+    <maxgroup>pnews.paradox-programming</maxgroup>
+    <modified>2013-02-02 03:55:14</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;510cfea1@pnews.thedbcommunity.com&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5310">
+    <id>5310</id>
+    <banner>200 newsd news server ready - posting ok</banner>
+    <created>2007-09-03 00:26:47</created>
+    <domloc>disabled</domloc>
+    <groupcount>27</groupcount>
+    <hostname>dns.easysw.com</hostname>
+    <ip>208.96.52.100</ip>
+    <kps>0.34</kps>
+    <listcount>71253</listcount>
+    <maxgroup>fltk.general</maxgroup>
+    <modified>2013-01-18 15:04:36</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Continue posting; Period on a line by itself to end</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4637">
+    <id>4637</id>
+    <banner>201 news.cs.uni-magdeburg.de InterNetNews NNRP server INN 2.4.1 ready (no posting).</banner>
+    <created>2004-04-15 05:20:51</created>
+    <domloc>disabled</domloc>
+    <groupcount>26</groupcount>
+    <hostname>fuerst.cs.uni-magdeburg.de</hostname>
+    <ip>141.44.21.5</ip>
+    <kps>0.90</kps>
+    <listcount>47708</listcount>
+    <maxgroup>unimd.www</maxgroup>
+    <modified>2013-01-18 22:57:43</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5376">
+    <id>5376</id>
+    <banner>200 news.lightlink.com InterNetNews NNRP server INN 1.7.2 08-Dec-1997 ready (posting ok).</banner>
+    <created>2008-09-02 15:49:02</created>
+    <domloc>disabled</domloc>
+    <groupcount>26</groupcount>
+    <hostname>aurora.lightlink.com</hostname>
+    <ip>64.57.176.27</ip>
+    <kps>1.40</kps>
+    <listcount>1684</listcount>
+    <maxgroup>alt.religion.scientology</maxgroup>
+    <modified>2013-01-18 07:20:55</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5599">
+    <id>5599</id>
+    <banner>200 NNTP Service 6.0.3790.3959 Version: 6.0.3790.3959 Posting Allowed </banner>
+    <created>2012-02-01 02:10:22</created>
+    <domloc>disabled</domloc>
+    <groupcount>26</groupcount>
+    <hostname>ec2-107-21-225-180.compute-1.amazonaws.com</hostname>
+    <ip>107.21.225.180</ip>
+    <kps>1.24</kps>
+    <listcount>116166</listcount>
+    <maxgroup>dbase.programming</maxgroup>
+    <modified>2013-02-02 01:45:14</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Continue posting - terminate with period </post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4566">
+    <id>4566</id>
+    <banner>200 news.cvmx.de InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2004-03-02 19:53:19</created>
+    <domloc>disabled</domloc>
+    <groupcount>24</groupcount>
+    <hostname>80.190.195.22</hostname>
+    <ip>80.190.195.22</ip>
+    <kps>0.95</kps>
+    <listcount>31124</listcount>
+    <maxgroup>life.d.software.freepdf</maxgroup>
+    <modified>2013-01-18 03:14:13</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;kdbaq4$r24$1@narnia.blumen-schwarz.de&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner>
+      200 news.cvmx.de InterNetNews NNRP server INN 2.5.2 ready (posting ok)
+      205 Bye!
+    </sslbanner>
+  </hostinfo>
+  <hostinfo id="5409">
+    <id>5409</id>
+    <banner>200 news.cvmx.de InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2009-01-15 01:23:27</created>
+    <domloc>disabled</domloc>
+    <groupcount>24</groupcount>
+    <hostname>narnia.blumen-schwarz.de</hostname>
+    <ip>80.190.195.21</ip>
+    <kps>0.47</kps>
+    <listcount>31120</listcount>
+    <maxgroup>life.d.software.freepdf</maxgroup>
+    <modified>2013-01-17 02:02:22</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;kd8i7d$tsh$1@narnia.blumen-schwarz.de&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner>
+      200 news.cvmx.de InterNetNews NNRP server INN 2.5.2 ready (posting ok)
+      205 Bye!
+    </sslbanner>
+  </hostinfo>
+  <hostinfo id="5549">
+    <id>5549</id>
+    <banner>200 news.sslug.dk InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2011-05-17 07:13:15</created>
+    <domloc>disabled</domloc>
+    <groupcount>24</groupcount>
+    <hostname>www.sslug.dk</hostname>
+    <ip>130.225.213.113</ip>
+    <kps>0.45</kps>
+    <listcount>936</listcount>
+    <maxgroup>sslug.teknik</maxgroup>
+    <modified>2013-01-18 15:04:21</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;kdckc8$o9o$1@www.sslug.dk&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5531">
+    <id>5531</id>
+    <banner>200 Welcome in my kitchen (posting OK)</banner>
+    <created>2010-09-29 23:37:44</created>
+    <domloc>disabled</domloc>
+    <groupcount>23</groupcount>
+    <hostname>jeffrey.matabio.net</hostname>
+    <ip>91.121.149.43</ip>
+    <kps>0.73</kps>
+    <listcount>10545</listcount>
+    <maxgroup>fr.test</maxgroup>
+    <modified>2013-02-01 01:12:55</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Poster la suite en finissant pas CRLF.CRLF</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5336">
+    <id>5336</id>
+    <banner>200 news.eISP.pl InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2008-01-03 08:24:45</created>
+    <domloc>disabled</domloc>
+    <groupcount>22</groupcount>
+    <hostname>virgo.kasat.net</hostname>
+    <ip>82.96.114.101</ip>
+    <kps>0.37</kps>
+    <listcount>14638</listcount>
+    <maxgroup>isp.test</maxgroup>
+    <modified>2013-02-01 22:43:46</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;keichj$j2v$1@virgo.kasat.net&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5333">
+    <id>5333</id>
+    <banner>200 news.eISP.pl InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2007-12-18 16:07:53</created>
+    <domloc>disabled</domloc>
+    <groupcount>22</groupcount>
+    <hostname>eisp.pl</hostname>
+    <ip>82.96.114.103</ip>
+    <kps>0.73</kps>
+    <listcount>14599</listcount>
+    <maxgroup>isp.test</maxgroup>
+    <modified>2013-01-18 06:42:36</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;kdbmvd$kbp$1@virgo.kasat.net&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5311">
+    <id>5311</id>
+    <banner>200 news://news.netgod.org.hk, 5.5h2, S0</banner>
+    <created>2007-09-17 05:31:44</created>
+    <domloc>disabled</domloc>
+    <groupcount>21</groupcount>
+    <hostname>202-123-85-144.static.hdcdatacentre.com</hostname>
+    <ip>202.123.85.144</ip>
+    <kps>0.73</kps>
+    <listcount>12520</listcount>
+    <maxgroup>netgod.broadband</maxgroup>
+    <modified>2013-02-02 03:54:53</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;510cf540@news.netgod.org.hk&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5397">
+    <id>5397</id>
+    <banner>200 news.iswiz.com DNEWS Version  5.7e1,, S0, posting OK </banner>
+    <created>2008-11-02 04:24:03</created>
+    <domloc>disabled</domloc>
+    <groupcount>21</groupcount>
+    <hostname>mail.iswiz.com</hostname>
+    <ip>99.14.40.233</ip>
+    <kps>0.50</kps>
+    <listcount>86261</listcount>
+    <maxgroup>iswiz.canteen</maxgroup>
+    <modified>2013-02-02 01:04:47</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;510cd681@news.iswiz.com&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4833">
+    <id>4833</id>
+    <banner>201 news.thur.de InterNetNews NNRP server INN 2.4.3 ready (no posting).</banner>
+    <created>2004-11-23 09:02:07</created>
+    <domloc>disabled</domloc>
+    <groupcount>20</groupcount>
+    <hostname>news.thur.de</hostname>
+    <ip>217.17.192.74</ip>
+    <kps>0.81</kps>
+    <listcount>90</listcount>
+    <maxgroup>thur.org.lug</maxgroup>
+    <modified>2013-02-01 23:47:45</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5484">
+    <id>5484</id>
+    <banner>200 news.szaf.org InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2009-11-22 04:03:27</created>
+    <domloc>disabled</domloc>
+    <groupcount>19</groupcount>
+    <hostname>pasture.szaf.org</hostname>
+    <ip>87.106.167.149</ip>
+    <kps>2.02</kps>
+    <listcount>72</listcount>
+    <maxgroup>feuerwehrmann.allgemein</maxgroup>
+    <modified>2013-01-19 21:30:58</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;kdfveg$5du$1@fwmann.news.szaf.org&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner>
+      200 news.szaf.org InterNetNews NNRP server INN 2.5.2 ready (posting ok)
+      205 Bye!
+    </sslbanner>
+  </hostinfo>
+  <hostinfo id="3758">
+    <id>3758</id>
+    <banner>201 news.karlsruhe.org InterNetNews NNRP server INN 2.2.3 18-Jul-2000 ready (no posting).</banner>
+    <created>2002-06-01 17:45:21</created>
+    <domloc>disabled</domloc>
+    <groupcount>18</groupcount>
+    <hostname>akk4-dmz.akk.uni-karlsruhe.de</hostname>
+    <ip>129.13.251.68</ip>
+    <kps>0.98</kps>
+    <listcount>124640</listcount>
+    <maxgroup>lists.nanog</maxgroup>
+    <modified>2013-02-02 03:53:26</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="1399">
+    <id>1399</id>
+    <banner>200 news.mcneel.com DNEWS Version  5.7e1,, S0, posting OK </banner>
+    <created>2000-02-07 08:05:09</created>
+    <domloc>disabled</domloc>
+    <groupcount>17</groupcount>
+    <hostname>news.mcneel.com</hostname>
+    <ip>204.177.179.36</ip>
+    <kps>0.21</kps>
+    <listcount>295119</listcount>
+    <maxgroup>rhino</maxgroup>
+    <modified>2013-02-01 23:00:14</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;510cb951@news.mcneel.com&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4719">
+    <id>4719</id>
+    <banner>200 news2.mcneel.com DNEWS Version  5.7e1,, S0, posting OK </banner>
+    <created>2004-06-01 20:28:52</created>
+    <domloc>disabled</domloc>
+    <groupcount>17</groupcount>
+    <hostname>news2.mcneel.com</hostname>
+    <ip>204.177.179.40</ip>
+    <kps>0.40</kps>
+    <listcount>380329</listcount>
+    <maxgroup>rhino</maxgroup>
+    <modified>2013-02-02 07:17:49</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;510d2df0@news2.mcneel.com&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5477">
+    <id>5477</id>
+    <banner>200 NNTP Service Microsoft® Internet Services 5.5 Version: 5.5.1877.79 Posting Allowed </banner>
+    <created>2009-10-16 13:25:15</created>
+    <domloc>disabled</domloc>
+    <groupcount>17</groupcount>
+    <hostname>fl-65-41-230-24.sta.embarqhsd.net</hostname>
+    <ip>65.41.230.24</ip>
+    <kps>0.57</kps>
+    <listcount>28687</listcount>
+    <maxgroup>chami.public.htmlkit.misc</maxgroup>
+    <modified>2013-02-01 23:38:37</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Continue posting - terminate with period </post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5562">
+    <id>5562</id>
+    <banner>200 news.freexp.de InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2011-06-19 13:10:47</created>
+    <domloc>disabled</domloc>
+    <groupcount>15</groupcount>
+    <hostname>dedi64.freexp.de</hostname>
+    <ip>80.244.248.98</ip>
+    <kps>2.08</kps>
+    <listcount>12538</listcount>
+    <maxgroup>crosspoint.freexp.support</maxgroup>
+    <modified>2013-01-18 15:38:08</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;kdcmcv$4tp$1@dedi64.freexp.de&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4928">
+    <id>4928</id>
+    <banner>200 news.e-wro.pl InterNetNews NNRP server INN 2.4.2 ready (posting ok).</banner>
+    <created>2005-04-18 22:26:05</created>
+    <domloc>disabled</domloc>
+    <groupcount>14</groupcount>
+    <hostname>atena.e-wro.net</hostname>
+    <ip>82.143.174.68</ip>
+    <kps>0.30</kps>
+    <listcount>22154</listcount>
+    <maxgroup>trzepak.freesco</maxgroup>
+    <modified>2013-02-01 20:11:52</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;kei3le$tro$1@atena.e-wro.net&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5064">
+    <id>5064</id>
+    <banner>200 news.spline.inf.fu-berlin.de InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2005-12-15 21:53:11</created>
+    <domloc>disabled</domloc>
+    <groupcount>14</groupcount>
+    <hostname>vm-news.spline.inf.fu-berlin.de</hostname>
+    <ip>130.133.110.85</ip>
+    <kps>0.68</kps>
+    <listcount>21927</listcount>
+    <maxgroup>spline.eisfair</maxgroup>
+    <modified>2013-02-02 01:23:27</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;keilue$poc$1@vm-news.spline.inf.fu-berlin.de&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner>
+      200 news.spline.inf.fu-berlin.de InterNetNews NNRP server INN 2.5.2 ready (posting ok)
+      205 Bye!
+    </sslbanner>
+  </hostinfo>
+  <hostinfo id="5080">
+    <id>5080</id>
+    <banner>200 news.pld-linux.org InterNetNews NNRP server INN 2.4.6 ready (posting ok).</banner>
+    <created>2006-02-01 02:45:44</created>
+    <domloc>disabled</domloc>
+    <groupcount>14</groupcount>
+    <hostname>lists.pld-linux.org</hostname>
+    <ip>217.149.246.4</ip>
+    <kps>0.51</kps>
+    <listcount>243964</listcount>
+    <maxgroup>pld.cvs.commit</maxgroup>
+    <modified>2013-01-19 13:35:22</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;kdf3ip$s7k$1@lists.pld-linux.org&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5313">
+    <id>5313</id>
+    <banner>200 news.cict.fr InterNetNews NNRP server INN 2.4.1 ready (posting ok).</banner>
+    <created>2007-09-23 03:01:26</created>
+    <domloc>disabled</domloc>
+    <groupcount>14</groupcount>
+    <hostname>news.cict.fr</hostname>
+    <ip>195.220.53.230</ip>
+    <kps>0.33</kps>
+    <listcount>5609</listcount>
+    <maxgroup>toulouse.petites-annonces.informatique</maxgroup>
+    <modified>2013-01-18 08:50:23</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;kdbv46$co7$1@news.cict.fr&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5611">
+    <id>5611</id>
+    <banner>200 w3.nls.net DNEWS Version  5.7e1,, S0, posting OK </banner>
+    <created>2012-05-19 03:56:02</created>
+    <domloc>disabled</domloc>
+    <groupcount>14</groupcount>
+    <hostname>news.barkto.com</hostname>
+    <ip>50.96.195.12</ip>
+    <kps>0.63</kps>
+    <listcount>188892</listcount>
+    <maxgroup>homeless.barktopus</maxgroup>
+    <modified>2013-01-17 05:23:43</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;50f7fb32@w3.nls.net&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4912">
+    <id>4912</id>
+    <banner>200 mail DNEWS Version  5.7e1,, S0, posting OK </banner>
+    <created>2005-03-15 05:47:25</created>
+    <domloc>disabled</domloc>
+    <groupcount>13</groupcount>
+    <hostname>mail.digital-metaphors.com</hostname>
+    <ip>69.15.240.74</ip>
+    <kps>0.77</kps>
+    <listcount>75382</listcount>
+    <maxgroup>digital-metaphors.public.reportbuilder.general</maxgroup>
+    <modified>2013-01-18 00:21:07</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;50f905f9@mail.&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5422">
+    <id>5422</id>
+    <banner>200 news.davenulle.org InterNetNews NNRP server INN 2.5.2 ready (no posting)</banner>
+    <created>2009-02-22 06:19:22</created>
+    <domloc>disabled</domloc>
+    <groupcount>13</groupcount>
+    <hostname>netnet.lamaiziere.net</hostname>
+    <ip>91.121.44.19</ip>
+    <kps>0.18</kps>
+    <listcount>3610</listcount>
+    <maxgroup>rss.bashfr</maxgroup>
+    <modified>2013-01-17 18:48:55</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>480 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5539">
+    <id>5539</id>
+    <banner>200 gegeweb.org InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2011-02-17 12:07:54</created>
+    <domloc>disabled</domloc>
+    <groupcount>13</groupcount>
+    <hostname>obelix.gegeweb.org</hostname>
+    <ip>91.121.103.138</ip>
+    <kps>0.67</kps>
+    <listcount>1957</listcount>
+    <maxgroup>local.gegeweb.utilisateurs</maxgroup>
+    <modified>2013-02-02 01:25:28</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;keim27$20s$1@obelix.gegeweb.org&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner>
+      200 gegeweb.org InterNetNews NNRP server INN 2.5.2 ready (posting ok)
+      205 Bye!
+    </sslbanner>
+  </hostinfo>
+  <hostinfo id="5581">
+    <id>5581</id>
+    <banner>200 news.davenulle.org InterNetNews NNRP server INN 2.5.2 ready (no posting)</banner>
+    <created>2011-09-22 15:51:35</created>
+    <domloc>disabled</domloc>
+    <groupcount>13</groupcount>
+    <hostname>net.lamaiziere.net</hostname>
+    <ip>94.23.254.147</ip>
+    <kps>0.27</kps>
+    <listcount>3694</listcount>
+    <maxgroup>rss.bashfr</maxgroup>
+    <modified>2013-02-01 22:41:12</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>480 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5148">
+    <id>5148</id>
+    <banner>200 you: jammed.com (216.99.218.161) have reached news.in-ulm.de, posting ok.</banner>
+    <created>2006-09-29 03:37:06</created>
+    <domloc>disabled</domloc>
+    <groupcount>12</groupcount>
+    <hostname>news.in-ulm.de</hostname>
+    <ip>217.10.1.42</ip>
+    <kps>0.48</kps>
+    <listcount>6559</listcount>
+    <maxgroup>ulm.germnews</maxgroup>
+    <modified>2013-02-01 23:38:54</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Send your junk, recommended ID &lt;keifqeUh8dL1@news.in-ulm.de&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="2916">
+    <id>2916</id>
+    <banner>200 news.podolsk.ru InterNetNews NNRP server INN 2.4.0 ready (posting ok).</banner>
+    <created>2000-12-28 05:14:08</created>
+    <domloc>disabled</domloc>
+    <groupcount>11</groupcount>
+    <hostname>cache.pdlsk.cifra1.ru</hostname>
+    <ip>212.152.32.71</ip>
+    <kps>0.39</kps>
+    <listcount>9504</listcount>
+    <maxgroup>inet.fido.robots</maxgroup>
+    <modified>2013-01-17 12:04:57</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;kd9jvj$1h7m$1@gate.pdlsk.cifra1.ru&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4646">
+    <id>4646</id>
+    <banner>200 news.uni-ulm.de DNEWS Version  5.6f3,, S0, posting OK </banner>
+    <created>2004-04-28 02:38:23</created>
+    <domloc>disabled</domloc>
+    <groupcount>11</groupcount>
+    <hostname>news.rz.uni-ulm.de</hostname>
+    <ip>134.60.1.200</ip>
+    <kps>0.37</kps>
+    <listcount>32891</listcount>
+    <maxgroup>ulm.kleinanzeigen</maxgroup>
+    <modified>2013-02-01 23:37:36</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;510cc23f@news.uni-ulm.de&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5505">
+    <id>5505</id>
+    <banner>200 news.cadsoft.de InterNetNews NNRP server INN 2.4.2 ready (posting ok).</banner>
+    <created>2010-04-05 17:39:03</created>
+    <domloc>disabled</domloc>
+    <groupcount>11</groupcount>
+    <hostname>cheetah.cadsoft.de</hostname>
+    <ip>188.40.46.46</ip>
+    <kps>1.17</kps>
+    <listcount>48653</listcount>
+    <maxgroup>eagle.support.eng</maxgroup>
+    <modified>2013-02-02 01:25:12</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;keim0a$1le$1@cheetah.cadsoft.de&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4798">
+    <id>4798</id>
+    <banner>201 news.upv.es InterNetNews NNRP server INN 2.4.1 ready (no posting).</banner>
+    <created>2004-10-17 22:50:18</created>
+    <domloc>disabled</domloc>
+    <groupcount>10</groupcount>
+    <hostname>news.cc.upv.es</hostname>
+    <ip>158.42.249.7</ip>
+    <kps>0.39</kps>
+    <listcount>993</listcount>
+    <maxgroup>UPV.administracio</maxgroup>
+    <modified>2013-02-02 07:16:22</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5551">
+    <id>5551</id>
+    <banner>200 mx04.eternal-september.org InterNetNews NNRP server INN 2.6.0 (20121129 snapshot) ready (posting ok)</banner>
+    <created>2011-05-18 19:38:19</created>
+    <domloc>disabled</domloc>
+    <groupcount>10</groupcount>
+    <hostname>news.eternal-september.org</hostname>
+    <ip>88.198.244.100</ip>
+    <kps>0.25</kps>
+    <listcount>10135</listcount>
+    <maxgroup>eternal-september.support</maxgroup>
+    <modified>2013-01-19 19:09:17</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;kdfn4r$o0e$1@anonymous.dont-email.me&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner>
+      200 mx04.eternal-september.org InterNetNews NNRP server INN 2.6.0 (20121129 snapshot) ready (posting ok)
+      205 Bye!
+    </sslbanner>
+  </hostinfo>
+  <hostinfo id="5554">
+    <id>5554</id>
+    <banner>200 mx04.eternal-september.org InterNetNews NNRP server INN 2.6.0 (20121129 snapshot) ready (posting ok)</banner>
+    <created>2011-06-03 03:45:56</created>
+    <domloc>disabled</domloc>
+    <groupcount>10</groupcount>
+    <hostname>mx04.eternal-september.org</hostname>
+    <ip>46.4.102.18</ip>
+    <kps>0.25</kps>
+    <listcount>10277</listcount>
+    <maxgroup>eternal-september.support</maxgroup>
+    <modified>2013-02-02 03:47:39</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;keiucq$9c0$1@anonymous.dont-email.me&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner>
+      200 mx04.eternal-september.org InterNetNews NNRP server INN 2.6.0 (20121129 snapshot) ready (posting ok)
+      205 Bye!
+    </sslbanner>
+  </hostinfo>
+  <hostinfo id="5577">
+    <id>5577</id>
+    <banner>200 linux1.netconx.de InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2011-09-21 12:26:47</created>
+    <domloc>disabled</domloc>
+    <groupcount>10</groupcount>
+    <hostname>news.intershop.de</hostname>
+    <ip>195.110.60.25</ip>
+    <kps>0.47</kps>
+    <listcount>37209</listcount>
+    <maxgroup>intershop.public.is3+4</maxgroup>
+    <modified>2013-01-18 03:32:57</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;kdbbt8$loa$1@linux1.netconx.de&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5635">
+    <id>5635</id>
+    <banner>200 mx05.eternal-september.org InterNetNews NNRP server INN 2.6.0 (20121129 snapshot) ready (posting ok)</banner>
+    <created>2013-02-02 01:26:32</created>
+    <domloc>disabled</domloc>
+    <groupcount>10</groupcount>
+    <hostname>mx05.eternal-september.org</hostname>
+    <ip>78.46.70.116</ip>
+    <kps>0.45</kps>
+    <listcount>10277</listcount>
+    <maxgroup>eternal-september.support</maxgroup>
+    <modified>2013-02-02 01:26:32</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;keim3k$s01$1@anonymous.dont-email.me&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner>
+      200 mx05.eternal-september.org InterNetNews NNRP server INN 2.6.0 (20121129 snapshot) ready (posting ok)
+      205 Bye!
+    </sslbanner>
+  </hostinfo>
+  <hostinfo id="5081">
+    <id>5081</id>
+    <banner>200 news.totallyobjects.com</banner>
+    <created>2006-02-01 05:01:38</created>
+    <domloc>disabled</domloc>
+    <groupcount>9</groupcount>
+    <hostname>rs101.dca.giganews.com</hostname>
+    <ip>216.196.97.170</ip>
+    <kps>231.25</kps>
+    <listcount>111493</listcount>
+    <maxgroup>comp.object</maxgroup>
+    <modified>2013-02-01 23:41:53</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 send article</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5607">
+    <id>5607</id>
+    <banner>200 dictatorshandbook.net InterNetNews NNRP server INN 2.4.6 ready (posting ok).</banner>
+    <created>2012-04-10 10:57:30</created>
+    <domloc>disabled</domloc>
+    <groupcount>9</groupcount>
+    <hostname>66.219.20.204</hostname>
+    <ip>66.219.20.204</ip>
+    <kps>0.34</kps>
+    <listcount>631</listcount>
+    <maxgroup>region.mideast</maxgroup>
+    <modified>2013-01-18 16:22:25</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;kdconc$19ng$1@stalin.dictatorshandbook.net&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4307">
+    <id>4307</id>
+    <banner>200 news.spamcop.net InterNetNews NNRP server INN 2.3.2 ready (posting ok).</banner>
+    <created>2003-07-02 09:52:14</created>
+    <domloc>disabled</domloc>
+    <groupcount>8</groupcount>
+    <hostname>news.cesmail.net</hostname>
+    <ip>216.154.195.61</ip>
+    <kps>0.86</kps>
+    <listcount>396</listcount>
+    <maxgroup>spamcop.social</maxgroup>
+    <modified>2013-02-01 22:58:38</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;keideu$j3b$1@news.spamcop.net&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5473">
+    <id>5473</id>
+    <banner>200 news.netobjects.com InterNetNews NNRP server INN 2.4.5 ready (posting ok).</banner>
+    <created>2009-09-04 01:23:45</created>
+    <domloc>disabled</domloc>
+    <groupcount>8</groupcount>
+    <hostname>174-143-234-15.static.cloud-ips.com</hostname>
+    <ip>174.143.234.15</ip>
+    <kps>0.51</kps>
+    <listcount>131408</listcount>
+    <maxgroup>netobjects.fusion7.gen-discuss</maxgroup>
+    <modified>2013-01-18 01:06:40</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;kdb3mu$dv1$1@DailyPlanet.news.netobjects.com&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5401">
+    <id>5401</id>
+    <banner>200 news.man.lodz.pl InterNetNews NNRP server INN 2.5.1 ready (no posting)</banner>
+    <created>2008-11-22 13:47:43</created>
+    <domloc>disabled</domloc>
+    <groupcount>8</groupcount>
+    <hostname>newsfeed.man.lodz.pl</hostname>
+    <ip>212.191.2.21</ip>
+    <kps>0.15</kps>
+    <listcount>6005</listcount>
+    <maxgroup>lodman.info</maxgroup>
+    <modified>2013-02-02 07:19:58</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5404">
+    <id>5404</id>
+    <banner>200 svctag-j7w3v3j DNEWS Version  5.7e1,, S0, posting OK </banner>
+    <created>2008-11-23 04:15:50</created>
+    <domloc>disabled</domloc>
+    <groupcount>8</groupcount>
+    <hostname>ozs.com</hostname>
+    <ip>89.17.221.237</ip>
+    <kps>0.21</kps>
+    <listcount>41830</listcount>
+    <maxgroup>local.xailer.pro.es</maxgroup>
+    <modified>2013-02-01 22:40:38</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;510cb4b8@svctag-j7w3v3j.&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5534">
+    <id>5534</id>
+    <banner>200 news.servidellagleba.it InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2010-10-22 18:59:37</created>
+    <domloc>disabled</domloc>
+    <groupcount>7</groupcount>
+    <hostname>93-62-191-12.ip23.fastwebnet.it</hostname>
+    <ip>93.62.191.12</ip>
+    <kps>0.42</kps>
+    <listcount>30</listcount>
+    <maxgroup>servidellagleba.test</maxgroup>
+    <modified>2013-02-01 22:44:03</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;keicji$7od$1@megan.servidellagleba.it&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5151">
+    <id>5151</id>
+    <banner>200 news.inds.pl InterNetNews NNRP server INN 2.4.6 ready (posting ok).</banner>
+    <created>2006-09-29 05:37:40</created>
+    <domloc>disabled</domloc>
+    <groupcount>6</groupcount>
+    <hostname>ns1.inds.pl</hostname>
+    <ip>87.239.176.2</ip>
+    <kps>0.12</kps>
+    <listcount>163076</listcount>
+    <maxgroup>b3d.forum</maxgroup>
+    <modified>2013-02-02 06:49:38</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;kej90l$4jp$1@bgp1.inds.pl&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5456">
+    <id>5456</id>
+    <banner>200 news.bbs-scene.org InterNetNews NNRP server INN 2.4.4 (20070806 snapshot) ready (posting ok).</banner>
+    <created>2009-07-21 17:45:36</created>
+    <domloc>disabled</domloc>
+    <groupcount>6</groupcount>
+    <hostname>bbs-scene.org</hostname>
+    <ip>209.20.83.142</ip>
+    <kps>0.12</kps>
+    <listcount>864</listcount>
+    <maxgroup>bbs-scene.help</maxgroup>
+    <modified>2013-01-18 14:43:31</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;kdcj6i$ngv$1@technocratmedia-w1.news.bbs-scene.org&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4570">
+    <id>4570</id>
+    <banner>200 segfault.kiev.ua InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2004-03-02 21:45:34</created>
+    <domloc>disabled</domloc>
+    <groupcount>5</groupcount>
+    <hostname>segfault.kiev.ua</hostname>
+    <ip>193.193.193.4</ip>
+    <kps>0.19</kps>
+    <listcount>14711</listcount>
+    <maxgroup>fido7.ru.unix.bsd</maxgroup>
+    <modified>2013-01-18 06:34:36</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;kdbmge$118r$1@segfault.kiev.ua&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5242">
+    <id>5242</id>
+    <banner>200 www.openwatcom.org InterNetNews NNRP server INN 2.4.2 ready (posting ok).</banner>
+    <created>2007-01-09 13:17:37</created>
+    <domloc>disabled</domloc>
+    <groupcount>5</groupcount>
+    <hostname>216-55-181-205.dedicated.abac.net</hostname>
+    <ip>216.55.181.205</ip>
+    <kps>0.22</kps>
+    <listcount>68059</listcount>
+    <maxgroup>openwatcom.users.c_cpp</maxgroup>
+    <modified>2013-01-17 16:52:43</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;kda6be$vt2$1@www.openwatcom.org&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5428">
+    <id>5428</id>
+    <banner>200 Hi, you can post (sn version 0.3.8)</banner>
+    <created>2009-03-16 14:02:10</created>
+    <domloc>disabled</domloc>
+    <groupcount>5</groupcount>
+    <hostname>bigweek.tagadab.com</hostname>
+    <ip>78.40.35.18</ip>
+    <kps>0.13</kps>
+    <listcount>425186</listcount>
+    <maxgroup>bigweek.general.old</maxgroup>
+    <modified>2013-02-02 01:42:29</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Go ahead</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4449">
+    <id>4449</id>
+    <banner>200 news.asarian-host.net, MySQL-asariaNNews V3.5. Hello [jammed.com], pleased to meet you</banner>
+    <created>2003-12-21 09:26:24</created>
+    <domloc>disabled</domloc>
+    <groupcount>4</groupcount>
+    <hostname>mail.asarian-host.net</hostname>
+    <ip>194.109.160.70</ip>
+    <kps>0.14</kps>
+    <listcount>226</listcount>
+    <maxgroup>local.religion.divine-love</maxgroup>
+    <modified>2013-02-02 07:15:23</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok. Send article to be posted. End with &lt;CR-LF&gt;.&lt;CR-LF&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner>
+      200 news.asarian-host.net, MySQL-asariaNNews V3.5. Hello [jammed.com], pleased to meet you
+      205 MySQL-asariaNNews V3.5. Goodbye
+    </sslbanner>
+  </hostinfo>
+  <hostinfo id="4451">
+    <id>4451</id>
+    <banner>200 news.sibptus.ru InterNetNews NNRP server INN 2.4.6 ready (posting ok).</banner>
+    <created>2003-12-21 10:31:32</created>
+    <domloc>disabled</domloc>
+    <groupcount>4</groupcount>
+    <hostname>relay.sibptus.ru</hostname>
+    <ip>212.73.124.2</ip>
+    <kps>0.08</kps>
+    <listcount>15</listcount>
+    <maxgroup>tomsk.test</maxgroup>
+    <modified>2013-02-02 03:51:48</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;keiuki$nan$1@relay.sibptus.ru&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner>
+      200 news.sibptus.ru InterNetNews NNRP server INN 2.4.6 ready (posting ok).
+      205 .
+    </sslbanner>
+  </hostinfo>
+  <hostinfo id="5552">
+    <id>5552</id>
+    <banner>200 localhost InterNetNews NNRP server INN 2.5.1 ready (posting ok)</banner>
+    <created>2011-05-20 02:41:13</created>
+    <domloc>disabled</domloc>
+    <groupcount>4</groupcount>
+    <hostname>static.45.133.47.78.clients.your-server.de</hostname>
+    <ip>78.47.133.45</ip>
+    <kps>0.19</kps>
+    <listcount>6609</listcount>
+    <maxgroup>lmd.public.vcl.elpack</maxgroup>
+    <modified>2013-02-02 06:49:49</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;kej92d$o9s$1@v220110178664744.yourvserver.net&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5353">
+    <id>5353</id>
+    <banner>200 APPSERV2 DNEWS Version  5.7e1,, S0, posting OK </banner>
+    <created>2008-04-01 11:22:32</created>
+    <domloc>disabled</domloc>
+    <groupcount>4</groupcount>
+    <hostname>secure.gamewood.net</hostname>
+    <ip>65.254.172.36</ip>
+    <kps>0.05</kps>
+    <listcount>201406</listcount>
+    <maxgroup>SpareRoom</maxgroup>
+    <modified>2013-02-01 20:21:18</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;510c9411@APPSERV2.gamewoodapp.net&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5487">
+    <id>5487</id>
+    <banner>201 news.backcountry.net InterNetNews NNRP server INN 2.4.3 ready (no posting).</banner>
+    <created>2009-12-01 02:46:13</created>
+    <domloc>disabled</domloc>
+    <groupcount>4</groupcount>
+    <hostname>edina.hack.net</hostname>
+    <ip>204.15.100.27</ip>
+    <kps>0.35</kps>
+    <listcount>1960</listcount>
+    <maxgroup>local.pct-l</maxgroup>
+    <modified>2013-01-17 01:54:37</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5629">
+    <id>5629</id>
+    <banner>200 NNTP Service 6.0.3790.1830 Version: 6.0.3790.1830 Posting Allowed </banner>
+    <created>2012-12-21 03:21:38</created>
+    <domloc>disabled</domloc>
+    <groupcount>4</groupcount>
+    <hostname>64.27.56.101</hostname>
+    <ip>64.27.56.101</ip>
+    <kps>0.29</kps>
+    <listcount>29296</listcount>
+    <maxgroup>gowest.webdev</maxgroup>
+    <modified>2013-02-01 23:40:39</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Continue posting - terminate with period </post>
+    <postcode>1</postcode>
+    <sslbanner>0</sslbanner>
+  </hostinfo>
+  <hostinfo id="5529">
+    <id>5529</id>
+    <banner>200 nntp.fysh.org InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2010-09-17 00:11:07</created>
+    <domloc>disabled</domloc>
+    <groupcount>3</groupcount>
+    <hostname>lake.fysh.org</hostname>
+    <ip>81.94.195.195</ip>
+    <kps>0.12</kps>
+    <listcount>27</listcount>
+    <maxgroup>fysh.announce</maxgroup>
+    <modified>2013-01-18 10:28:09</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;kdc47n$erl$1@lake.fysh.org&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5500">
+    <id>5500</id>
+    <banner>200 news.iecc.com InterNetNews NNRP server INN 2.5.2 ready (posting ok)</banner>
+    <created>2010-02-22 14:36:44</created>
+    <domloc>disabled</domloc>
+    <groupcount>3</groupcount>
+    <hostname>news.iecc.com</hostname>
+    <ip>64.57.183.58</ip>
+    <kps>0.11</kps>
+    <listcount>328</listcount>
+    <maxgroup>cauce.comments</maxgroup>
+    <modified>2013-02-02 05:26:58</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;kej472$77s$1@leila.iecc.com&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5004">
+    <id>5004</id>
+    <banner>200 news.intersystems.com InterNetNews NNRP server INN 2.4.3 ready (posting ok).</banner>
+    <created>2005-07-16 11:44:53</created>
+    <domloc>disabled</domloc>
+    <groupcount>2</groupcount>
+    <hostname>198.133.74.249</hostname>
+    <ip>198.133.74.249</ip>
+    <kps>0.33</kps>
+    <listcount>2664</listcount>
+    <maxgroup>intersystems.public.cache</maxgroup>
+    <modified>2013-02-02 00:50:33</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;keik0p$gii$1@news.intersystems.com&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5415">
+    <id>5415</id>
+    <banner>200 1000years.com news server (MPNews 5.0.0.54) ready - posting allowed</banner>
+    <created>2009-02-15 04:50:12</created>
+    <domloc>disabled</domloc>
+    <groupcount>2</groupcount>
+    <hostname>host.atrex.com</hostname>
+    <ip>67.227.156.73</ip>
+    <kps>0.06</kps>
+    <listcount>3343</listcount>
+    <maxgroup>millennium.atrex</maxgroup>
+    <modified>2013-02-02 08:28:57</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Send article to be posted</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="54">
+    <id>54</id>
+    <banner>200 mcadams.posc.mu.edu DNEWS Version  5.7e1,, S0, posting OK </banner>
+    <created>2000-02-06 16:28:05</created>
+    <domloc>disabled</domloc>
+    <groupcount>1</groupcount>
+    <hostname>mcadams.posc.mu.edu</hostname>
+    <ip>134.48.30.18</ip>
+    <kps>0.04</kps>
+    <listcount>1377</listcount>
+    <maxgroup>alt.assassination.jfk</maxgroup>
+    <modified>2013-02-01 01:13:55</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;510b8726@mcadams.posc.mu.edu&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="3409">
+    <id>3409</id>
+    <banner>200 zoy.org InterNetNews NNRP server INN 2.5.3 ready (posting ok)</banner>
+    <created>2001-07-17 13:33:36</created>
+    <domloc>disabled</domloc>
+    <groupcount>1</groupcount>
+    <hostname>poulet.zoy.org</hostname>
+    <ip>80.65.228.129</ip>
+    <kps>0.14</kps>
+    <listcount>19</listcount>
+    <maxgroup>hpcalc.general</maxgroup>
+    <modified>2013-02-01 22:58:34</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended message-ID &lt;keiddd$hhg$1@poulet.zoy.org&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="3007">
+    <id>3007</id>
+    <banner>200 demos InterNetNews NNRP server INN 2.4.2 (20040323 prerelease) ready (posting ok).</banner>
+    <created>2001-01-03 15:45:34</created>
+    <domloc>disabled</domloc>
+    <groupcount>1</groupcount>
+    <hostname>194.87.0.34</hostname>
+    <ip>194.87.0.34</ip>
+    <kps>0.06</kps>
+    <listcount>1497</listcount>
+    <maxgroup>demos.local.statistics</maxgroup>
+    <modified>2013-02-02 08:29:09</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;kejesl$30vi$1@news.demos.su&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="3537">
+    <id>3537</id>
+    <banner>200 news-asp.cifnet.net InterNetNews NNRP server INN 2.4.0 (20011011 CVS prerelease) ready (posting ok).</banner>
+    <created>2001-10-25 09:35:47</created>
+    <domloc>disabled</domloc>
+    <groupcount>1</groupcount>
+    <hostname>asp-public.cifnet.net</hostname>
+    <ip>198.63.208.252</ip>
+    <kps>0.15</kps>
+    <listcount>454</listcount>
+    <maxgroup>asp.pad_support</maxgroup>
+    <modified>2013-01-18 06:20:10</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;kdblmp$1lcr$1@news-asp.cifnet.net&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="4814">
+    <id>4814</id>
+    <banner>201 news.axelspringer.com.pl InterNetNews NNRP server INN 2.4.3 ready (no posting).</banner>
+    <created>2004-10-19 07:13:55</created>
+    <domloc>disabled</domloc>
+    <groupcount>1</groupcount>
+    <hostname>news.axelspringer.pl</hostname>
+    <ip>195.177.210.91</ip>
+    <kps>0.08</kps>
+    <listcount>39719</listcount>
+    <maxgroup>pl.test</maxgroup>
+    <modified>2013-02-02 05:26:53</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>440 Posting not allowed</post>
+    <postcode>0</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5288">
+    <id>5288</id>
+    <banner>200 SurgeNews netwinsite.com (Version 2.0a-14) http://surgenews.com posting OK</banner>
+    <created>2007-06-03 02:28:55</created>
+    <domloc>disabled</domloc>
+    <groupcount>1</groupcount>
+    <hostname>70.85.155.194</hostname>
+    <ip>70.85.155.194</ip>
+    <kps>0.05</kps>
+    <listcount>32380</listcount>
+    <maxgroup>netwin.surgemail</maxgroup>
+    <modified>2013-02-01 23:47:59</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;1359791278_0@netwinsite.com&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner>
+      200 SurgeNews netwinsite.com (Version 2.0a-14) http://surgenews.com posting OK
+      205 Command QUIT, disconnecting
+    </sslbanner>
+  </hostinfo>
+  <hostinfo id="5377">
+    <id>5377</id>
+    <banner>200 poprovec.arnes.si InterNetNews NNRP server INN 2.4.3 ready (posting ok).</banner>
+    <created>2008-09-02 15:52:54</created>
+    <domloc>disabled</domloc>
+    <groupcount>1</groupcount>
+    <hostname>poprovec.arnes.si</hostname>
+    <ip>193.2.1.88</ip>
+    <kps>0.02</kps>
+    <listcount>144</listcount>
+    <maxgroup>si.org.arnes.domene</maxgroup>
+    <modified>2013-02-01 22:32:31</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;keibsh$jbp$1@poprovec.arnes.si&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+  <hostinfo id="5450">
+    <id>5450</id>
+    <banner>200 news.jessen.ch InterNetNews NNRP server INN 2.3.4 ready (posting ok).</banner>
+    <created>2009-07-16 11:28:14</created>
+    <domloc>disabled</domloc>
+    <groupcount>1</groupcount>
+    <hostname>news.jessen.ch</hostname>
+    <ip>212.25.14.36</ip>
+    <kps>0.02</kps>
+    <listcount>17</listcount>
+    <maxgroup>list24.mersenne.users</maxgroup>
+    <modified>2013-02-02 06:45:33</modified>
+    <os>disabled</os>
+    <platency>0</platency>
+    <post>340 Ok, recommended ID &lt;kej8ov$hc6$1@saturn.local.net&gt;</post>
+    <postcode>1</postcode>
+    <sslbanner></sslbanner>
+  </hostinfo>
+</newzbot>
