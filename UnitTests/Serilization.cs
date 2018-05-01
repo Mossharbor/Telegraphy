@@ -160,5 +160,65 @@ namespace UnitTests
             Assert.IsTrue(output.Equals("Foo"));
 
         }
+
+        [TestMethod]
+        public void SerializeAValueTypeMessage()
+        {
+            MessageSerializationActor serialization = new MessageSerializationActor();
+            MessageDeserializationActor deserialization = new MessageDeserializationActor();
+            deserialization.Register((object msg) => (ValueTypeMessage<int>)msg);
+            deserialization.Register((object msg) => (ValueTypeMessage<double>)msg);
+            deserialization.Register((object msg) => (ValueTypeMessage<float>)msg);
+            deserialization.Register((object msg) => (ValueTypeMessage<byte>)msg);
+            deserialization.Register((object msg) => (ValueTypeMessage<sbyte>)msg);
+            deserialization.Register((object msg) => (ValueTypeMessage<short>)msg);
+            deserialization.Register((object msg) => (ValueTypeMessage<ushort>)msg);
+            deserialization.Register((object msg) => (ValueTypeMessage<uint>)msg);
+            deserialization.Register((object msg) => (ValueTypeMessage<double>)msg);
+            deserialization.Register((object msg) => (ValueTypeMessage<long>)msg);
+            deserialization.Register((object msg) => (ValueTypeMessage<ulong>)msg);
+            deserialization.Register((object msg) => (ValueTypeMessage<bool>)msg);
+            deserialization.Register((object msg) => (ValueTypeMessage<decimal>)msg);
+            deserialization.Register((object msg) => (ValueTypeMessage<char>)msg);
+            deserialization.Register((object msg) => (ValueTypeMessage<DateTime>)msg);
+            deserialization.Register((object msg) => (ValueTypeMessage<TimeSpan>)msg);
+
+            DateTime start = DateTime.Now;
+            TestValType<int>(serialization, deserialization, 4);
+            TestValType<double>(serialization, deserialization, 4.2);
+            TestValType<float>(serialization, deserialization, 4.1F);
+            TestValType<byte>(serialization, deserialization, 8);
+            TestValType<sbyte>(serialization, deserialization, 2);
+            TestValType<short>(serialization, deserialization, 30);
+            TestValType<ushort>(serialization, deserialization, 200);
+            TestValType<uint>(serialization, deserialization, uint.MaxValue);
+            TestValType<long>(serialization, deserialization, long.MinValue);
+            TestValType<ulong>(serialization, deserialization, ulong.MaxValue);
+            TestValType<ulong>(serialization, deserialization, ulong.MinValue);
+            TestValType<bool>(serialization, deserialization, true);
+            TestValType<bool>(serialization, deserialization, false);
+            TestValType<decimal>(serialization, deserialization, (decimal)5.67);
+            TestValType<char>(serialization, deserialization, 'a');
+            TestValType<DateTime>(serialization, deserialization, DateTime.Now);
+            TestValType<TimeSpan>(serialization, deserialization, DateTime.Now - start);
+        }
+
+        private static void TestValType<T>(MessageSerializationActor serialization, MessageDeserializationActor deserialization, T val) where T : IEquatable<T>
+        {
+            ValueTypeMessage<T> intType = new ValueTypeMessage<T>(val);
+            var typeVal = (T)intType.Message;
+            string id = intType.Id;
+
+            SerializeMessage sMsg = new SerializeMessage(intType);
+            if (!serialization.OnMessageRecieved(sMsg))
+                Assert.Fail(string.Format("Seriaization of {0} Failed", val.GetType().Name));
+
+            DeSerializeMessage dMsg = new DeSerializeMessage(sMsg.ProcessingResult as byte[]);
+            if (!deserialization.OnMessageRecieved(dMsg))
+                Assert.Fail(string.Format("DeSeriaization of {0} Failed", val.GetType().Name));
+
+            Assert.IsTrue((dMsg.ProcessingResult as ValueTypeMessage<T>).Message.Equals(typeVal));
+            Assert.IsTrue((dMsg.ProcessingResult as IActorMessageIdentifier).Id.Equals(id));
+        }
     }
 }

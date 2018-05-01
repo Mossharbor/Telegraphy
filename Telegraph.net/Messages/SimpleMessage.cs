@@ -8,7 +8,7 @@ namespace Telegraphy.Net
 {
     using System.Runtime.Serialization;
     
-    public class SimpleMessage<T> : IActorMessage  where T : class
+    public class SimpleMessage<T> : IActorMessage, IActorMessageIdentifier where T : class
     {
         public SimpleMessage()
         {
@@ -22,12 +22,14 @@ namespace Telegraphy.Net
                 throw new ArgumentNullException("info");
 
             this.Message = info.GetValue("msg", messageType);
+            this.id = info.GetString("id");
             this.ThisType = messageType;
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("msg", this.Message, this.Message.GetType());
+            info.AddValue("id", this.Id, typeof(string));
         }
 
         public SimpleMessage(T message)
@@ -42,7 +44,25 @@ namespace Telegraphy.Net
             }
             else
                 this.Message = message;
+
+            if (message is IActorMessageIdentifier)
+            {
+                this.id = (message as IActorMessageIdentifier).Id;
+            }
         }
+        #region IActorMessageIdentifier
+        private string id = null;
+        public string Id
+        {
+            get
+            {
+                if (null == id)
+                    id = Guid.NewGuid().ToString();
+                return id;
+            }
+            set { id = value; }
+        }
+        #endregion
 
         private Type thisType = null;
         protected Type ThisType

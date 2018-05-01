@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Telegraphy.Net
 {
-    internal abstract class ActorMessageInvocationBase
+    public interface IActorMessageIdentifier
     {
-        internal abstract IActorMessage Invoke(object message);
+        string Id { get; }
     }
 }

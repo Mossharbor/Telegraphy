@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Telegraphy.Net
 {
-    public class DeSerializeMessage : IActorMessage
+    public class DeSerializeMessage : IActorMessage, IActorMessageIdentifier
     {
         Type thisType = null;
         byte[] msgBytes;
@@ -16,6 +16,13 @@ namespace Telegraphy.Net
             this.Message = msgBytes;
             this.thisType = typeof(DeSerializeMessage);
         }
+        #region IActorMessageIdentifier
+        private string id = null;
+        public string Id
+        {
+            get { if (null == id) id = Guid.NewGuid().ToString(); return id; }
+        }
+        #endregion
 
         internal Type Type
         {

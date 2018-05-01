@@ -60,6 +60,11 @@ namespace Telegraphy.Azure
                 message.MessageId = (msg as IServiceBusPropertiesProvider).MessageId ?? message.MessageId;
             }
 
+            if ((message is IActorMessageIdentifier) && String.IsNullOrWhiteSpace(message.MessageId))
+            {
+                message.MessageId = (msg as IActorMessageIdentifier).Id;
+            }
+
             this.ServiceBusMsgSender.SendAsync(message);
         }
 

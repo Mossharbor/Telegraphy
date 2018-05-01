@@ -120,6 +120,8 @@ namespace Telegraphy.Net
                     msg.Status.SetResult(msg);
                 }
             }
+            else
+                msg.ProcessingResult = serializedMsg;
 
             return true;
         }

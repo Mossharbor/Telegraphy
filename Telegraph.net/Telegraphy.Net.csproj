@@ -44,6 +44,7 @@
     <Compile Include="Exceptions\CantDeserlializeMessageBytesSmallerThanMinSize.cs" />
     <Compile Include="Exceptions\CantDeserlializeUnknownVersion.cs" />
     <Compile Include="Exceptions\DispatchMethodCanOnlyBeSetBeforeOperatorsAreRegistered.cs" />
+    <Compile Include="Exceptions\DontKnowHowToSerializeType.cs" />
     <Compile Include="Exceptions\FailedMessageEnque.cs" />
     <Compile Include="Exceptions\FailedToRegisterOperatorForAction.cs" />
     <Compile Include="Exceptions\FailedToRegisterOperatorForType.cs" />
@@ -69,12 +70,14 @@
     <Compile Include="Enums.cs" />
     <Compile Include="Interfaces\IActor.cs" />
     <Compile Include="Interfaces\IActorMessage.cs" />
+    <Compile Include="Interfaces\IActorMessageIdentifier.cs" />
     <Compile Include="Interfaces\IAnonActor.cs" />
     <Compile Include="Interfaces\IHasMailbox.cs" />
     <Compile Include="Interfaces\ILocalSwitchboard.cs" />
     <Compile Include="Interfaces\IOperator.cs" />
     <Compile Include="Interfaces\IWrappedActor.cs" />
     <Compile Include="Interfaces\IWrappedMessage.cs" />
+    <Compile Include="Messages\ActorMessageInvocation.cs" />
     <Compile Include="Messages\AnonAskMessage.cs" />
     <Compile Include="Messages\ControlMessages.cs" />
     <Compile Include="Messages\DeSerializeMessage.cs" />

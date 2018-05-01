@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Telegraphy.Net
 {
-    public class SerializeMessage : IActorMessage
+    public class SerializeMessage : IActorMessage, IActorMessageIdentifier
     {
         Type thisType = null;
         IActorMessage wrappedMsg;
@@ -21,6 +21,13 @@ namespace Telegraphy.Net
             this.Status = null;
             this.ProcessingResult = result;
         }
+        #region IActorMessageIdentifier
+        private string id = null;
+        public string Id
+        {
+            get { if (null == id) id = Guid.NewGuid().ToString(); return id; }
+        }
+        #endregion
 
         internal IActorMessage MessageToSerialize { get { return wrappedMsg; } }
 

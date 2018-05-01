@@ -80,10 +80,9 @@ namespace Telegraphy.Net
             IActorMessage invokedMessage = invoker.Invoke(msgObject);
 
             if (null != msg.Status)
-            {
                 msg.Status.SetResult(invokedMessage);
-            }
-
+            
+            msg.ProcessingResult = invokedMessage;
             return true;
         }
 
