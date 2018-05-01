@@ -12,11 +12,13 @@ namespace Telegraphy.Net
     public class LocalOperator : IOperator
     {
         private Semaphore _dataExists = new Semaphore(0, int.MaxValue);
-        private long _queueEmpty = 0;
         ConcurrentQueue<IActorMessage> actorMessages = new ConcurrentQueue<IActorMessage>();
 
         public LocalOperator() :this(new LocalSwitchboard(LocalConcurrencyType.OneThreadAllActors))
         { }
+
+        public LocalOperator(LocalConcurrencyType concurrencyType, uint concurrency = 1) : this (new LocalSwitchboard(concurrencyType, concurrency))
+        {}
 
         public LocalOperator(ILocalSwitchboard switchBoard)
         {
@@ -26,14 +28,12 @@ namespace Telegraphy.Net
 
         #region IActor
 
-        public bool OnMessageRecieved<T>(T msg) where T : IActorMessage
+        public bool OnMessageRecieved<T>(T msg) where T : class, IActorMessage
         {
             this.NextMessage = msg;
             return true;
         }
-
-       
-
+        
         #endregion
 
         #region IOperator
@@ -42,7 +42,7 @@ namespace Telegraphy.Net
 
         public long ID { get; set; }
 
-        public void Register<T>(Action<T> action)
+        public void Register<T>(Action<T> action) where T : class
         {
             this.Switchboard.Register<T>(action);
         }
@@ -77,7 +77,7 @@ namespace Telegraphy.Net
         {
             return NextMessage;
         }
-
+        
         public virtual bool WaitTillEmpty(TimeSpan timeout)
         {
             DateTime start = DateTime.Now;
@@ -114,7 +114,7 @@ namespace Telegraphy.Net
         }
         #endregion
 
-        public virtual IActorMessage NextMessage
+        private IActorMessage NextMessage
         {
             get
             {

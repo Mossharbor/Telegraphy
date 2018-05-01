@@ -10,7 +10,7 @@ namespace RolePlayingGame
 
     class Display : IActor
     {
-        public bool OnMessageRecieved<T>(T msg) where T : IActorMessage
+        public bool OnMessageRecieved<T>(T msg) where T : class, IActorMessage
         {
             try
             {

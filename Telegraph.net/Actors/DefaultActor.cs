@@ -23,9 +23,9 @@ namespace Telegraphy.Net
 
         #region IActor
 
-        public virtual bool OnMessageRecieved<T>(T msg) where T : IActorMessage
+        public virtual bool OnMessageRecieved<T>(T msg) where T : class, IActorMessage
         {
-            if (typeof(HangUp) == msg.GetType())
+            if (typeof(ControlMessages.HangUp) == msg.GetType())
             {
                 if (null != OnExitHandler)
                     return OnExitHandler(msg);

@@ -17,7 +17,7 @@ namespace Telegraphy.Net
         internal SerializeMessage(IActorMessage wrappedMsg, object result)
         {
             this.wrappedMsg = wrappedMsg;
-            this.thisType = wrappedMsg.GetType();
+            //this.thisType = wrappedMsg.GetType();
             this.Status = null;
             this.ProcessingResult = result;
         }
@@ -30,11 +30,11 @@ namespace Telegraphy.Net
 
         public TaskCompletionSource<IActorMessage> Status { get; set; }
 
-        public new Type GetType()
-        {
-            if (null == thisType)
-                thisType = this.Message.GetType();
-            return thisType;
-        }
+        //public new Type GetType()
+        //{
+        //    if (null == thisType)
+        //        thisType = this.Message.GetType();
+        //    return thisType;
+        //}
     }
 }

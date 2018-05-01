@@ -37,6 +37,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actors\ActorMessageInvocation.cs" />
     <Compile Include="Actors\MessageDeserializationActor.cs" />
     <Compile Include="Actors\MessageSerializationActor.cs" />
     <Compile Include="Exceptions\CantDeserlializeAnythingButADeSerializeMessage.cs" />
@@ -74,8 +75,8 @@
     <Compile Include="Interfaces\IWrappedActor.cs" />
     <Compile Include="Interfaces\IWrappedMessage.cs" />
     <Compile Include="Messages\AnonAskMessage.cs" />
+    <Compile Include="Messages\ControlMessages.cs" />
     <Compile Include="Messages\DeSerializeMessage.cs" />
-    <Compile Include="Messages\HangUp.cs" />
     <Compile Include="Messages\SerializeMessage.cs" />
     <Compile Include="Messages\SimpleMessage.cs" />
     <Compile Include="Operators\LocalOperator.cs" />

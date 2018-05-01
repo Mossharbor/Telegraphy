@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Telegraphy.Net
 {
-    internal class AnonActor<MsgType> : IActor, IAnonActor
+    internal class AnonActor<MsgType> : IActor, IAnonActor where MsgType : class
     {
         Action<MsgType> onTellAction = null;
 
@@ -16,13 +16,24 @@ namespace Telegraphy.Net
         }
 
         #region IActor
-
-        public bool OnMessageRecieved<T>(T msg) where T : IActorMessage
+        public bool OnMessageRecieved(MsgType msg)
         {
-            if (typeof(HangUp) == msg.GetType())
+            if (typeof(ControlMessages.HangUp) == msg.GetType())
+                return true;
+            
+            onTellAction(msg);
+            return true;
+        }
+
+        public bool OnMessageRecieved<T>(T msg) where T : class, IActorMessage
+        {
+            if (typeof(ControlMessages.HangUp) == msg.GetType())
                 return true;
 
-            onTellAction((MsgType)msg.Message);
+            if (msg is MsgType)
+                OnMessageRecieved(msg as MsgType);
+            else
+                onTellAction((MsgType)msg.Message);
             return true;
         }
 

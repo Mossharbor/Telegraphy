@@ -67,7 +67,7 @@ namespace Telegraphy.Net
             // We are farming this out to the dictionary of local operators.
             throw new NotImplementedException();
         }
-
+        
         public ILocalSwitchboard Switchboard
         {
             get { throw new NotImplementedException("We have sub operators each with their own switch board."); }
@@ -92,13 +92,13 @@ namespace Telegraphy.Net
         #endregion
 
         #region IActor
-        public bool OnMessageRecieved<T>(T msg) where T : IActorMessage
+        public bool OnMessageRecieved<T>(T msg) where T : class, IActorMessage
         {
             this.AddMessage(msg);
             return true;;
         }
 
-        public void Register<T>(Action<T> action)
+        public void Register<T>(Action<T> action) where T : class
         {
             var handlesType = typeof(T);
 

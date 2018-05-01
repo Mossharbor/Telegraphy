@@ -7,7 +7,7 @@
     <ProjectGuid>{E4EA221A-70E9-44AE-ABFD-6F6DCBE609DE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Telegraph.Azure</RootNamespace>
+    <RootNamespace>Telegraphy.Azure</RootNamespace>
     <AssemblyName>TelegraphyAzure</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -30,19 +30,42 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.1.0.0\lib\net40\Microsoft.Azure.KeyVault.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=9.1.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAzure.Storage.9.1.1\lib\net45\Microsoft.WindowsAzure.Storage.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Actors\SendMessageToAzureQueueActor.cs" />
-    <Compile Include="AzureSmallMessageQueueOperator.cs" />
+    <Compile Include="Operators\AzureSmallMessageQueueOperator.cs" />
+    <Compile Include="Exceptions\CannotRegisterActionWithOperatorSinceWeAreSendingToAzureQueueOnly.cs" />
+    <Compile Include="Exceptions\OperatorCannotRecieveMessages.cs" />
+    <Compile Include="Exceptions\OperatorCannotSendMessages.cs" />
+    <Compile Include="Exceptions\SwitchBoardNeededWhenRecievingMessages.cs" />
+    <Compile Include="IAzureQueuePropertiesProvider.cs" />
+    <Compile Include="Messages\QueuedCloudMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Operators\RecieveMessagesFromAzureQueueOperator.cs" />
+    <Compile Include="Operators\SendMessagesToAzureQueueOperator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Telegraph.net\Telegraphy.Net.csproj">
       <Project>{0d5eda21-0e26-4e10-b109-bfa71559163e}</Project>
       <Name>Telegraphy.Net</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Actors\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

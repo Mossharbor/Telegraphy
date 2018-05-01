@@ -106,8 +106,16 @@ namespace Telegraphy.Net
         }
 
         #region IActor
-        public bool OnMessageRecieved<T>(T msg) where T : IActorMessage
+        public bool OnMessageRecieved<T>(T msg) where T : class, IActorMessage
         {
+            if (msg is ControlMessages.HangUp)
+            {
+                Broadcast(msg);
+                UnRegisterAll();
+                msg.Status?.TrySetResult(msg);
+                return true;
+            }
+
             if (IsUsingSingleOperator())
                 return MainOperator.OnMessageRecieved<T>(msg);
 
@@ -191,8 +199,21 @@ namespace Telegraphy.Net
             else
                 msg = (message as IActorMessage);
 
+            if((msg is ControlMessages.HangUp))
+            {
+                foreach (var t in msgTypeToOperator)
+                    foreach (var q in t.Value)
+                        q.OnMessageRecieved(msg);
+                return true;
+            }
+
             if (!msgTypeToOperator.ContainsKey(handlesType))
-                throw new NoOperatorRegisteredToSupportTypeException();
+            {
+                if (!IsUsingSingleOperator())
+                    throw new NoOperatorRegisteredToSupportTypeException();
+
+                return MainOperator.OnMessageRecieved(msg);
+            }
 
             bool recieved = true;
             for (int i = msgTypeToOperator[handlesType].Count - 1; i >= 0 && i < msgTypeToOperator[handlesType].Count; --i)
@@ -229,7 +250,7 @@ namespace Telegraphy.Net
                 msgTypeToOperator.Clear();
         }
 
-        public void Register<T>(Action<T> action)
+        public void Register<T>(Action<T> action) where T : class
         {
             if (IsUsingSingleOperator())
                 this.MainOperator.Register<T>(action);
@@ -305,8 +326,16 @@ namespace Telegraphy.Net
                     throw new FailedToRegisterOperatorForTypeException(handlesType.ToString());
             }
         }
+        
+        public void Register<T>(long opId)
+        {
+            IOperator op = null;
+            if (!operators.TryGetValue(opId, out op))
+                throw new NoOperatorFoundForIDException();
+            Register<T>(op);
+        }
 
-        public void Register<T>(long opID, Action<T> action)
+        public void Register<T>(long opID, Action<T> action) where T : class
         {
             IOperator op = null;
             if (!operators.TryGetValue(opID, out op))
@@ -315,7 +344,7 @@ namespace Telegraphy.Net
             this.Register<T>(op,action);
         }
 
-        public long Register<T>(IOperator op, Action<T> action)
+        public long Register<T>(IOperator op, Action<T> action) where T : class
         {
             long nextID = Register(op);
             op.Register<T>(action);

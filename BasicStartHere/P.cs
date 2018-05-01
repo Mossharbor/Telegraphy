@@ -59,15 +59,18 @@ namespace BasicStartHere
 
         public static void HelloWorld()
         {
-            Telegraph.Instance.Register<string>(message => Console.WriteLine(message));
+            int msgCount = 0;
+            Telegraph.Instance.Register<string>(message => {Console.WriteLine(message); msgCount++; });
 
             for (int i = 0; i < 10; ++i)
                 Telegraph.Instance.Tell("Hello World." + i.ToString());
 
-            Telegraph.Instance.Ask(new HangUp()).Wait();
+            Telegraph.Instance.Ask(new ControlMessages.HangUp()).Wait();
+            System.Threading.Thread.Sleep(100);
+            System.Diagnostics.Debug.Assert(msgCount == 10);
         }
 
-        public static void HelloWorld2()
+        public static void HelloWorldWithLazyActorInstantiation()
         {
             string messageStr = "HelloWorld2.";
             try
@@ -90,17 +93,19 @@ namespace BasicStartHere
                 Telegraph.Instance.Tell(msg);
             }
 
-            Telegraph.Instance.Ask(new HangUp()).Wait();
+            Telegraph.Instance.Ask(new ControlMessages.HangUp()).Wait();
         }
 
         public static void SimpleSingleThreadSequential()
         {
+            int msgCount = 0;
             try
             {
                 Telegraph.Instance.MainOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneThreadPerActor));
 
                 Telegraph.Instance.Register<string>(message =>
                 {
+                    ++msgCount;
                     Console.WriteLine(message);
                 });
 
@@ -115,17 +120,21 @@ namespace BasicStartHere
                 return;
             }
 
-            Task task = Telegraph.Instance.Ask(new HangUp());
+            Task task = Telegraph.Instance.Ask(new ControlMessages.HangUp());
             task.Wait();
+            System.Threading.Thread.Sleep(100);
+            System.Diagnostics.Debug.Assert(11 == msgCount);
         }
 
         public static void ThreadPool()
         {
+            int msgCount = 0;
             Telegraph.Instance.MainOperator = new LocalOperator();
             Telegraph.Instance.MainOperator.Switchboard = new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool);
 
             Telegraph.Instance.Register<string>(message =>
             {
+                ++msgCount;
                 Console.WriteLine(message);
             });
 
@@ -133,15 +142,18 @@ namespace BasicStartHere
                 Telegraph.Instance.Tell("ThreadPool was executed." + i.ToString());
 
             Telegraph.Instance.MainOperator.WaitTillEmpty(new TimeSpan(1, 0, 0));
+            System.Diagnostics.Debug.Assert(10 == msgCount);
         }
 
         public static void LimitedThreadPool()
         {
+            int msgCount = 0;
             var localOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool, 2));
             Telegraph.Instance.MainOperator = localOperator;
 
             Telegraph.Instance.Register<string>(message =>
             {
+                ++msgCount;
                 Console.WriteLine(message);
             });
 
@@ -149,15 +161,18 @@ namespace BasicStartHere
                 Telegraph.Instance.Tell("LimitedThreadPool was executed." + i.ToString());
 
             Telegraph.Instance.MainOperator.WaitTillEmpty(new TimeSpan(1, 0, 0));
+            System.Diagnostics.Debug.Assert(10 == msgCount);
         }
 
         public static void WorkerThreads()
         {
+            int msgCount = 0;
             System.Diagnostics.Debug.WriteLine("WorkerThreads");
             Telegraph.Instance.MainOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneActorPerThread, 20));
 
             Telegraph.Instance.Register<string>(message =>
             {
+                ++msgCount;
                 Console.WriteLine(message);
             });
 
@@ -167,6 +182,7 @@ namespace BasicStartHere
             }
 
             Telegraph.Instance.MainOperator.WaitTillEmpty(new TimeSpan(1, 0, 0));
+            System.Diagnostics.Debug.Assert(10 == msgCount);
         }
 
         public static void LazyInstantiation()
@@ -224,7 +240,7 @@ namespace BasicStartHere
             Task<IActorMessage>[] tasksToWaitOn = new Task<IActorMessage>[20] ;
             for (int i = 0; i < 20; ++i)
             {
-                tasksToWaitOn[i] = Telegraph.Instance.Ask(new HangUp());
+                tasksToWaitOn[i] = Telegraph.Instance.Ask(new ControlMessages.HangUp());
             }
 
             Task.WaitAll(tasksToWaitOn);
@@ -232,10 +248,12 @@ namespace BasicStartHere
 
         public static void WaitForCompletion()
         {
+            int msgCount = 0;
             System.Diagnostics.Debug.WriteLine("WaitForCompletion");
             Telegraph.Instance.MainOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool)); // performs a reset.
             Telegraph.Instance.Register<string>(message =>
             {
+                ++msgCount;
                 System.Threading.Thread.Sleep(4000);
                 Console.WriteLine(message + " bar");
             });
@@ -245,14 +263,17 @@ namespace BasicStartHere
             var task = Telegraph.Instance.Ask("Foo");
             task.Wait();
             Console.WriteLine("WaitForCompletion Task Completed in " + (DateTime.Now - start).TotalSeconds.ToString("00") + " seconds.");
+            System.Diagnostics.Debug.Assert(1 == msgCount);
         }
 
         public static void MessageTimeOut()
         {
+            int msgCount = 0;
             System.Diagnostics.Debug.WriteLine("MessageTimeOut");
             Telegraph.Instance.MainOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneActorPerThread)); // performs a reset.
             Telegraph.Instance.Register<string>(message =>
             {
+                msgCount++;
                 System.Threading.Thread.Sleep(4000);
                 Console.WriteLine(message + " bar");
             });
@@ -274,14 +295,17 @@ namespace BasicStartHere
             }
 
             Console.WriteLine("MessageTimeOut Completed in " + (DateTime.Now - start).TotalSeconds.ToString("00") + " seconds.");
+            System.Diagnostics.Debug.Assert(msgCount == 1);
         }
 
         public static void MessageCancelled()
         {
+            int msgCount = 0;
             System.Diagnostics.Debug.WriteLine("MessageCancelled");
             Telegraph.Instance.MainOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneActorPerThread)); // performs a reset.
             Telegraph.Instance.Register<string>(message =>
             {
+                ++msgCount;
                 System.Threading.Thread.Sleep(4000);
                 Console.WriteLine(message + " bar");
             });
@@ -307,14 +331,17 @@ namespace BasicStartHere
             }
 
             Console.WriteLine("MessageCancelled Task Completed in " + (DateTime.Now - start).TotalSeconds.ToString("00") + " seconds.");
+            System.Diagnostics.Debug.Assert(msgCount == 1);
         }
 
         public static void GetResultOfProcessing()
         {
+            int msgCount = 0;
             System.Diagnostics.Debug.WriteLine("GetResultOfProcessing");
             Telegraph.Instance.MainOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneThreadAllActors)); // performs a reset.
             Telegraph.Instance.Register<Compute>(compute =>
             {
+                ++msgCount;
                 compute.RaiseToPower(2);
             });
 
@@ -327,19 +354,23 @@ namespace BasicStartHere
 
                 Console.WriteLine("GetResultOfProcessing returned " + result.ToString("00"));
             }
+            System.Diagnostics.Debug.Assert(msgCount == 1);
         }
 
         public static void MessageOrdering()
         {
+            int strmsgCount = 0, computeMsgCount = 0;
             Telegraph.Instance.MainOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneThreadPerActor)); // performs a reset.
             Telegraph.Instance.Register<string>(message =>
             {
+                ++strmsgCount;
                 System.Threading.Thread.Sleep(100);
                 Console.WriteLine(message + " bar");
             });
 
             Telegraph.Instance.Register<Compute>(compute =>
             {
+                ++computeMsgCount;
                 compute.RaiseToPower(2);
                 System.Threading.Thread.Sleep(300);
                 Console.ForegroundColor = ConsoleColor.Green;
@@ -362,21 +393,26 @@ namespace BasicStartHere
             System.Threading.Thread.Sleep(10000);
             double result = (double)(computeTask.Result.ProcessingResult);
             Console.WriteLine("MessageOrdering compute task returned " + result.ToString("00"));
+            System.Diagnostics.Debug.Assert(computeMsgCount == 1);
+            System.Diagnostics.Debug.Assert(strmsgCount == 76);
         }
 
         public static void MessageOrdering2()
         {
+            int strmsgCount = 0, computeMsgCount = 0;
             System.Diagnostics.Debug.WriteLine("MessageOrdering2");
             Telegraph.Instance.MainOperator = new SingleThreadPerMessageTypeOperator();
 
             Telegraph.Instance.Register<string>(message =>
             {
+                ++strmsgCount;
                 System.Threading.Thread.Sleep(300);
                 Console.WriteLine(message + " bar");
             });
 
             Telegraph.Instance.Register<Compute>(compute =>
             {
+                ++computeMsgCount;
                 compute.RaiseToPower(2);
                 Console.WriteLine("computed.");
             });
@@ -396,6 +432,8 @@ namespace BasicStartHere
 
             double result = (double)(computeTask.Result.ProcessingResult);
             Console.WriteLine("MessageOrdering2 compute task returned " + result.ToString("00"));
+            System.Diagnostics.Debug.Assert(computeMsgCount == 1);
+            System.Diagnostics.Debug.Assert(strmsgCount == 4);
         }
 
         public static void BasicMessageSerializationDeserialization()
@@ -451,8 +489,8 @@ namespace BasicStartHere
 
             byte[] serializedBytes = (serializeTask.Result.ProcessingResult as byte[]);
 
-            DeSerializeMessage msgToSerialize2 = new DeSerializeMessage(serializedBytes);
-            var task = Telegraph.Instance.Ask(msgToSerialize2);
+            DeSerializeMessage msgToDeSerialize = new DeSerializeMessage(serializedBytes);
+            var task = Telegraph.Instance.Ask(msgToDeSerialize);
 
             task.Wait();
 
@@ -463,6 +501,7 @@ namespace BasicStartHere
 
         public static void MultipleOperatorsBasic()
         {
+            int msgCount = 0, strCount = 0;
             try
             {
                 LocalOperator threadPoolOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool));
@@ -472,8 +511,8 @@ namespace BasicStartHere
                 long threadPoolOpID = Telegraph.Instance.Register(threadPoolOperator);
                 long singleThreadOperatorID = Telegraph.Instance.Register(singleThreadOperator); //NOTE: this sets the operator ID (singleThreadOperator.ID)
 
-                Telegraph.Instance.Register<string>(threadPoolOpID, message => Console.WriteLine(System.Environment.NewLine+message));
-                Telegraph.Instance.Register<int>(threadPoolOpID, count => Console.Write(count+","));
+                Telegraph.Instance.Register<string>(threadPoolOpID, message => { Console.WriteLine(System.Environment.NewLine + message); strCount++; });
+                Telegraph.Instance.Register<SimpleMessage<int>>(threadPoolOpID, count => { Console.Write((int)count.Message + ","); ++msgCount; });
             }
             catch (FailedRegistrationException ex)
             {
@@ -494,16 +533,19 @@ namespace BasicStartHere
                 }
 
                 // this should be sequential since we are on one thread for ints
-                msgsToWaitOn.Add(Telegraph.Instance.Ask<int>(i));
+                msgsToWaitOn.Add(Telegraph.Instance.Ask(new SimpleMessage<int>(i)));
             }
 
             Task.WaitAll(msgsToWaitOn.ToArray());
 
             Console.WriteLine(System.Environment.NewLine + "MultipleOperatorsBasic finished");
+            System.Diagnostics.Debug.Assert(10 == strCount);
+            System.Diagnostics.Debug.Assert(100 == msgCount);
         }
 
         public static void BroadcastToAllOperators()
         {
+            int op1Count = 0, op2Count = 0;
             try
             {
                 LocalOperator op1 = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneThreadAllActors));
@@ -514,8 +556,8 @@ namespace BasicStartHere
                 long op2ID = Telegraph.Instance.Register(op2); //NOTE: this sets the operator ID (op2.ID)
 
                 // register a string for two different operators
-                Telegraph.Instance.Register<string>(op1ID, message => Console.WriteLine("1." + message));
-                Telegraph.Instance.Register<string>(op2ID, message => Console.WriteLine("2." + message));
+                Telegraph.Instance.Register<string>(op1ID, message => { Console.WriteLine("1." + message); ++op1Count; });
+                Telegraph.Instance.Register<string>(op2ID, message => { Console.WriteLine("2." + message); ++op2Count; });
             }
             catch (FailedRegistrationException ex)
             {
@@ -535,15 +577,19 @@ namespace BasicStartHere
             Telegraph.Instance.WaitTillEmpty(new TimeSpan(0,1,0));
 
             Console.WriteLine(System.Environment.NewLine + "MultipleOperatorsBasic finished");
+            System.Diagnostics.Debug.Assert(10 == op1Count);
+            System.Diagnostics.Debug.Assert(10 == op2Count);
         }
 
         public static void ThrottlingIncomingMessages()
         {
+            int msgCount = 0;
             AsyncSemaphore messageThrottle = new AsyncSemaphore(2, 2); // allow 2 at a time so we dont bombard the thread pool
 
             Telegraph.Instance.MainOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool)); // performs a reset.
 
             Telegraph.Instance.Register<string>(message => {
+                msgCount++;
                 Console.WriteLine("ThrottlingIncomingMessages: " + message);
                 System.Threading.Thread.Sleep(100);
             });
@@ -558,6 +604,8 @@ namespace BasicStartHere
 
             while (0 != messageThrottle.CurrentCount)
                 System.Threading.Thread.Sleep(1000);
+
+            System.Diagnostics.Debug.Assert(msgCount == 100);
         }
     }
 }

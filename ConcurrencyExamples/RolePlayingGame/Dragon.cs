@@ -23,7 +23,7 @@ namespace RolePlayingGame
         public DragonState DragonState { get; set; }
 
         public bool OnMessageRecieved<T>(T msg) 
-            where T : IActorMessage
+            where T : class, IActorMessage
         {
             if (this.DragonState == RolePlayingGame.DragonState.Dead)
                 return true;

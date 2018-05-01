@@ -38,13 +38,13 @@ namespace Telegraphy.Net
         }
 
         #region IActor
-        public virtual bool OnMessageRecieved<T>(T msg) where T : IActorMessage
+        public virtual bool OnMessageRecieved<T>(T msg) where T : class, IActorMessage
         {
             this.Operator.AddMessage(msg);
             return true;
         }
 
-        public virtual void Register<T>(Action<T> action)
+        public virtual void Register<T>(Action<T> action) where T: class
         {
             var handlesType = typeof(T);
             bool decorateActorWithMailbox = LocalConcurrencyType.OneThreadPerActor == this.LocalConcurrencyType;
@@ -214,7 +214,7 @@ namespace Telegraphy.Net
             {
                 try
                 {
-                    t.Value.Invoke(decorateActorWithMailbox).OnMessageRecieved(new HangUp());
+                    t.Value.Invoke(decorateActorWithMailbox).OnMessageRecieved(new ControlMessages.HangUp());
                 }
                 catch (Exception)
                 {
@@ -246,7 +246,7 @@ namespace Telegraphy.Net
                         msg.Status.TrySetResult(msg);
                 }
             }
-
+            
             return true;
         }
 
@@ -267,18 +267,20 @@ namespace Telegraphy.Net
                 if (null == msg)
                     continue;
 
-                if (typeof(HangUp) == msg.GetType())
+                if (typeof(ControlMessages.HangUp) == msg.GetType())
                 {
-
                     if (null != msg.Status && !msg.Status.Task.IsCompleted)
                         msg.Status.SetResult(msg);
+                    //this.Disable();
                     return;
                 }
 
                 Interlocked.Increment(ref tellingCount);
 
                 if (useThreadPool)
+                {
                     System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ProcessIActorMessageOnThreadPoolFcn), msg);
+                }
                 else
                 {
                     IActor actor = null;

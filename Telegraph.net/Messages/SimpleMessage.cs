@@ -7,13 +7,27 @@ using System.Threading.Tasks;
 namespace Telegraphy.Net
 {
     using System.Runtime.Serialization;
-
+    
     public class SimpleMessage<T> : IActorMessage
     {
         public SimpleMessage()
         {
             this.thisType = typeof(T);
             this.Status = null;
+        }
+
+        protected SimpleMessage(SerializationInfo info, StreamingContext context, Type messageType)
+        {
+            if (info == null)
+                throw new ArgumentNullException("info");
+
+            this.Message = info.GetValue("msg", messageType);
+            this.ThisType = messageType;
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("msg", this.Message, this.Message.GetType());
         }
 
         public SimpleMessage(T message)

@@ -9,7 +9,7 @@ namespace Telegraphy.Net
     using System.Collections.Concurrent;
     using System.Threading;
 
-    public abstract class ActorInvocationBase : IActor, IActorInvocation
+    internal abstract class ActorInvocationBase : IActor, IActorInvocation
     {
         protected bool withMailbox = false;
         private Semaphore _dataExists = new Semaphore(0, int.MaxValue);
@@ -29,13 +29,13 @@ namespace Telegraphy.Net
 
         public Type InvokesType { get; set; }
 
-        public bool OnMessageRecieved<T>(T msg) where T : IActorMessage
+        public bool OnMessageRecieved<T>(T msg) where T : class, IActorMessage
         {
             actorMailbox.Enqueue(msg);
             return true;
         }
 
-        public void Register<T>(Action<T> action)
+        public void Register<T>(Action<T> action) where T : class
         {
             Telegraph.Instance.Register<T>(action);
         }

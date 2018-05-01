@@ -14,7 +14,7 @@ namespace Telegraphy.Net
     {
         internal static readonly uint MinSizeOfSerializedMessage = 2+16+4+4+4+4;//minimum size without message or result
 
-        public virtual bool OnMessageRecieved<T>(T msg) where T : IActorMessage
+        public virtual bool OnMessageRecieved<T>(T msg) where T : class, IActorMessage
         {
             if (null == msg.Message)
                 throw new NullReferenceException("Could not serialize " + msg.GetType() + " because the message was null.");
@@ -24,9 +24,13 @@ namespace Telegraphy.Net
             {
                 toSerialize = (msg as AnonAskMessage<SerializeMessage>).OriginalMessage.MessageToSerialize;
             }
-            else
+            else if (msg is SerializeMessage)
             {
                 toSerialize = (msg as SerializeMessage).MessageToSerialize;
+            }
+            else
+            {
+                toSerialize = new SerializeMessage(msg).MessageToSerialize;
             }
 
 
@@ -70,10 +74,8 @@ namespace Telegraphy.Net
                 {
                     resultInBytes = new byte[0];
                 }
-
             }
-
-
+            
             return Serialize(msg, toSerialize, version, messageInBytes, resultInBytes);
         }
 
@@ -97,7 +99,7 @@ namespace Telegraphy.Net
             uint sizeOfType = 0;
             IFormatter formatter = new BinaryFormatter();
             MemoryStream typeMs = new MemoryStream();
-            formatter.Serialize(typeMs, msg.GetType());
+            formatter.Serialize(typeMs, toSerialize.GetType());
             typeBytes = typeMs.GetBuffer();
             typeMs = null;
             sizeOfType = (uint)typeBytes.Length;

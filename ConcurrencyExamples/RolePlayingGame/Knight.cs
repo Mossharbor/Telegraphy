@@ -21,7 +21,7 @@ namespace RolePlayingGame
         public PlayerState PlayerState { get; set; }
 
         public bool OnMessageRecieved<T>(T msg) 
-            where T : IActorMessage
+            where T : class, IActorMessage
         {
             if (this.PlayerState == RolePlayingGame.PlayerState.Dead)
                 return true;

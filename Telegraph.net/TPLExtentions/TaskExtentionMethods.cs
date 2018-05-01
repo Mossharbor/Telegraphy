@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Telegraph.Net.TPLExtentions
+namespace Telegraphy.Net.TPLExtentions
 {
     using System.Threading;
     using Telegraphy.Net.TPLExtentions;

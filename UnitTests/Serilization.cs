@@ -34,8 +34,15 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void MessageSerialization()
+        public void SimpleMessageSerialization()
         {
+            SimpleMessageSerializationReturn();
+        }
+
+        public byte[] SimpleMessageSerializationReturn()
+        {
+            Telegraph.Instance.UnRegisterAll();
+
             Telegraph.Instance.MainOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool)); // performs a reset.
             MessageSerializationActor serializer = new MessageSerializationActor();
             SimpleMessage<string> msgToSerialize = new SimpleMessage<string>();
@@ -50,21 +57,44 @@ namespace UnitTests
 
             byte[] serializedBytes = (msgToSerialize.Status.Task.Result.ProcessingResult as byte[]);
 
-            SerializeMessage msgToSerialize2 = new SerializeMessage(msgToSerialize);
+            return serializedBytes;
+
+        }
+
+        [TestMethod]
+        public void SerializeSerializeMessage()
+        {
+            SerializeSerializeMessageReturn();
+        }
+
+        public byte[] SerializeSerializeMessageReturn()
+        {
+            Telegraph.Instance.UnRegisterAll();
+
+            Telegraph.Instance.MainOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool)); // performs a reset.
+            MessageSerializationActor serializer = new MessageSerializationActor();
+            SimpleMessage<string> msgToSerialize = new SimpleMessage<string>();
+            msgToSerialize.Message = "Foo";
+
+            SerializeMessage serializeMessage = new SerializeMessage(msgToSerialize);
             msgToSerialize.ProcessingResult = null;
 
             Telegraph.Instance.Register<SerializeMessage, MessageSerializationActor>(() => new MessageSerializationActor());
 
-            var task = Telegraph.Instance.Ask(msgToSerialize2);
+            var task = Telegraph.Instance.Ask(serializeMessage);
 
             task.Wait();
 
             byte[] serializedBytes2 = (task.Result.ProcessingResult as byte[]);
+
+            return serializedBytes2;
         }
 
         [TestMethod]
-        public void MessageDeSerialization()
+        public void SimpleMessageDeSerialization()
         {
+            Telegraph.Instance.UnRegisterAll();
+
             Telegraph.Instance.MainOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool)); // performs a reset.
             MessageSerializationActor serializer = new MessageSerializationActor();
             MessageDeserializationActor deserializer = new MessageDeserializationActor();
@@ -97,6 +127,38 @@ namespace UnitTests
             task.Wait();
 
             string output = (task.Result.Message as string);
+        }
+
+        [TestMethod]
+        public void DeSerializeInDeserializeClass()
+        {
+            byte[] serializedBytes = SimpleMessageSerializationReturn();
+            MessageDeserializationActor deserializer = new MessageDeserializationActor();
+            DeSerializeMessage deserializationMessage = new DeSerializeMessage(serializedBytes);
+
+            if (!deserializer.OnMessageRecieved(deserializationMessage))
+                Assert.Fail("De-serialization Failed.");
+
+            Assert.IsTrue(deserializationMessage.Message.Equals("Foo"));
+        }
+
+        [TestMethod]
+        public void DeSerializeDeSerializeMessage()
+        {
+            byte[] serializedBytes = SimpleMessageSerializationReturn();
+            MessageDeserializationActor deserializer = new MessageDeserializationActor();
+            DeSerializeMessage deserializationMessage = new DeSerializeMessage(serializedBytes);
+            Telegraph.Instance.Register<DeSerializeMessage, MessageDeserializationActor>(() => new MessageDeserializationActor());
+
+            DeSerializeMessage msgToSerialize2 = new DeSerializeMessage(serializedBytes);
+
+            var task = Telegraph.Instance.Ask(msgToSerialize2);
+
+            task.Wait();
+
+            string output = (task.Result.Message as string);
+            Assert.IsTrue(output.Equals("Foo"));
+
         }
     }
 }

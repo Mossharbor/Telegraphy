@@ -48,7 +48,7 @@ namespace BasicToleranceToFailure
                 Telegraph.Instance.Tell(msg);
             }
 
-            Telegraph.Instance.Ask(new HangUp()).Wait();
+            Telegraph.Instance.Ask(new ControlMessages.HangUp()).Wait();
         }
 
         static void RetryMessage()
@@ -181,7 +181,7 @@ namespace BasicToleranceToFailure
             // NOTE only one task should have completed the one that was started before we called canceled.
             Console.WriteLine("MessageCancelled Task Completed in " + (DateTime.Now - start).TotalSeconds.ToString("00") + " seconds.");
 
-            Telegraph.Instance.Ask(new HangUp()).Wait();
+            Telegraph.Instance.Ask(new ControlMessages.HangUp()).Wait();
         }
 
         static void KillGroupOfMessagesOnFailure()
@@ -236,7 +236,7 @@ namespace BasicToleranceToFailure
             // NOTE only one task should have completed the one that was started before we called canceled.
             Console.WriteLine("MessageCancelled Task Completed in " + (DateTime.Now - start).TotalSeconds.ToString("00") + " seconds.");
 
-            Telegraph.Instance.Ask(new HangUp()).Wait();
+            Telegraph.Instance.Ask(new ControlMessages.HangUp()).Wait();
         }
 
         static IActor HandleExceptionByCancelingTask(Exception ex, IActor actor, IActorMessage msg, IActorInvocation invoker)
