@@ -40,6 +40,8 @@
     <Compile Include="Actors\ActorMessageInvocation.cs" />
     <Compile Include="Actors\MessageDeserializationActor.cs" />
     <Compile Include="Actors\MessageSerializationActor.cs" />
+    <Compile Include="Exceptions\CannotSerializeArrayValueTypeWhenNonArraySpecified.cs" />
+    <Compile Include="Exceptions\CannotSerializeNonArrayValueTypeWhenArraySpecified.cs" />
     <Compile Include="Exceptions\CantDeserlializeAnythingButADeSerializeMessage.cs" />
     <Compile Include="Exceptions\CantDeserlializeMessageBytesSmallerThanMinSize.cs" />
     <Compile Include="Exceptions\CantDeserlializeUnknownVersion.cs" />

@@ -43,7 +43,7 @@ namespace BasicToleranceToFailure
 
             for (int i = 0; i < 10; ++i)
             {
-                IActorMessage msg = new SimpleMessage<byte[]>(Encoding.ASCII.GetBytes(messageStr + i.ToString()));
+                IActorMessage msg = new ValueTypeMessage<byte>(Encoding.ASCII.GetBytes(messageStr + i.ToString()));
 
                 Telegraph.Instance.Tell(msg);
             }

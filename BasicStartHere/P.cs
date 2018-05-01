@@ -83,12 +83,12 @@ namespace BasicStartHere
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Error.WriteLine(ex.GetType().ToString() + ":" + ex.Message);
                 Console.ResetColor();
-                return;
+                throw;
             }
 
             for (int i = 0; i < 10; ++i)
             {
-                IActorMessage msg = new SimpleMessage<byte[]>(Encoding.ASCII.GetBytes(messageStr + i.ToString()));
+                IActorMessage msg = new ValueTypeMessage<byte>(Encoding.ASCII.GetBytes(messageStr + i.ToString()));
 
                 Telegraph.Instance.Tell(msg);
             }
@@ -117,7 +117,7 @@ namespace BasicStartHere
             catch (FailedRegistrationException ex)
             {
                 Console.Error.WriteLine(ex.GetType().ToString()+":"+ex.Message);
-                return;
+                throw;
             }
 
             Task task = Telegraph.Instance.Ask(new ControlMessages.HangUp());
@@ -523,7 +523,7 @@ namespace BasicStartHere
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Error.WriteLine(ex.GetType().ToString() + ":" + ex.Message);
                 Console.ResetColor();
-                return;
+                throw;
             }
 
             List<Task<IActorMessage>> msgsToWaitOn = new List<Task<IActorMessage>>();
@@ -568,7 +568,7 @@ namespace BasicStartHere
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Error.WriteLine(ex.GetType().ToString() + ":" + ex.Message);
                 Console.ResetColor();
-                return;
+                throw;
             }
 
             for (int i = 0; i < 10; ++i)

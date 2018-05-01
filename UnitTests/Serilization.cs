@@ -189,24 +189,39 @@ namespace UnitTests
 
             DateTime start = DateTime.Now;
             DateTime utcStart = start.ToUniversalTime();
+            TestValTypeArray<int>(serialization, deserialization, new int[] { 4, 3 });
             TestValType<int>(serialization, deserialization, 4);
             TestValType<double>(serialization, deserialization, 4.2);
+            TestValTypeArray<double>(serialization, deserialization, new double[] { 4, 3 });
             TestValType<float>(serialization, deserialization, 4.1F);
+            TestValTypeArray<float>(serialization, deserialization, new float[] { 4, 3 });
             TestValType<byte>(serialization, deserialization, 8);
+            TestValTypeArray<byte>(serialization, deserialization, new byte[] { 4, 3 });
             TestValType<sbyte>(serialization, deserialization, 2);
+            TestValTypeArray<sbyte>(serialization, deserialization, new sbyte[] { 4, 3 });
             TestValType<short>(serialization, deserialization, 30);
+            TestValTypeArray<short>(serialization, deserialization, new short[] { 4, 3 });
             TestValType<ushort>(serialization, deserialization, 200);
+            TestValTypeArray<ushort>(serialization, deserialization, new ushort[] { 4, 3 });
             TestValType<uint>(serialization, deserialization, uint.MaxValue);
+            TestValTypeArray<uint>(serialization, deserialization, new uint[] { 4, 3 });
             TestValType<long>(serialization, deserialization, long.MinValue);
+            TestValTypeArray<long>(serialization, deserialization, new long[] { 4, 3 });
             TestValType<ulong>(serialization, deserialization, ulong.MaxValue);
+            TestValTypeArray<ulong>(serialization, deserialization, new ulong[] { 4, 3 });
             TestValType<ulong>(serialization, deserialization, ulong.MinValue);
+            TestValTypeArray<ulong>(serialization, deserialization, new ulong[] { 4, 3 });
             TestValType<bool>(serialization, deserialization, true);
+            TestValTypeArray<bool>(serialization, deserialization, new bool[] { true, false });
             TestValType<bool>(serialization, deserialization, false);
             TestValType<decimal>(serialization, deserialization, (decimal)5.67);
+            TestValTypeArray<decimal>(serialization, deserialization, new decimal[] { 4, 3 });
             TestValType<char>(serialization, deserialization, 'a');
+            TestValTypeArray<char>(serialization, deserialization, new char[] { 'a', 'c' });
             TestValType<DateTime>(serialization, deserialization, DateTime.Now);
             TestValType<TimeSpan>(serialization, deserialization, DateTime.Now - start);
             TestValType<Guid>(serialization, deserialization, Guid.NewGuid());
+            TestValTypeArray<Guid>(serialization, deserialization, new Guid[] { Guid.NewGuid(), Guid.NewGuid() });
             TestValType<DateTimeOffset>(serialization, deserialization,new DateTimeOffset(start));
             var myDt = DateTime.SpecifyKind(new DateTime(1,1,1), DateTimeKind.Unspecified);
             TestValType<TimeZoneInfo.TransitionTime>(serialization, deserialization, TimeZoneInfo.TransitionTime.CreateFixedDateRule(myDt, 10,11));
@@ -227,6 +242,30 @@ namespace UnitTests
                 Assert.Fail(string.Format("DeSeriaization of {0} Failed", val.GetType().Name));
 
             Assert.IsTrue((dMsg.ProcessingResult as ValueTypeMessage<T>).Message.Equals(typeVal));
+            Assert.IsTrue((dMsg.ProcessingResult as IActorMessageIdentifier).Id.Equals(id));
+        }
+
+        private static void TestValTypeArray<T>(MessageSerializationActor serialization, MessageDeserializationActor deserialization, T[] val) where T : IEquatable<T>
+        {
+            ValueTypeMessage<T> intType = new ValueTypeMessage<T>(val);
+            var typeVal = (T[])intType.Message;
+            string id = intType.Id;
+
+            SerializeMessage sMsg = new SerializeMessage(intType);
+            if (!serialization.OnMessageRecieved(sMsg))
+                Assert.Fail(string.Format("Seriaization of array {0} Failed", val.GetType().Name));
+
+            DeSerializeMessage dMsg = new DeSerializeMessage(sMsg.ProcessingResult as byte[]);
+            if (!deserialization.OnMessageRecieved(dMsg))
+                Assert.Fail(string.Format("DeSeriaization of array {0} Failed", val.GetType().Name));
+
+            T[] message = (T[])(dMsg.ProcessingResult as ValueTypeMessage<T>).Message;
+
+            for(int i=0; i < message.Length; ++i)
+            {
+                Assert.IsTrue(message[i].Equals(typeVal[i]));
+            }
+            Assert.IsTrue(message.Length != 0);
             Assert.IsTrue((dMsg.ProcessingResult as IActorMessageIdentifier).Id.Equals(id));
         }
     }
