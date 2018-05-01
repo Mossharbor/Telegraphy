@@ -82,6 +82,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Messages\IServiceBusPropertiesProvider.cs" />
     <Compile Include="Operators\ServiceBusOperator.cs" />
     <Compile Include="Operators\StorageQueueOperator.cs" />
     <Compile Include="Exceptions\CannotRegisterActionWithOperatorSinceWeAreSendingToAzureQueueOnly.cs" />
