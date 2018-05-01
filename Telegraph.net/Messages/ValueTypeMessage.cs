@@ -56,6 +56,12 @@ namespace Telegraphy.Net
                     messageType = typeof(DateTime); break;
                 case "timespan":
                     messageType = typeof(TimeSpan); break;
+                case "guid":
+                    messageType = typeof(Guid); break;
+                case "datetimeoffset":
+                    messageType = typeof(DateTimeOffset); break;
+                case "transitiontime":
+                    messageType = typeof(TimeZoneInfo.TransitionTime); break;
                 default:
                     throw new DontKnowHowToSerializeTypeException(msgTypeString);
             }

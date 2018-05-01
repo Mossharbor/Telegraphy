@@ -182,8 +182,13 @@ namespace UnitTests
             deserialization.Register((object msg) => (ValueTypeMessage<char>)msg);
             deserialization.Register((object msg) => (ValueTypeMessage<DateTime>)msg);
             deserialization.Register((object msg) => (ValueTypeMessage<TimeSpan>)msg);
+            deserialization.Register((object msg) => (ValueTypeMessage<Guid>)msg);
+            deserialization.Register((object msg) => (ValueTypeMessage<DateTimeOffset>)msg);
+            //deserialization.Register((object msg) => (ValueTypeMessage<ArraySegment<byte>>)msg);
+            deserialization.Register((object msg) => (ValueTypeMessage<TimeZoneInfo.TransitionTime>)msg);
 
             DateTime start = DateTime.Now;
+            DateTime utcStart = start.ToUniversalTime();
             TestValType<int>(serialization, deserialization, 4);
             TestValType<double>(serialization, deserialization, 4.2);
             TestValType<float>(serialization, deserialization, 4.1F);
@@ -201,6 +206,10 @@ namespace UnitTests
             TestValType<char>(serialization, deserialization, 'a');
             TestValType<DateTime>(serialization, deserialization, DateTime.Now);
             TestValType<TimeSpan>(serialization, deserialization, DateTime.Now - start);
+            TestValType<Guid>(serialization, deserialization, Guid.NewGuid());
+            TestValType<DateTimeOffset>(serialization, deserialization,new DateTimeOffset(start));
+            var myDt = DateTime.SpecifyKind(new DateTime(1,1,1), DateTimeKind.Unspecified);
+            TestValType<TimeZoneInfo.TransitionTime>(serialization, deserialization, TimeZoneInfo.TransitionTime.CreateFixedDateRule(myDt, 10,11));
         }
 
         private static void TestValType<T>(MessageSerializationActor serialization, MessageDeserializationActor deserialization, T val) where T : IEquatable<T>
