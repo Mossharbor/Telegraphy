@@ -385,34 +385,14 @@ namespace Telegraphy.Net
         {
             try
             {
+                Exception foundEx = null;
                 Func<Exception, IActor, IActorMessage, IActorInvocation, IActor> handler;
 
-                Exception foundEx = ex;
-                bool found = false;
-                do
-                {
-                    if (_exceptionTypeToHandler.TryGetValue(foundEx.GetType(), out handler))
-                    {
-                        found = true;
-                        break;
-                    }
-                    foundEx = ex.InnerException;
-                } while (null != ex.InnerException);
-
-                if (!found)
-                    foundEx = ex;
-
-                //Try the default exception handler
-                if (!found && !_exceptionTypeToHandler.TryGetValue(typeof(Exception), out handler))
-                {
-                    if (null != msg.Status)
-                        msg.Status.SetException(ex);
-
+                handler = this.FindExceptionHandler(_exceptionTypeToHandler, ex, actor, msg, out foundEx);
+                if (null == handler)
                     return;
-                }
 
                 IActorInvocation invoker = null;
-                System.Diagnostics.Debug.Assert(null != handler);
                 IActor newActor = handler.Invoke(foundEx, actor, msg, invoker);
 
                 if (null == newActor)
@@ -422,11 +402,13 @@ namespace Telegraphy.Net
             }
             catch (NotImplementedException)
             {
-                // todo rethrow?
+                System.Diagnostics.Debug.Assert(false);
+                throw;
             }
             catch (Exception)
             {
                 //TODO fail hard!!!
+                System.Diagnostics.Debug.Assert(false);
             }
         }
     }

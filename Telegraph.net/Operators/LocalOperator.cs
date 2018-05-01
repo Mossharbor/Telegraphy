@@ -11,6 +11,7 @@ namespace Telegraphy.Net
 
     public class LocalOperator : IOperator
     {
+        private ConcurrentDictionary<Type, Action<Exception>> _exceptionTypeToHandler = new ConcurrentDictionary<Type, Action<Exception>>();
         private Semaphore _dataExists = new Semaphore(0, int.MaxValue);
         ConcurrentQueue<IActorMessage> actorMessages = new ConcurrentQueue<IActorMessage>();
 
@@ -106,6 +107,12 @@ namespace Telegraphy.Net
                 _switchboard = value;
                 _switchboard.Operator = this;
             }
+        }
+
+        public void Register(Type exceptionType, Action<Exception> handler)
+        {
+            while (!_exceptionTypeToHandler.TryAdd(exceptionType, handler))
+                _exceptionTypeToHandler.TryAdd(exceptionType, handler);
         }
 
         public void Register(Type exceptionType, Func<Exception, IActor, IActorMessage, IActorInvocation, IActor> handler)

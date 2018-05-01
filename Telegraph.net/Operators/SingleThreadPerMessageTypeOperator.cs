@@ -11,6 +11,7 @@ namespace Telegraphy.Net
 
     public class SingleThreadPerMessageTypeOperator : IOperator
     {
+        ConcurrentDictionary<Type, Action<Exception>> _exceptionTypeToHandler = new ConcurrentDictionary<Type, Action<Exception>>();
         ConcurrentDictionary<Type, LocalOperator> messageQueues = new ConcurrentDictionary<Type, LocalOperator>();
 
         Func<ILocalSwitchboard> createSwitchBoard = null;
@@ -82,6 +83,12 @@ namespace Telegraphy.Net
                 key.WaitTillEmpty(new TimeSpan(0,0,0,0,millisecondsToWaitPerSubOperator));
 
             return true;
+        }
+
+        public void Register(Type exceptionType, Action<Exception> handler)
+        {
+            while (!_exceptionTypeToHandler.TryAdd(exceptionType, handler))
+                _exceptionTypeToHandler.TryAdd(exceptionType, handler);
         }
 
         public void Register(Type exceptionType, Func<Exception, IActor, IActorMessage, IActorInvocation, IActor> handler)

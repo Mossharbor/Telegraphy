@@ -76,7 +76,7 @@ namespace BasicStartHere
             try
             {
                 Telegraph.Instance.MainOperator = new LocalOperator(); // performs a reset when we assign a new operator
-                Telegraph.Instance.Register<byte[], LazyInstantiationActor>(() => new LazyInstantiationActor());
+                Telegraph.Instance.Register<ValueTypeMessage<byte>, LazyInstantiationActor>(() => new LazyInstantiationActor());
             }
             catch (FailedRegistrationException ex)
             {

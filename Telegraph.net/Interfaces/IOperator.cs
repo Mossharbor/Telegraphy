@@ -27,6 +27,8 @@ namespace Telegraphy.Net
             //where T : IActorMessage
             where K : IActor;
 
+        void Register(Type exceptionType, Action<Exception> handler);
+
         void Register(Type exceptionType, Func<Exception, IActor, IActorMessage, IActorInvocation, IActor> handler);
 
     }

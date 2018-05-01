@@ -7,11 +7,13 @@ using Telegraphy.Net;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Microsoft.WindowsAzure.Storage;
 using Telegraphy.Azure.Exceptions;
+using System.Collections.Concurrent;
 
 namespace Telegraphy.Azure
 {
     public abstract class StorageQueueOperator : IOperator
     {
+        ConcurrentDictionary<Type, Action<Exception>> _exceptionTypeToHandler = new ConcurrentDictionary<Type, Action<Exception>>();
         CloudQueue queue = null;
         //MessageSerializationActor serializer = new MessageSerializationActor();
         //MessageDeserializationActor deserializer = new MessageDeserializationActor();
@@ -110,26 +112,36 @@ namespace Telegraphy.Azure
 
             // TODO allow the serializers to be passed in as IActors
             // Serialize the message first
-
-            var serializeTask = Telegraph.Instance.Ask(new SerializeMessage(msg));
-            byte[] msgBytes = (serializeTask.Result.ProcessingResult as byte[]);
-            //IActorMessage msg = t.Result as IActorMessage;
-            //byte[] msgBytes = (serializer.Ask(new SerializeMessage(msg)).Result.ProcessingResult as byte[]);
-
-            // Add the message to the azure queue
-            CloudQueueMessage cloudMessage = new CloudQueueMessage(msgBytes);
-            if (!(msg is IStorageQueuePropertiesProvider))
+            try
             {
-                this.queue.AddMessage(cloudMessage);
-            }
-            else
-            {
-                IStorageQueuePropertiesProvider props = (msg as IStorageQueuePropertiesProvider);
-                this.queue.AddMessage(cloudMessage, props.TimeToLive, props.InitialVisibilityDelay, props.Options, props.OperationContext);
-            }
+                var serializeTask = Telegraph.Instance.Ask(new SerializeMessage(msg));
+                byte[] msgBytes = (serializeTask.Result.ProcessingResult as byte[]);
+                //IActorMessage msg = t.Result as IActorMessage;
+                //byte[] msgBytes = (serializer.Ask(new SerializeMessage(msg)).Result.ProcessingResult as byte[]);
 
-            if (null != msg.Status)
-                msg.Status?.SetResult(new QueuedCloudMessage(cloudMessage));
+                // Add the message to the azure queue
+                CloudQueueMessage cloudMessage = new CloudQueueMessage(msgBytes);
+                if (!(msg is IStorageQueuePropertiesProvider))
+                {
+                    this.queue.AddMessage(cloudMessage);
+                }
+                else
+                {
+                    IStorageQueuePropertiesProvider props = (msg as IStorageQueuePropertiesProvider);
+                    this.queue.AddMessage(cloudMessage, props.TimeToLive, props.InitialVisibilityDelay, props.Options, props.OperationContext);
+                }
+
+                if (null != msg.Status)
+                    msg.Status?.SetResult(new QueuedCloudMessage(cloudMessage));
+            }
+            catch(Exception ex)
+            {
+                Exception foundEx = null;
+                var handler = this.FindExceptionHandler(_exceptionTypeToHandler, ex, out foundEx);
+
+                if (null != handler)
+                    handler.Invoke(foundEx);
+            }
         }
 
         public IActorMessage GetMessage()
@@ -140,20 +152,32 @@ namespace Telegraphy.Azure
             if (null != hangUp)
                 return hangUp;
 
-            // Get the next message off of the azure queue
-            CloudQueueMessage next = this.queue.GetMessage(this.retrieveVisibilityTimeout, retrievalRequestOptions, retrievalOperationContext);
-            
-            if (null == next)
+            try
+            {
+                // Get the next message off of the azure queue
+                CloudQueueMessage next = this.queue.GetMessage(this.retrieveVisibilityTimeout, retrievalRequestOptions, retrievalOperationContext);
+
+                if (null == next)
+                    return null;
+                byte[] msgBytes = next.AsBytes;
+                var t = Telegraph.Instance.Ask(new DeSerializeMessage(msgBytes));
+                IActorMessage msg = t.Result as IActorMessage;
+
+                if (null == msg.Status)
+                    msg.Status = new TaskCompletionSource<IActorMessage>();
+
+                msg.Status.Task.ContinueWith(p => queue.DeleteMessage(next));
+                return msg;
+            }
+            catch(Exception ex)
+            {
+                Exception foundEx = null;
+                var handler = this.FindExceptionHandler(_exceptionTypeToHandler, ex, out foundEx);
+
+                if (null != handler)
+                    handler.Invoke(foundEx);
                 return null;
-            byte[] msgBytes = next.AsBytes; 
-            var t = Telegraph.Instance.Ask(new DeSerializeMessage(msgBytes));
-            IActorMessage msg = t.Result as IActorMessage;
-
-            if (null == msg.Status)
-                msg.Status = new TaskCompletionSource<IActorMessage>();
-
-            msg.Status.Task.ContinueWith(p => queue.DeleteMessage(next));
-            return msg;
+            }
         }
         
         public bool WaitTillEmpty(TimeSpan timeout)
@@ -167,9 +191,7 @@ namespace Telegraphy.Azure
                 this.queue.FetchAttributes();
             }
 
-                if ((DateTime.Now - start) <= timeout)
-                return true;
-            return false;
+            return ((DateTime.Now - start) <= timeout);
         }
 
         public void Register<T>(Action<T> action) where T : class
@@ -190,9 +212,14 @@ namespace Telegraphy.Azure
             this.Switchboard.Register<T, K>(factory);
         }
 
+        public void Register(Type exceptionType, Action<Exception> handler)
+        {
+            while (!_exceptionTypeToHandler.TryAdd(exceptionType, handler))
+                _exceptionTypeToHandler.TryAdd(exceptionType, handler);
+        }
+
         public void Register(Type exceptionType, Func<Exception, IActor, IActorMessage, IActorInvocation, IActor> handler)
         {
-            throw new NotImplementedException();
             this.Switchboard.Register(exceptionType, handler);
         }
         #endregion

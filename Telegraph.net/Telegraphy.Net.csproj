@@ -62,6 +62,8 @@
     <Compile Include="Exceptions\NoOperatorRegisteredToSupportType.cs" />
     <Compile Include="Exceptions\UnsupportedDispatchImplementation.cs" />
     <Compile Include="ExtentionMethods\DotNetRefTypeExtentions.cs" />
+    <Compile Include="ExtentionMethods\IOperatorExtentionMethods.cs" />
+    <Compile Include="ExtentionMethods\ISwitchBoardExtentionMethods.cs" />
     <Compile Include="Interfaces\IActorInvocation.cs" />
     <Compile Include="Actors\MailBoxActor.cs" />
     <Compile Include="Exceptions\NoActorForMessageType.cs" />
