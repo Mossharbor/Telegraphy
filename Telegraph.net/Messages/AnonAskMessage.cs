@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Telegraphy.Net
 {
-    internal class AnonAskMessage<T> : SimpleMessage<T>, IActorMessage, IWrappedMessage
+    internal class AnonAskMessage<T> : SimpleMessage<T>, IActorMessage, IWrappedMessage where T : class
     {
         public AnonAskMessage(T wrappedMessage, TaskCompletionSource<IActorMessage> task):base(wrappedMessage)
         {

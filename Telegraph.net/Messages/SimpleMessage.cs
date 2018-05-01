@@ -8,7 +8,7 @@ namespace Telegraphy.Net
 {
     using System.Runtime.Serialization;
     
-    public class SimpleMessage<T> : IActorMessage
+    public class SimpleMessage<T> : IActorMessage  where T : class
     {
         public SimpleMessage()
         {

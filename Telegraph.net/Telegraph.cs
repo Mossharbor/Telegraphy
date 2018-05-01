@@ -189,7 +189,7 @@ namespace Telegraphy.Net
             return op.OnMessageRecieved<T>(msg);
         }
 
-        public bool Broadcast<T>(T message)
+        public bool Broadcast<T>(T message) where T : class
         {
             IActorMessage msg = null;
             var handlesType = typeof(T);

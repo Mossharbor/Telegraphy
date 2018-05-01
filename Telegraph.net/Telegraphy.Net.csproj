@@ -58,10 +58,11 @@
     <Compile Include="Exceptions\NoOperatorFoundForID.cs" />
     <Compile Include="Exceptions\NoOperatorRegisteredToSupportType.cs" />
     <Compile Include="Exceptions\UnsupportedDispatchImplementation.cs" />
+    <Compile Include="ExtentionMethods\DotNetRefTypeExtentions.cs" />
     <Compile Include="Interfaces\IActorInvocation.cs" />
     <Compile Include="Actors\MailBoxActor.cs" />
     <Compile Include="Exceptions\NoActorForMessageType.cs" />
-    <Compile Include="IActorExtentionMethods.cs" />
+    <Compile Include="ExtentionMethods\IActorExtentionMethods.cs" />
     <Compile Include="Actors\ActorInvocation.cs" />
     <Compile Include="Actors\AnonActor.cs" />
     <Compile Include="Actors\DefaultActor.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Messages\AnonAskMessage.cs" />
     <Compile Include="Messages\ControlMessages.cs" />
     <Compile Include="Messages\DeSerializeMessage.cs" />
+    <Compile Include="Messages\ValueTypeMessage.cs" />
     <Compile Include="Messages\SerializeMessage.cs" />
     <Compile Include="Messages\SimpleMessage.cs" />
     <Compile Include="Operators\LocalOperator.cs" />

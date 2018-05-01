@@ -181,6 +181,7 @@ namespace BasicStartHere
                 Telegraph.Instance.Tell("Worker was executed." + i.ToString());
             }
 
+            System.Threading.Thread.Sleep(1000);
             Telegraph.Instance.MainOperator.WaitTillEmpty(new TimeSpan(1, 0, 0));
             System.Diagnostics.Debug.Assert(10 == msgCount);
         }
@@ -331,7 +332,7 @@ namespace BasicStartHere
             }
 
             Console.WriteLine("MessageCancelled Task Completed in " + (DateTime.Now - start).TotalSeconds.ToString("00") + " seconds.");
-            System.Diagnostics.Debug.Assert(msgCount == 1);
+            System.Diagnostics.Debug.Assert(msgCount == 0);
         }
 
         public static void GetResultOfProcessing()
@@ -465,7 +466,7 @@ namespace BasicStartHere
 
             string output = (task.Result.Message as string);
 
-            System.Diagnostics.Debug.Assert(task.Result.GetType() == typeof(SerializeMessage));
+            System.Diagnostics.Debug.Assert(task.Result.GetType() == typeof(string));
 
             Console.WriteLine("Serialized and De-serialized " + output);
         }
@@ -474,8 +475,10 @@ namespace BasicStartHere
         {
             Telegraph.Instance.MainOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool)); // performs a reset.
 
+            MessageDeserializationActor deserialization = new MessageDeserializationActor();
             Telegraph.Instance.Register<SerializeMessage, MessageSerializationActor>(() => new MessageSerializationActor());
-            Telegraph.Instance.Register<DeSerializeMessage, MessageDeserializationActor>(() => new MessageDeserializationActor());
+            Telegraph.Instance.Register<DeSerializeMessage, MessageDeserializationActor>(() => deserialization);
+            deserialization.Register<CustomSerializableMessage>((object msg) => (CustomSerializableMessage)msg);
 
             CustomSerializableMessage originalMsg = new CustomSerializableMessage(100,"Foo");
             SerializeMessage serializeRqst = new SerializeMessage(originalMsg);
@@ -494,9 +497,10 @@ namespace BasicStartHere
 
             task.Wait();
 
-            CustomSerializableMessage output = (task.Result.Message as CustomSerializableMessage);
+            CustomSerializableMessage output = (task.Result as CustomSerializableMessage);
 
             Console.WriteLine("Serialized " + output.MyProperty.ToString());
+            System.Diagnostics.Debug.Assert(100 == output.MyProperty);
         }
 
         public static void MultipleOperatorsBasic()
@@ -512,7 +516,7 @@ namespace BasicStartHere
                 long singleThreadOperatorID = Telegraph.Instance.Register(singleThreadOperator); //NOTE: this sets the operator ID (singleThreadOperator.ID)
 
                 Telegraph.Instance.Register<string>(threadPoolOpID, message => { Console.WriteLine(System.Environment.NewLine + message); strCount++; });
-                Telegraph.Instance.Register<SimpleMessage<int>>(threadPoolOpID, count => { Console.Write((int)count.Message + ","); ++msgCount; });
+                Telegraph.Instance.Register<ValueTypeMessage<int>>(threadPoolOpID, count => { Console.Write((int)count.Message + ","); ++msgCount; });
             }
             catch (FailedRegistrationException ex)
             {
@@ -533,7 +537,7 @@ namespace BasicStartHere
                 }
 
                 // this should be sequential since we are on one thread for ints
-                msgsToWaitOn.Add(Telegraph.Instance.Ask(new SimpleMessage<int>(i)));
+                msgsToWaitOn.Add(Telegraph.Instance.Ask(i.ToActorMessage()));
             }
 
             Task.WaitAll(msgsToWaitOn.ToArray());
@@ -602,7 +606,7 @@ namespace BasicStartHere
                 });
             }
 
-            while (0 != messageThrottle.CurrentCount)
+            while (0 != messageThrottle.WaitingCount)
                 System.Threading.Thread.Sleep(1000);
 
             System.Diagnostics.Debug.Assert(msgCount == 100);

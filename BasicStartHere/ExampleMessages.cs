@@ -43,9 +43,8 @@ namespace BasicStartHere
         public CustomSerializableMessage(SerializationInfo info, StreamingContext context)
         {
             // Reset the property value using the GetValue method.
-            MyProperty = (int)info.GetValue("props", typeof(int));
-            var messageType = (Type)info.GetValue("message_type", typeof(Type));
-            Message = info.GetValue("message_props", messageType);
+            MyProperty = info.GetInt32("props");
+            Message = info.GetString("message_props");
         }
 
         public int MyProperty { get; set; }
@@ -61,9 +60,8 @@ namespace BasicStartHere
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             // Use the AddValue method to specify serialized values.
-            info.AddValue("props", MyProperty, typeof(int));
-            info.AddValue("message_type", Message.GetType());
-            info.AddValue("message_props", Message, Message.GetType());
+            info.AddValue("props", MyProperty);
+            info.AddValue("message_props", Message, typeof(string));
         }
     }
 }
