@@ -20,28 +20,26 @@ namespace Telegraphy.Azure
         private ConcurrentQueue<IActorMessage> msgQueue = new ConcurrentQueue<IActorMessage>();
         private ControlMessages.HangUp hangUp = null;
         private int maxDequeueCount;
+        private int maxConcurrentCalls = 1;
 
-        internal ServiceBusQueueOperator(ILocalSwitchboard switchBoard, ServiceBusQueue queue, int maxDequeueCount, bool createQueueIfItDoesNotExist)
-            : this(queue, true,createQueueIfItDoesNotExist)
+        internal ServiceBusQueueOperator(ILocalSwitchboard switchBoard, ServiceBusQueue queue, int maxDequeueCount)
+            : this(queue, true)
         {
             this.Switchboard = switchBoard;
             this.Switchboard.Operator = this;
             this.maxDequeueCount = maxDequeueCount;
         }
 
-        internal ServiceBusQueueOperator(ServiceBusQueue queue,bool createQueueIfItDoesNotExist) :this(queue, false, createQueueIfItDoesNotExist)
+        internal ServiceBusQueueOperator(ServiceBusQueue queue) :this(queue, false)
         {
 
         }
 
-        internal ServiceBusQueueOperator(ServiceBusQueue queue, bool recievingOnly, bool createQueueIfItDoesNotExist)
+        internal ServiceBusQueueOperator(ServiceBusQueue queue, bool recievingOnly)
         {
             this.queue = queue;
             this.recievingOnly = recievingOnly;
-
-            if (createQueueIfItDoesNotExist)
-                queue.CreateIfNotExists();
-
+            
             if (recievingOnly)
                 RegisterOnMessageHandlerAndReceiveMessages();
         }
@@ -53,7 +51,7 @@ namespace Telegraphy.Azure
             {
                 // Maximum number of Concurrent calls to the callback `ProcessMessagesAsync`, set to 1 for simplicity.
                 // Set it according to how many messages the application wants to process in parallel.
-                MaxConcurrentCalls = 1,
+                MaxConcurrentCalls = maxConcurrentCalls,
 
                 // Indicates whether MessagePump should automatically complete the messages after returning from User Callback.
                 // False below indicates the Complete will be handled by the User Callback as in `ProcessMessagesAsync` below.

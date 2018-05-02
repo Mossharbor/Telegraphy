@@ -14,7 +14,7 @@ namespace Telegraphy.Azure
         public ServiceBusQueueMessageDeliveryOperator(string connectionString,string queueName, bool createQueueIfItDoesNotExist) : this(GetQueue(connectionString, queueName), connectionString, createQueueIfItDoesNotExist)
         { }
 
-        public ServiceBusQueueMessageDeliveryOperator(QueueClient queue, string connectionString, bool createQueueIfItDoesNotExist) : base (new ServiceBusQueue(connectionString, queue), createQueueIfItDoesNotExist)
+        public ServiceBusQueueMessageDeliveryOperator(QueueClient queue, string connectionString, bool createQueueIfItDoesNotExist) : base (new ServiceBusQueue(connectionString, queue, createQueueIfItDoesNotExist))
         { }
 
         internal static QueueClient GetQueue(string connectionString,string queueName)

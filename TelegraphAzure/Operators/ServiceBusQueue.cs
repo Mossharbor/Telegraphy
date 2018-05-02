@@ -12,14 +12,17 @@ namespace Telegraphy.Azure
     internal class ServiceBusQueue : QueueClient
     {
         string connectionString = null;
-        public ServiceBusQueue(string connectionString, string entityPath, ReceiveMode receiveMode = ReceiveMode.PeekLock, RetryPolicy retryPolicy = null)
+        public ServiceBusQueue(string connectionString, string entityPath, bool createQueueIfItDoesNotExist, ReceiveMode receiveMode = ReceiveMode.PeekLock, RetryPolicy retryPolicy = null)
             : base(connectionString, entityPath, receiveMode, retryPolicy)
         {
             this.connectionString = connectionString;
+
+            if (createQueueIfItDoesNotExist)
+                this.CreateIfNotExists();
         }
 
-        public ServiceBusQueue(string connectionString, QueueClient queue)
-            : this(connectionString, queue.QueueName, queue.ReceiveMode, queue.RetryPolicy)
+        public ServiceBusQueue(string connectionString, QueueClient queue, bool createQueueIfItDoesNotExist)
+            : this(connectionString, queue.QueueName, createQueueIfItDoesNotExist, queue.ReceiveMode, queue.RetryPolicy)
         {
 
         }

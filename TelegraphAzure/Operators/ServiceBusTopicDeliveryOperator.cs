@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Azure.ServiceBus;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,19 +9,20 @@ namespace Telegraphy.Azure
 {
     public class ServiceBusTopicDeliveryOperator : ServiceBusTopicOperator
     {
-        public ServiceBusTopicDeliveryOperator(string connectionString, string topicName = "", Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
-               : this(GetSender(connectionString, topicName, policy))
+        public ServiceBusTopicDeliveryOperator(string connectionString, string topicName, bool createTopicIfItDoesNotExist, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
+               : base(GetSender(connectionString, topicName, createTopicIfItDoesNotExist, policy))
         {
         }
-
-        public ServiceBusTopicDeliveryOperator(Microsoft.Azure.ServiceBus.Core.MessageSender sender)
-            : base(sender)
+        
+        private static ServiceBusTopicDeliverer GetSender(string connectionString, string topicName, bool createTopicIfItDoesNotExist, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
         {
+            return new ServiceBusTopicDeliverer(connectionString, topicName, createTopicIfItDoesNotExist, policy);
         }
 
-        private static Microsoft.Azure.ServiceBus.Core.MessageSender GetSender(string connectionString, string topicName, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
+        public override bool WaitTillEmpty(TimeSpan timeout)
         {
-            return new Microsoft.Azure.ServiceBus.Core.MessageSender(connectionString, topicName, policy);
+            // we dont have a queue here since the purpose of this class is to poplate a queue.
+            return true;
         }
     }
 }

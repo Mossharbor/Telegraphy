@@ -18,18 +18,18 @@ namespace Telegraphy.Azure
     {
         private ConcurrentDictionary<Type, Action<Exception>> _exceptionTypeToHandler = new ConcurrentDictionary<Type, Action<Exception>>();
         private int maxDequeueCount = 1;
-        private MessageSender ServiceBusMsgSender = null;
-        private MessageReceiver ServiceBusMsgReciever = null;
+        private ServiceBusTopicDeliverer ServiceBusMsgSender = null;
+        private ServiceBusTopicReciever ServiceBusMsgReciever = null;
         ControlMessages.HangUp hangUp = null;
         ConcurrentQueue<IActorMessage> msgQueue = new ConcurrentQueue<IActorMessage>();
         
-        protected ServiceBusTopicOperator(MessageSender serviceBusMsgSender)
+        internal ServiceBusTopicOperator(ServiceBusTopicDeliverer serviceBusMsgSender)
         {
             this.ServiceBusMsgSender = serviceBusMsgSender;
             this.ID = 0;
         }
 
-        protected ServiceBusTopicOperator(ILocalSwitchboard switchboard, MessageReceiver serviceBusMsgReciever, int maxDequeueCount)
+        internal ServiceBusTopicOperator(ILocalSwitchboard switchboard, ServiceBusTopicReciever serviceBusMsgReciever, int maxDequeueCount)
         {
             this.maxDequeueCount = maxDequeueCount;
             this.Switchboard = switchboard;
@@ -47,19 +47,7 @@ namespace Telegraphy.Azure
             
             this.ServiceBusMsgReciever.RegisterMessageHandler(ListenForMessages, options);
         }
-
-        private Task HandleExceptions(ExceptionReceivedEventArgs eargs)
-        {
-            return Task.Factory.StartNew(() =>
-            {
-                Exception foundEx = null;
-                var handler = this.FindExceptionHandler(_exceptionTypeToHandler, eargs.Exception, out foundEx);
-
-                if (null != handler)
-                    handler.Invoke(foundEx);
-            });
-        }
-
+        
         private Task ListenForMessages(Microsoft.Azure.ServiceBus.Message sbMessage, CancellationToken token)
         {
             if (sbMessage.SystemProperties.DeliveryCount > maxDequeueCount)
@@ -75,10 +63,31 @@ namespace Telegraphy.Azure
 
             if (null == msg.Status)
                 msg.Status = new TaskCompletionSource<IActorMessage>();
-            
-            msg.Status.Task.ContinueWith(p => this.ServiceBusMsgReciever.CompleteAsync(sbMessage.SystemProperties.LockToken));
+
+            msg.Status.Task.ContinueWith(p =>
+            {
+                // Note: Use the cancellationToken passed as necessary to determine if the queueClient has already been closed.
+                // If queueClient has already been Closed, you may chose to not call CompleteAsync() or AbandonAsync() etc. calls 
+                // to avoid unnecessary exceptions.
+                if (token.IsCancellationRequested)
+                    this.ServiceBusMsgReciever.AbandonAsync(sbMessage.SystemProperties.LockToken);
+                else
+                    this.ServiceBusMsgReciever.CompleteAsync(sbMessage.SystemProperties.LockToken);
+            });
 
             return msg.Status.Task;
+        }
+        
+        private Task HandleExceptions(ExceptionReceivedEventArgs eargs)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                Exception foundEx = null;
+                var handler = this.FindExceptionHandler(_exceptionTypeToHandler, eargs.Exception, out foundEx);
+
+                if (null != handler)
+                    handler.Invoke(foundEx);
+            });
         }
 
         #region IOperator
@@ -98,7 +107,7 @@ namespace Telegraphy.Azure
 
                 if (null != ServiceBusMsgSender)
                 {
-                    ServiceBusMsgReciever.CloseAsync().Wait();
+                    ServiceBusMsgSender.CloseAsync().Wait();
                     if (null != msg.Status && !msg.Status.Task.IsCompleted)
                         msg.Status.SetResult(msg);
                     return;
@@ -111,9 +120,10 @@ namespace Telegraphy.Azure
             }
 
             System.Diagnostics.Debug.Assert(null != ServiceBusMsgSender);
-            byte[] serializedMessage = null; //TODO
+            var serializeTask = Telegraph.Instance.Ask(new SerializeMessage(msg));
+            byte[] msgBytes = (serializeTask.Result.ProcessingResult as byte[]);
 
-            var message = new Message(serializedMessage);
+            var message = new Message(msgBytes);
 
             if (msg is IServiceBusPropertiesProvider)
             {
@@ -198,10 +208,21 @@ namespace Telegraphy.Azure
             this.Switchboard.Register(exceptionType, handler);
         }
 
-        public bool WaitTillEmpty(TimeSpan timeout)
+        public uint ApproximateMessageCount
+        {
+            get
+            {
+                if (null != this.ServiceBusMsgSender)
+                    return this.ServiceBusMsgSender.ApproximateMessageCount;
+                else
+                    return this.ServiceBusMsgReciever.ApproximateMessageCount;
+            }
+        }
+
+        public virtual bool WaitTillEmpty(TimeSpan timeout)
         {
             DateTime start = DateTime.Now;
-            while (0 != this.msgQueue.Count && (DateTime.Now - start) < timeout)
+            while ((DateTime.Now - start) < timeout && (0 != this.msgQueue.Count || 0 != this.ApproximateMessageCount))
             {
                 System.Threading.Thread.Sleep(1000);
             }

@@ -25,12 +25,12 @@ namespace Telegraphy.Azure
         { }
 
         public ServiceBusQueueMessageReceptionOperator(ILocalSwitchboard switchBoard, QueueClient queue, string connectionString, bool createQueueIfItDoesNotExist, int maxDequeueCount = 3)
-           : this(switchBoard, new ServiceBusQueue(connectionString, queue), createQueueIfItDoesNotExist, maxDequeueCount)
+           : this(switchBoard, new ServiceBusQueue(connectionString, queue, createQueueIfItDoesNotExist), maxDequeueCount)
         {
         }
 
-        private ServiceBusQueueMessageReceptionOperator(ILocalSwitchboard switchBoard, ServiceBusQueue queue, bool createQueueIfItDoesNotExist, int maxDequeueCount = 3) 
-            : base(switchBoard, queue, maxDequeueCount, createQueueIfItDoesNotExist)
+        private ServiceBusQueueMessageReceptionOperator(ILocalSwitchboard switchBoard, ServiceBusQueue queue, int maxDequeueCount = 3) 
+            : base(switchBoard, queue, maxDequeueCount)
         {
         }
     }

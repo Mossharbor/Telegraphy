@@ -97,12 +97,15 @@
   <ItemGroup>
     <Compile Include="Messages\IServiceBusPropertiesProvider.cs" />
     <Compile Include="Messages\ServiceBusMessage.cs" />
-    <Compile Include="Operators\ServiceBusMessageDeliveryOperator.cs" />
-    <Compile Include="Operators\ServiceBusOperator.cs" />
+    <Compile Include="Operators\ServiceBusTopicDeliveryOperator.cs" />
+    <Compile Include="Operators\ServiceBusTopicOperator.cs" />
     <Compile Include="Operators\ServiceBusQueue.cs" />
     <Compile Include="Operators\ServiceBusQueueMessageDeliveryOperator.cs" />
     <Compile Include="Operators\ServiceBusQueueMessageReceptionOperator.cs" />
     <Compile Include="Operators\ServiceBusQueueOperator.cs" />
+    <Compile Include="Operators\ServiceBusTopicReceptionOperator.cs" />
+    <Compile Include="Operators\ServiceBusTopicReciever.cs" />
+    <Compile Include="Operators\ServiceBusTopicDeliverer.cs" />
     <Compile Include="Operators\StorageQueueOperator.cs" />
     <Compile Include="Exceptions\CannotRegisterActionWithOperatorSinceWeAreSendingToAzureQueueOnly.cs" />
     <Compile Include="Exceptions\OperatorCannotRecieveMessages.cs" />
