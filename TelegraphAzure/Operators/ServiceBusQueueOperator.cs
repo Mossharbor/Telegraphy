@@ -155,6 +155,7 @@ namespace Telegraphy.Azure
                 message.ReplyToSessionId = (msg as IServiceBusPropertiesProvider).ReplyToSessionId ?? message.ReplyToSessionId;
                 message.SessionId = (msg as IServiceBusPropertiesProvider).SessionId ?? message.SessionId;
                 message.MessageId = (msg as IServiceBusPropertiesProvider).MessageId ?? message.MessageId;
+                message.PartitionKey = (msg as IServiceBusPropertiesProvider).PartitionKey ?? message.PartitionKey;
                 if (null != (msg as IServiceBusPropertiesProvider).UserProperties)
                 {
                     foreach (var t in (msg as IServiceBusPropertiesProvider).UserProperties)

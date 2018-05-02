@@ -93,5 +93,15 @@ namespace Telegraphy.Azure
         //     DateTimeOffset, TimeSpan, Stream, byte[], and IList / IDictionary of supported
         //     types
         IDictionary<string, object> UserProperties { get; }
+        
+        //
+        // Summary:
+        //     Gets or sets a partition key for sending a transactional message to a queue or
+        //     topic that is not session-aware.
+        //
+        // Remarks:
+        //     Transactions are not currently supported with this library. Messages with same
+        //     partitionKey are sent to the same partition. Max PartitionKey size is 128 chars.
+        string PartitionKey { get; }
     }
 }
