@@ -2,6 +2,7 @@
 
 namespace StartHere
 {
+    using Microsoft.ServiceBus;
     using Microsoft.WindowsAzure.Storage.Queue;
     using Telegraphy.Azure;
     using Telegraphy.Net;
@@ -27,11 +28,17 @@ namespace StartHere
             //SendToAzureServiceBusQueue(serviceBusConnectionString, "useazurequeueexample");
             //RecieveFromAzureServiceBusQueue(serviceBusConnectionString, "useazurequeueexample");
 
-            //SendToAzureServiceBusTopic(serviceBusConnectionString, "useazurequeuetopicexample");
-            //RecieveFromAzureServiceBusTopic(serviceBusConnectionString, "useazurequeuetopicexample");
+            //NamespaceManager ns = NamespaceManager.CreateFromConnectionString(serviceBusConnectionString);
+            //if (!ns.SubscriptionExists("useazurequeuetopicexample", "Subscription1"))
+            //    ns.CreateSubscription("useazurequeuetopicexample", "Subscription1");
 
-            SendToAzureServiceBusSubscription(serviceBusConnectionString, "useazurequeuetopicexample", "Subscription1");
-            RecieveFromAzureServiceBusSubscription(serviceBusConnectionString, "useazurequeuetopicexample", "Subscription1");
+            //SendToAzureServiceBusTopic(serviceBusConnectionString, "useazurequeuetopicexample");
+            //RecieveFromAzureServiceBusTopic(serviceBusConnectionString, "useazurequeuetopicexample", "Subscription1");
+
+            //SendToAzureServiceBusSubscription(serviceBusConnectionString, "useazurequeuetopic2example", new string[] { "Subscription1", "Subscription2", "Subscription3" });
+            //RecieveFromAzureServiceBusSubscription(serviceBusConnectionString, "useazurequeuetopic2example", "Subscription1");
+            //RecieveFromAzureServiceBusSubscription(serviceBusConnectionString, "useazurequeuetopic2example", "Subscription2");
+            //RecieveFromAzureServiceBusSubscription(serviceBusConnectionString, "useazurequeuetopic2example", "Subscription3");
         }
 
         static void SendToAzureQueue(string connectionstring, string queueName)
@@ -171,11 +178,11 @@ namespace StartHere
             Telegraph.Instance.Ask(new ControlMessages.HangUp()).Wait();
         }
 
-        static void RecieveFromAzureServiceBusTopic(string connectionString, string topicName)
+        static void RecieveFromAzureServiceBusTopic(string connectionString, string topicName, string subscription)
         {
             // NOTE: run this after you run SendToAzureQueue();
             long localOperatorID = Telegraph.Instance.Register(new LocalOperator());
-            long azureOperatorID = Telegraph.Instance.Register(new ServiceBusTopicReceptionOperator(LocalConcurrencyType.DedicatedThreadCount, connectionString, topicName, true, 2));
+            long azureOperatorID = Telegraph.Instance.Register(new ServiceBusTopicReceptionOperator(LocalConcurrencyType.DedicatedThreadCount, connectionString, topicName, subscription, true, 2));
 
             MessageDeserializationActor deserializer = new MessageDeserializationActor();
             Telegraph.Instance.Register<DeSerializeMessage, MessageDeserializationActor>(localOperatorID, () => deserializer);
@@ -184,16 +191,16 @@ namespace StartHere
             Telegraph.Instance.Register<PingPong.Ping>(azureOperatorID, ping =>
             {
                 System.Threading.Thread.Sleep(100);
-                Console.WriteLine(ping.Message);
+                Console.WriteLine(subscription + ":"+ping.Message);
             });
 
             Telegraph.Instance.WaitTillEmpty(new TimeSpan(0, 0, 30));
             Telegraph.Instance.Ask(new ControlMessages.HangUp()).Wait();
         }
 
-        static void SendToAzureServiceBusSubscription(string connectionString, string topicName, string subscription)
+        static void SendToAzureServiceBusSubscription(string connectionString, string topicName, string[] subscriptionsToCreate)
         {
-            long azureOperatorId = Telegraph.Instance.Register(new ServiceBusTopicDeliveryOperator(serviceBusConnectionString, topicName, true));
+            long azureOperatorId = Telegraph.Instance.Register(new ServiceBusTopicDeliveryOperator(serviceBusConnectionString, topicName, subscriptionsToCreate, true));
             Telegraph.Instance.Register<PingPong.Ping>(azureOperatorId);
 
             MessageSerializationActor serializer = new MessageSerializationActor();
@@ -211,7 +218,7 @@ namespace StartHere
         {
             // NOTE: run this after you run SendToAzureQueue();
             long localOperatorID = Telegraph.Instance.Register(new LocalOperator());
-            long azureOperatorID = Telegraph.Instance.Register(new ServiceBusTopicReceptionOperator(LocalConcurrencyType.DedicatedThreadCount, connectionString, topicName, true, 2));
+            long azureOperatorID = Telegraph.Instance.Register(new ServiceBusTopicReceptionOperator(LocalConcurrencyType.DedicatedThreadCount, connectionString, topicName, subscription, true, 2));
 
             MessageDeserializationActor deserializer = new MessageDeserializationActor();
             Telegraph.Instance.Register<DeSerializeMessage, MessageDeserializationActor>(localOperatorID, () => deserializer);
@@ -220,7 +227,7 @@ namespace StartHere
             Telegraph.Instance.Register<PingPong.Ping>(azureOperatorID, ping =>
             {
                 System.Threading.Thread.Sleep(100);
-                Console.WriteLine(ping.Message);
+                Console.WriteLine(subscription + ":"+ ping.Message);
             });
 
             Telegraph.Instance.WaitTillEmpty(new TimeSpan(0, 0, 30));
