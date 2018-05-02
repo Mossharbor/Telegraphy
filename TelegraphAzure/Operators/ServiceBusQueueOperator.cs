@@ -155,6 +155,11 @@ namespace Telegraphy.Azure
                 message.ReplyToSessionId = (msg as IServiceBusPropertiesProvider).ReplyToSessionId ?? message.ReplyToSessionId;
                 message.SessionId = (msg as IServiceBusPropertiesProvider).SessionId ?? message.SessionId;
                 message.MessageId = (msg as IServiceBusPropertiesProvider).MessageId ?? message.MessageId;
+                if (null != (msg as IServiceBusPropertiesProvider).UserProperties)
+                {
+                    foreach (var t in (msg as IServiceBusPropertiesProvider).UserProperties)
+                        message.UserProperties.Add(t);
+                }
             }
 
             if ((message is IActorMessageIdentifier) && String.IsNullOrWhiteSpace(message.MessageId))

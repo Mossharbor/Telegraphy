@@ -82,5 +82,16 @@ namespace Telegraphy.Azure
         //     is enabled on the entity, this value will be used for deduplication. Max MessageId
         //     size is 128 chars.
         string MessageId { get; }
+
+        //
+        // Summary:
+        //     Gets the user property bag, which can be used for custom message properties.
+        //
+        // Remarks:
+        //     Only following value types are supported: byte, sbyte, char, short, ushort, int,
+        //     uint, long, ulong, float, double, decimal, bool, Guid, string, Uri, DateTime,
+        //     DateTimeOffset, TimeSpan, Stream, byte[], and IList / IDictionary of supported
+        //     types
+        IDictionary<string, object> UserProperties { get; }
     }
 }
