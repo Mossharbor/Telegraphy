@@ -77,5 +77,15 @@ namespace Telegraphy.Net
         {
             return new ValueTypeMessage<sbyte>(self);
         }
+
+        public static IActorMessage ToActorMessage(this Guid self)
+        {
+            return new ValueTypeMessage<Guid>(self);
+        }
+
+        public static IActorMessage ToActorMessage(this TimeSpan self)
+        {
+            return new ValueTypeMessage<TimeSpan>(self);
+        }
     }
 }

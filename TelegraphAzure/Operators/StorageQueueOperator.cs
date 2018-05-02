@@ -180,7 +180,7 @@ namespace Telegraphy.Azure
             }
         }
         
-        public bool WaitTillEmpty(TimeSpan timeout)
+        public virtual bool WaitTillEmpty(TimeSpan timeout)
         {
             // wait till the azure queue is currently empty
             DateTime start = DateTime.Now;

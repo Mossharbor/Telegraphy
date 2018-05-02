@@ -18,9 +18,9 @@ namespace Usenet
 
             public static void RegisterActorsAndMessages(uint numberOfSimultaneousConnections)
             {
-                IOperator connectionOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.LimitedThreadCount,4));
+                IOperator connectionOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.DedicatedThreadCount,4));
                 IOperator responseOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool));
-                IOperator perConnection = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.LimitedThreadCount, numberOfSimultaneousConnections));
+                IOperator perConnection = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.DedicatedThreadCount, numberOfSimultaneousConnections));
                 try
                 {
                     Telegraph.Instance.MessageDispatchProcedure = MessageDispatchProcedureType.RoundRobin;

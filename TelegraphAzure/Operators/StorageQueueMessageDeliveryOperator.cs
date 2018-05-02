@@ -20,5 +20,11 @@ namespace Telegraphy.Azure
             : base(null, queue, false, null, null, null)
         {
         }
+
+        public override bool WaitTillEmpty(TimeSpan timeout)
+        {
+            // we dont have a queue here since the purpose of this class is to poplate a queue.
+            return true;
+        }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Telegraphy.Net
 {
-    public enum LocalConcurrencyType { ActorsOnThreadPool, OneActorPerThread, OneThreadAllActors, OneThreadPerActor, LimitedThreadCount };
+    public enum LocalConcurrencyType { ActorsOnThreadPool, OneActorPerThread, OneThreadAllActors, OneThreadPerActor, DedicatedThreadCount };
 
     public enum MessageDispatchProcedureType { RoundRobin, BroadcastToAll, LeastBusy, RandomSelection }
 }
