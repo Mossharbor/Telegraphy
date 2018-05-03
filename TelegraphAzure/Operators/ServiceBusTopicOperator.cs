@@ -125,19 +125,19 @@ namespace Telegraphy.Azure
 
             var message = new Message(msgBytes);
 
-            if (msg is IServiceBusPropertiesProvider)
+            if (msg is IServiceBusMessagePropertiesProvider)
             {
-                message.ScheduledEnqueueTimeUtc = (msg as IServiceBusPropertiesProvider).ScheduledEnqueueTimeUtc.HasValue ? (msg as IServiceBusPropertiesProvider).ScheduledEnqueueTimeUtc.Value : message.ScheduledEnqueueTimeUtc;
-                message.TimeToLive = (msg as IServiceBusPropertiesProvider).TimeToLive.HasValue ? (msg as IServiceBusPropertiesProvider).TimeToLive.Value : message.TimeToLive;
-                message.ContentType = (msg as IServiceBusPropertiesProvider).ContentType ?? message.ContentType;
-                message.Label = (msg as IServiceBusPropertiesProvider).Label ?? message.Label;
-                message.CorrelationId = (msg as IServiceBusPropertiesProvider).CorrelationId ?? message.CorrelationId;
-                message.ReplyToSessionId = (msg as IServiceBusPropertiesProvider).ReplyToSessionId ?? message.ReplyToSessionId;
-                message.SessionId = (msg as IServiceBusPropertiesProvider).SessionId ?? message.SessionId;
-                message.MessageId = (msg as IServiceBusPropertiesProvider).MessageId ?? message.MessageId;
-                if (null != (msg as IServiceBusPropertiesProvider).UserProperties)
+                message.ScheduledEnqueueTimeUtc = (msg as IServiceBusMessagePropertiesProvider).ScheduledEnqueueTimeUtc.HasValue ? (msg as IServiceBusMessagePropertiesProvider).ScheduledEnqueueTimeUtc.Value : message.ScheduledEnqueueTimeUtc;
+                message.TimeToLive = (msg as IServiceBusMessagePropertiesProvider).TimeToLive.HasValue ? (msg as IServiceBusMessagePropertiesProvider).TimeToLive.Value : message.TimeToLive;
+                message.ContentType = (msg as IServiceBusMessagePropertiesProvider).ContentType ?? message.ContentType;
+                message.Label = (msg as IServiceBusMessagePropertiesProvider).Label ?? message.Label;
+                message.CorrelationId = (msg as IServiceBusMessagePropertiesProvider).CorrelationId ?? message.CorrelationId;
+                message.ReplyToSessionId = (msg as IServiceBusMessagePropertiesProvider).ReplyToSessionId ?? message.ReplyToSessionId;
+                message.SessionId = (msg as IServiceBusMessagePropertiesProvider).SessionId ?? message.SessionId;
+                message.MessageId = (msg as IServiceBusMessagePropertiesProvider).MessageId ?? message.MessageId;
+                if (null != (msg as IServiceBusMessagePropertiesProvider).UserProperties)
                 {
-                    foreach (var t in (msg as IServiceBusPropertiesProvider).UserProperties)
+                    foreach (var t in (msg as IServiceBusMessagePropertiesProvider).UserProperties)
                         message.UserProperties.Add(t);
                 }
             }

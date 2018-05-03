@@ -39,11 +39,16 @@
     <Compile Include="Ping.cs" />
     <Compile Include="Pong.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Pung.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Telegraph.net\Telegraphy.Net.csproj">
       <Project>{0d5eda21-0e26-4e10-b109-bfa71559163e}</Project>
       <Name>Telegraphy.Net</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\TelegraphAzure\Telegraphy.Azure.csproj">
+      <Project>{e4ea221a-70e9-44ae-abfd-6f6dcbe609de}</Project>
+      <Name>Telegraphy.Azure</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

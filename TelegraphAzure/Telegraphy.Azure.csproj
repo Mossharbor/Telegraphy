@@ -95,7 +95,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Messages\IServiceBusPropertiesProvider.cs" />
+    <Compile Include="Messages\IServiceBusMessagePropertiesProvider.cs" />
     <Compile Include="Messages\ServiceBusMessage.cs" />
     <Compile Include="Operators\ServiceBusTopicDeliveryOperator.cs" />
     <Compile Include="Operators\ServiceBusTopicOperator.cs" />
