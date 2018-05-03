@@ -4,6 +4,7 @@ namespace StartHere
 {
     using Microsoft.ServiceBus;
     using Microsoft.WindowsAzure.Storage.Queue;
+    using System.Text;
     using Telegraphy.Azure;
     using Telegraphy.Net;
 
@@ -20,6 +21,11 @@ namespace StartHere
         static void Main(string[] args)
         {
             #region StorageQueues
+            SimpleSendStringDataToAzureStorageQueue(queueAccountConnectionString, "simpleazureexample");
+            //SimpleSendRawDataToAzureStorageQueue(queueAccountConnectionString, "simpleazureexample");
+
+            //SimpleSendToAzureStorageQueue(queueAccountConnectionString", "simpleazureexample");
+
             //SendToAzureQueue(queueAccountConnectionString, "useazurequeueexample");
             //RecieveFromAzureQueue(queueAccountConnectionString, "useazurequeueexample");
 
@@ -50,6 +56,47 @@ namespace StartHere
             #region Event Bus
 
             #endregion
+        }
+
+        static void SimpleSendStringDataToAzureStorageQueue(string connectionString, string queueName)
+        {
+            // create message
+            string message = @"Hello World";
+
+            // Setup send to queue
+            Telegraph.Instance.Register<string, SendStringToStorageQueue>(() => new SendStringToStorageQueue(connectionString, queueName, true));
+
+            // Send message to queue
+            Telegraph.Instance.Ask(message).Wait();
+        }
+
+        static void SimpleSendRawDataToAzureStorageQueue(string connectionString, string queueName)
+        {
+            // create message
+            byte[] message = Encoding.UTF8.GetBytes(@"Hello World");
+
+            // Setup send to queue
+            //Telegraph.Instance.Register<ValueTypeMessage<byte>, SendBytesToStorageQueue>(() => new SendBytesToStorageQueue(connectionString, queueName, true));
+
+            Telegraph.Instance.Register<byte[], SendBytesToStorageQueue>(() => new SendBytesToStorageQueue(connectionString, queueName, true));
+
+            // Send message to queue
+            Telegraph.Instance.Ask(message).Wait();
+        }
+
+        static void SimpleSendMessageToAzureStorageQueue(string connectionString, string queueName)
+        {
+            // Setup send to queue
+            Telegraph.Instance.Register<PingPong.Ping, SendMessageToStorageQueue>(() => new SendMessageToStorageQueue(connectionString, queueName, true));
+
+            // Set up serialization
+            MessageSerializationActor serializer = new MessageSerializationActor();
+            Telegraph.Instance.Register<SerializeMessage, MessageSerializationActor>(() => serializer);
+
+            // Send message to queue
+            Telegraph.Instance.Ask(new PingPong.Ping()).Wait();
+
+            // If you look on the queue the binary version of Ping will have been put you can use the Deserialization Actor to pull this message  down later
         }
 
         static void SendToAzureQueue(string connectionstring, string queueName)

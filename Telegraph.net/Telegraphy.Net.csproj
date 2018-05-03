@@ -61,7 +61,7 @@
     <Compile Include="Exceptions\NoOperatorFoundForID.cs" />
     <Compile Include="Exceptions\NoOperatorRegisteredToSupportType.cs" />
     <Compile Include="Exceptions\UnsupportedDispatchImplementation.cs" />
-    <Compile Include="ExtentionMethods\DotNetRefTypeExtentions.cs" />
+    <Compile Include="ExtentionMethods\DotNetValueTypeExtentions.cs" />
     <Compile Include="ExtentionMethods\IOperatorExtentionMethods.cs" />
     <Compile Include="ExtentionMethods\ISwitchBoardExtentionMethods.cs" />
     <Compile Include="Interfaces\IActorInvocation.cs" />

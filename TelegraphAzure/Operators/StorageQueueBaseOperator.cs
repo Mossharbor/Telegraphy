@@ -43,7 +43,7 @@ namespace Telegraphy.Azure
                 throw new SwitchBoardNeededWhenRecievingMessagesException();
         }
 
-        private static CloudQueue GetQueueFrom(string storageConnectionString,string queueName, bool createQueueIfItDoesNotExist)
+        internal static CloudQueue GetQueueFrom(string storageConnectionString,string queueName, bool createQueueIfItDoesNotExist)
         {
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageConnectionString);
             CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
@@ -114,25 +114,7 @@ namespace Telegraphy.Azure
             // Serialize the message first
             try
             {
-                var serializeTask = Telegraph.Instance.Ask(new SerializeMessage(msg));
-                byte[] msgBytes = (serializeTask.Result.ProcessingResult as byte[]);
-                //IActorMessage msg = t.Result as IActorMessage;
-                //byte[] msgBytes = (serializer.Ask(new SerializeMessage(msg)).Result.ProcessingResult as byte[]);
-
-                // Add the message to the azure queue
-                CloudQueueMessage cloudMessage = new CloudQueueMessage(msgBytes);
-                if (!(msg is IStorageQueuePropertiesProvider))
-                {
-                    this.queue.AddMessage(cloudMessage);
-                }
-                else
-                {
-                    IStorageQueuePropertiesProvider props = (msg as IStorageQueuePropertiesProvider);
-                    this.queue.AddMessage(cloudMessage, props.TimeToLive, props.InitialVisibilityDelay, props.Options, props.OperationContext);
-                }
-
-                if (null != msg.Status)
-                    msg.Status?.SetResult(new QueuedCloudMessage(cloudMessage));
+                SerializeAndSend(msg, queue);
             }
             catch(Exception ex)
             {
@@ -143,6 +125,41 @@ namespace Telegraphy.Azure
                     handler.Invoke(foundEx);
             }
         }
+
+        internal static void SerializeAndSend(IActorMessage msg, CloudQueue queue, string msgString)
+        {
+            CloudQueueMessage cloudMessage = new CloudQueueMessage(msgString);
+            AddMessageProperties(queue, cloudMessage, (msg is IStorageQueuePropertiesProvider) ? (msg as IStorageQueuePropertiesProvider) : null);
+        }
+
+        internal static void SerializeAndSend(IActorMessage msg, CloudQueue queue, byte[] msgBytes = null)
+        {
+            if (null == msgBytes)
+            {
+                var serializeTask = Telegraph.Instance.Ask(new SerializeMessage(msg));
+                msgBytes = (serializeTask.Result.ProcessingResult as byte[]);
+            }
+
+            // Add the message to the azure queue
+            CloudQueueMessage cloudMessage = new CloudQueueMessage(msgBytes);
+            AddMessageProperties(queue, cloudMessage, (msg is IStorageQueuePropertiesProvider) ? (msg as IStorageQueuePropertiesProvider): null);
+
+            if (null != msg.Status)
+                msg.Status?.SetResult(new QueuedCloudMessage(cloudMessage));
+        }
+
+        internal static void AddMessageProperties(CloudQueue queue, CloudQueueMessage cloudMessage, IStorageQueuePropertiesProvider props)
+        {
+            if (null == props)
+            {
+                queue.AddMessage(cloudMessage);
+            }
+            else
+            {
+                queue.AddMessage(cloudMessage, props.TimeToLive, props.InitialVisibilityDelay, props.Options, props.OperationContext);
+            }
+        }
+
 
         public IActorMessage GetMessage()
         {

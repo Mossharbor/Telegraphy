@@ -66,6 +66,7 @@ namespace BasicStartHere
                 Telegraph.Instance.Tell("Hello World." + i.ToString());
 
             Telegraph.Instance.Ask(new ControlMessages.HangUp()).Wait();
+
             System.Threading.Thread.Sleep(100);
             System.Diagnostics.Debug.Assert(msgCount == 10);
         }

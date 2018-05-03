@@ -40,6 +40,9 @@ namespace Telegraphy.Net
         #region IActor
         public virtual bool OnMessageRecieved<T>(T msg) where T : class, IActorMessage
         {
+            if (null == this.Operator)
+                return false;
+
             this.Operator.AddMessage(msg);
             return true;
         }

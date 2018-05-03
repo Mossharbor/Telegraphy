@@ -8,7 +8,7 @@ namespace Telegraphy.Net
 {
     public interface IActorMessage
     {
-        Type GetType(); // default .NET implementation is fine
+        Type GetType(); // default .NET implementation is fine usually
 
         object Message { get; set; }
 
