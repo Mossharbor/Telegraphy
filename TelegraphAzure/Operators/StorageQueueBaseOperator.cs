@@ -11,7 +11,7 @@ using System.Collections.Concurrent;
 
 namespace Telegraphy.Azure
 {
-    public abstract class StorageQueueOperator : IOperator
+    public abstract class StorageQueueBaseOperator : IOperator
     {
         ConcurrentDictionary<Type, Action<Exception>> _exceptionTypeToHandler = new ConcurrentDictionary<Type, Action<Exception>>();
         CloudQueue queue = null;
@@ -22,12 +22,12 @@ namespace Telegraphy.Azure
         OperationContext retrievalOperationContext = null;
         bool recieveMessagesOnly = false;
         ControlMessages.HangUp hangUp = null;
-        protected StorageQueueOperator(ILocalSwitchboard switchBoard, string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist, bool recieve, TimeSpan? retrieveVisibilityTimeout = null, QueueRequestOptions retrievalRequestOptions = null, OperationContext retrievalOperationContext = null)
+        protected StorageQueueBaseOperator(ILocalSwitchboard switchBoard, string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist, bool recieve, TimeSpan? retrieveVisibilityTimeout = null, QueueRequestOptions retrievalRequestOptions = null, OperationContext retrievalOperationContext = null)
             : this (switchBoard, GetQueueFrom(storageConnectionString, queueName, createQueueIfItDoesNotExist), recieve, retrieveVisibilityTimeout, retrievalRequestOptions, retrievalOperationContext)
         {
         }
 
-        protected StorageQueueOperator(ILocalSwitchboard switchBoard, CloudQueue queue, bool recieve, TimeSpan? retrieveVisibilityTimeout = null, QueueRequestOptions retrievalRequestOptions = null, OperationContext retrievalOperationContext = null)
+        protected StorageQueueBaseOperator(ILocalSwitchboard switchBoard, CloudQueue queue, bool recieve, TimeSpan? retrieveVisibilityTimeout = null, QueueRequestOptions retrievalRequestOptions = null, OperationContext retrievalOperationContext = null)
         {
             this.recieveMessagesOnly = recieve;
             this.Switchboard = switchBoard;

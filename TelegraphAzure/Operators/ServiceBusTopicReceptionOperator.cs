@@ -7,7 +7,7 @@ using Telegraphy.Net;
 
 namespace Telegraphy.Azure
 {
-    public class ServiceBusTopicReceptionOperator : ServiceBusTopicOperator
+    public class ServiceBusTopicReceptionOperator : ServiceBusTopicBaseOperator
     {
         const int DefaultDequeueMaxCount = 3;
         const int DefaultPrefetchCount = 0;

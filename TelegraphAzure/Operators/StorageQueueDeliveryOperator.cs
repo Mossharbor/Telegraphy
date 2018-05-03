@@ -9,14 +9,14 @@ using Telegraphy.Net;
 
 namespace Telegraphy.Azure
 {
-    public class StorageQueueMessageDeliveryOperator : StorageQueueOperator
+    public class StorageQueueDeliveryOperator : StorageQueueBaseOperator
     {
-        public StorageQueueMessageDeliveryOperator(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true) 
+        public StorageQueueDeliveryOperator(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true) 
             : base (null, storageConnectionString, queueName, createQueueIfItDoesNotExist, false, null,null,null)
         {
         }
 
-        public StorageQueueMessageDeliveryOperator(CloudQueue queue) 
+        public StorageQueueDeliveryOperator(CloudQueue queue) 
             : base(null, queue, false, null, null, null)
         {
         }

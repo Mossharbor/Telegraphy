@@ -9,12 +9,12 @@ namespace Telegraphy.Azure
 {
     using Mossharbor.AzureWorkArounds.ServiceBus;
 
-    public class ServiceBusQueueMessageDeliveryOperator : ServiceBusQueueOperator
+    public class ServiceBusQueueDeliveryOperator : ServiceBusQueueBaseOperator
     {
-        public ServiceBusQueueMessageDeliveryOperator(string connectionString,string queueName, bool createQueueIfItDoesNotExist) : this(GetQueue(connectionString, queueName), connectionString, createQueueIfItDoesNotExist)
+        public ServiceBusQueueDeliveryOperator(string connectionString,string queueName, bool createQueueIfItDoesNotExist) : this(GetQueue(connectionString, queueName), connectionString, createQueueIfItDoesNotExist)
         { }
 
-        public ServiceBusQueueMessageDeliveryOperator(QueueClient queue, string connectionString, bool createQueueIfItDoesNotExist) : base (new ServiceBusQueue(connectionString, queue, createQueueIfItDoesNotExist))
+        public ServiceBusQueueDeliveryOperator(QueueClient queue, string connectionString, bool createQueueIfItDoesNotExist) : base (new ServiceBusQueue(connectionString, queue, createQueueIfItDoesNotExist))
         { }
 
         internal static QueueClient GetQueue(string connectionString,string queueName)

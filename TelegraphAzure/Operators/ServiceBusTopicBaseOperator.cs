@@ -1,75 +1,60 @@
-﻿using Microsoft.Azure.ServiceBus;
-using System;
-using System.Collections.Concurrent;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using Telegraphy.Azure.Exceptions;
-using Telegraphy.Net;
 
 namespace Telegraphy.Azure
 {
-    public class ServiceBusQueueOperator : IOperator
+    using Microsoft.Azure.ServiceBus;
+    using Microsoft.Azure.ServiceBus.Core;
+    using System.Collections.Concurrent;
+    using System.Threading;
+    using Telegraphy.Azure.Exceptions;
+    using Telegraphy.Net;
+
+    public class ServiceBusTopicBaseOperator : IOperator
     {
         private ConcurrentDictionary<Type, Action<Exception>> _exceptionTypeToHandler = new ConcurrentDictionary<Type, Action<Exception>>();
-        private bool recievingOnly = false;
-        private ServiceBusQueue queue;
-        private ConcurrentQueue<IActorMessage> msgQueue = new ConcurrentQueue<IActorMessage>();
-        private ControlMessages.HangUp hangUp = null;
-        private int maxDequeueCount;
-        private int maxConcurrentCalls = 1;
-
-        internal ServiceBusQueueOperator(ILocalSwitchboard switchBoard, ServiceBusQueue queue, int maxDequeueCount)
-            : this(queue, true)
+        private int maxDequeueCount = 1;
+        private ServiceBusTopicDeliverer ServiceBusMsgSender = null;
+        private ServiceBusTopicReciever ServiceBusMsgReciever = null;
+        ControlMessages.HangUp hangUp = null;
+        ConcurrentQueue<IActorMessage> msgQueue = new ConcurrentQueue<IActorMessage>();
+        
+        internal ServiceBusTopicBaseOperator(ServiceBusTopicDeliverer serviceBusMsgSender)
         {
-            this.Switchboard = switchBoard;
-            this.Switchboard.Operator = this;
+            this.ServiceBusMsgSender = serviceBusMsgSender;
+            this.ID = 0;
+        }
+
+        internal ServiceBusTopicBaseOperator(ILocalSwitchboard switchboard, ServiceBusTopicReciever serviceBusMsgReciever, int maxDequeueCount)
+        {
             this.maxDequeueCount = maxDequeueCount;
-        }
+            this.Switchboard = switchboard;
+            this.ServiceBusMsgReciever = serviceBusMsgReciever;
+            this.ID = 0;
+            if (null != Switchboard)
+                Switchboard.Operator = this;
 
-        internal ServiceBusQueueOperator(ServiceBusQueue queue) :this(queue, false)
-        {
+            if (null == switchboard)
+                throw new SwitchBoardNeededWhenRecievingMessagesException();
 
-        }
-
-        internal ServiceBusQueueOperator(ServiceBusQueue queue, bool recievingOnly)
-        {
-            this.queue = queue;
-            this.recievingOnly = recievingOnly;
+            MessageHandlerOptions options = new MessageHandlerOptions(HandleExceptions);
+            options.AutoComplete = false;
+            options.MaxConcurrentCalls = (int)switchboard.Concurrency;
             
-            if (recievingOnly)
-                RegisterOnMessageHandlerAndReceiveMessages();
+            this.ServiceBusMsgReciever.RegisterMessageHandler(ListenForMessages, options);
         }
-
-        void RegisterOnMessageHandlerAndReceiveMessages()
+        
+        private Task ListenForMessages(Microsoft.Azure.ServiceBus.Message sbMessage, CancellationToken token)
         {
-            // Configure the MessageHandler Options in terms of exception handling, number of concurrent messages to deliver etc.
-            var messageHandlerOptions = new MessageHandlerOptions(HandleExceptions)
+            if (sbMessage.SystemProperties.DeliveryCount > maxDequeueCount)
             {
-                // Maximum number of Concurrent calls to the callback `ProcessMessagesAsync`, set to 1 for simplicity.
-                // Set it according to how many messages the application wants to process in parallel.
-                MaxConcurrentCalls = maxConcurrentCalls,
-
-                // Indicates whether MessagePump should automatically complete the messages after returning from User Callback.
-                // False below indicates the Complete will be handled by the User Callback as in `ProcessMessagesAsync` below.
-                AutoComplete = false
-            };
-
-            // Register the function that will process messages
-            queue.RegisterMessageHandler(ProcessMessages, messageHandlerOptions);
-        }
-
-        private Task ProcessMessages(Message sbMessage, CancellationToken token)
-        {
-            if (sbMessage.SystemProperties.DeliveryCount >= maxDequeueCount)
-            {
-                return queue.AbandonAsync(sbMessage.SystemProperties.LockToken);
+                return this.ServiceBusMsgReciever.AbandonAsync(sbMessage.SystemProperties.LockToken);
             }
 
-            // Process the message
             byte[] msgBytes = sbMessage.Body;
             var t = Telegraph.Instance.Ask(new DeSerializeMessage(msgBytes));
             IActorMessage msg = t.Result as IActorMessage;
@@ -79,23 +64,20 @@ namespace Telegraphy.Azure
             if (null == msg.Status)
                 msg.Status = new TaskCompletionSource<IActorMessage>();
 
-            // Complete the message so that it is not received again.
-            // This can be done only if the queueClient is created in ReceiveMode.PeekLock mode (which is default).
             msg.Status.Task.ContinueWith(p =>
             {
                 // Note: Use the cancellationToken passed as necessary to determine if the queueClient has already been closed.
                 // If queueClient has already been Closed, you may chose to not call CompleteAsync() or AbandonAsync() etc. calls 
                 // to avoid unnecessary exceptions.
-
                 if (token.IsCancellationRequested)
-                    queue.AbandonAsync(sbMessage.SystemProperties.LockToken).Wait();
+                    this.ServiceBusMsgReciever.AbandonAsync(sbMessage.SystemProperties.LockToken);
                 else
-                    queue.CompleteAsync(sbMessage.SystemProperties.LockToken).Wait();
+                    this.ServiceBusMsgReciever.CompleteAsync(sbMessage.SystemProperties.LockToken);
             });
 
             return msg.Status.Task;
         }
-
+        
         private Task HandleExceptions(ExceptionReceivedEventArgs eargs)
         {
             return Task.Factory.StartNew(() =>
@@ -109,9 +91,10 @@ namespace Telegraphy.Azure
         }
 
         #region IOperator
+
         public long ID { get; set; }
 
-        public ulong Count { get { return (ulong)queue.ApproximateMessageCount; } }
+        public ulong Count { get { return (ulong)msgQueue.Count; } }
 
         public ILocalSwitchboard Switchboard { get; set; }
 
@@ -122,24 +105,21 @@ namespace Telegraphy.Azure
                 if (null != hangUp)
                     return;
 
-                if (null != queue)
+                if (null != ServiceBusMsgSender)
                 {
-                    this.queue.CloseAsync().Wait();
+                    ServiceBusMsgSender.CloseAsync().Wait();
                     if (null != msg.Status && !msg.Status.Task.IsCompleted)
                         msg.Status.SetResult(msg);
                     return;
                 }
 
-                this.queue.CloseAsync().Wait();
+                ServiceBusMsgReciever.CloseAsync().Wait();
                 hangUp = (msg as ControlMessages.HangUp);
                 this.Switchboard.Disable();
                 return;
             }
 
-            if (this.recievingOnly)
-                throw new OperatorCannotSendMessagesException();
-
-            System.Diagnostics.Debug.Assert(null != queue);
+            System.Diagnostics.Debug.Assert(null != ServiceBusMsgSender);
             var serializeTask = Telegraph.Instance.Ask(new SerializeMessage(msg));
             byte[] msgBytes = (serializeTask.Result.ProcessingResult as byte[]);
 
@@ -155,7 +135,6 @@ namespace Telegraphy.Azure
                 message.ReplyToSessionId = (msg as IServiceBusMessagePropertiesProvider).ReplyToSessionId ?? message.ReplyToSessionId;
                 message.SessionId = (msg as IServiceBusMessagePropertiesProvider).SessionId ?? message.SessionId;
                 message.MessageId = (msg as IServiceBusMessagePropertiesProvider).MessageId ?? message.MessageId;
-                message.PartitionKey = (msg as IServiceBusMessagePropertiesProvider).PartitionKey ?? message.PartitionKey;
                 if (null != (msg as IServiceBusMessagePropertiesProvider).UserProperties)
                 {
                     foreach (var t in (msg as IServiceBusMessagePropertiesProvider).UserProperties)
@@ -168,39 +147,48 @@ namespace Telegraphy.Azure
                 message.MessageId = (msg as IActorMessageIdentifier).Id;
             }
 
-            this.queue.SendAsync(message).Wait();
+            this.ServiceBusMsgSender.SendAsync(message).Wait();
 
-            if(null != msg.Status)
+            if (null != msg.Status)
                 msg.Status?.SetResult(new ServiceBusMessage(message));
         }
-
+        
         public IActorMessage GetMessage()
         {
+            System.Diagnostics.Debug.Assert(null != ServiceBusMsgReciever);
+
             IActorMessage msg = null;
             if (!msgQueue.TryDequeue(out msg))
                 return null;
-
+            
             return msg;
         }
 
         public bool IsAlive()
         {
-            if (queue.IsClosedOrClosing)
+            if (null == ServiceBusMsgReciever ? this.ServiceBusMsgSender.IsClosedOrClosing : this.ServiceBusMsgReciever.IsClosedOrClosing)
                 return false;
-
-            if (recievingOnly)
-                return this.Switchboard.IsDisabled();
-            return true;
+            
+            return this.Switchboard.IsDisabled();
         }
 
         public void Kill()
         {
-            queue.CloseAsync().Wait();
+            if (null != this.ServiceBusMsgSender)
+            {
+                this.ServiceBusMsgSender.CloseAsync().Wait();
+            }
+            else
+            {
+                this.ServiceBusMsgReciever.CloseAsync().Wait();
+            }
+
+            this.Switchboard.Disable();
         }
 
         public void Register<T>(Action<T> action) where T : class
         {
-            if (null == this.Switchboard && !recievingOnly)
+            if (null == this.Switchboard && null != ServiceBusMsgReciever)
                 throw new CannotRegisterActionWithOperatorSinceWeAreSendingToAzureQueueOnlyException();
 
             this.Switchboard.Register<T>(action);
@@ -208,7 +196,7 @@ namespace Telegraphy.Azure
 
         public void Register<T, K>(Expression<Func<K>> factory) where K : IActor
         {
-            if (null == this.Switchboard && !recievingOnly)
+            if (null == this.Switchboard && null != ServiceBusMsgReciever)
                 throw new CannotRegisterActionWithOperatorSinceWeAreSendingToAzureQueueOnlyException();
 
             this.Switchboard.Register<T, K>(factory);
@@ -225,19 +213,31 @@ namespace Telegraphy.Azure
             this.Switchboard.Register(exceptionType, handler);
         }
 
+        public uint ApproximateMessageCount
+        {
+            get
+            {
+                if (null != this.ServiceBusMsgSender)
+                    return this.ServiceBusMsgSender.ApproximateMessageCount;
+                else
+                    return this.ServiceBusMsgReciever.ApproximateMessageCount;
+            }
+        }
+
         public virtual bool WaitTillEmpty(TimeSpan timeout)
         {
             DateTime start = DateTime.Now;
-            while ((DateTime.Now - start) < timeout && (0 != this.msgQueue.Count || 0 != this.queue.ApproximateMessageCount))
+            while ((DateTime.Now - start) < timeout && (0 != this.msgQueue.Count || 0 != this.ApproximateMessageCount))
             {
                 System.Threading.Thread.Sleep(1000);
             }
-            
+
             return ((DateTime.Now - start) <= timeout);
         }
         #endregion
 
         #region IActor
+
         public bool OnMessageRecieved<T>(T msg) where T : class, IActorMessage
         {
             AddMessage(msg);

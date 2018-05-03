@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Telegraphy.Azure
 {
-    public class ServiceBusTopicDeliveryOperator : ServiceBusTopicOperator
+    public class ServiceBusTopicDeliveryOperator : ServiceBusTopicBaseOperator
     {
         public ServiceBusTopicDeliveryOperator(string connectionString, string topicName,string subscription, bool createTopicIfItDoesNotExist, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
                : this(connectionString, topicName, new string[] { subscription }, createTopicIfItDoesNotExist, policy)
