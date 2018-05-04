@@ -45,13 +45,13 @@ namespace Telegraphy.Azure
                     if ((msg as IActorMessage).Message.GetType().Name.Equals("Byte[]"))
                         msgBytes = (byte[])(msg as IActorMessage).Message;
                     else
-                        throw new OperatorIsNotConfiguredToSerializeThisTypeOfMessageException("Byte[]");
+                        throw new NotConfiguredToSerializeThisTypeOfMessageException("Byte[]");
                     break;
                 case MessageSource.StringMessage:
                     if ((msg as IActorMessage).Message.GetType().Name.Equals("String"))
                         msgBytes = Encoding.UTF8.GetBytes((string)(msg as IActorMessage).Message);
                     else
-                        throw new OperatorIsNotConfiguredToSerializeThisTypeOfMessageException("String");
+                        throw new NotConfiguredToSerializeThisTypeOfMessageException("String");
                     break;
             }
             return new EventData(msgBytes);

@@ -125,19 +125,19 @@ namespace Telegraphy.Azure
                         if ((msg as IActorMessage).Message.GetType().Name.Equals("String"))
                             SerializeAndSend(msg, queue, (string)(msg as IActorMessage).Message);
                         else
-                            throw new OperatorIsNotConfiguredToSerializeThisTypeOfMessageException("String");
+                            throw new NotConfiguredToSerializeThisTypeOfMessageException("String");
                         break;
                     case MessageSource.ByteArrayMessage:
                         if ((msg as IActorMessage).Message.GetType().Name.Equals("Byte[]"))
                             SerializeAndSend(msg, queue, (byte[])(msg as IActorMessage).Message);
                         else
-                            throw new OperatorIsNotConfiguredToSerializeThisTypeOfMessageException("Byte[]");
+                            throw new NotConfiguredToSerializeThisTypeOfMessageException("Byte[]");
                         break;
                     case MessageSource.EntireIActor:
                         SerializeAndSend(msg, queue);
                         break;
                     default:
-                        throw new OperatorIsNotConfiguredToSerializeThisTypeOfMessageException(messageSource.ToString());
+                        throw new NotConfiguredToSerializeThisTypeOfMessageException(messageSource.ToString());
                 }
             }
             catch(Exception ex)
