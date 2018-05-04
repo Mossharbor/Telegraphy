@@ -11,8 +11,8 @@ namespace Telegraphy.Azure
     class ServiceBusTopicDeliverer : Microsoft.Azure.ServiceBus.Core.MessageSender
     {
         string connectionString;
-        string[] subscriptions = null;
-        string topic = null;
+        protected string[] subscriptions = null;
+        protected string topic = null;
         public ServiceBusTopicDeliverer(string connectionString, string topicName, bool createTopicIfItDoesNotExist, Microsoft.Azure.ServiceBus.RetryPolicy retryPolicy = null)
             :base(connectionString, topicName, retryPolicy)
         {

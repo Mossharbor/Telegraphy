@@ -9,9 +9,9 @@ namespace Telegraphy.Azure
 {
     public class ServiceBusTopicByteArrayReceptionOperator : ServiceBusTopicBaseOperator
     {
-        const int DefaultDequeueMaxCount = 3;
-        const int DefaultPrefetchCount = 0;
-        const int DefaultConcurrency = 1;
+        const int DefaultDequeueMaxCount = ServiceBusTopicActorMessageReceptionOperator.DefaultDequeueMaxCount;
+        const int DefaultPrefetchCount = ServiceBusTopicActorMessageReceptionOperator.DefaultPrefetchCount;
+        const int DefaultConcurrency = ServiceBusTopicActorMessageReceptionOperator.DefaultConcurrency;
 
         public ServiceBusTopicByteArrayReceptionOperator(LocalConcurrencyType concurrencyType, string connectionString, string topicName, string subscriptionName, bool createQueueIfItDoesNotExist, uint concurrency = DefaultConcurrency)
             : this(concurrencyType, connectionString, topicName, subscriptionName, createQueueIfItDoesNotExist, DefaultDequeueMaxCount, DefaultPrefetchCount, concurrency)

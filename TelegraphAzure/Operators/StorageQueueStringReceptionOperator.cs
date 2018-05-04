@@ -11,12 +11,14 @@ namespace Telegraphy.Azure
 {
     public class StorageQueueStringReceptionOperator : StorageQueueBaseOperator
     {
+        const int DefaultConcurrency = ServiceBusTopicActorMessageReceptionOperator.DefaultConcurrency;
+
         public StorageQueueStringReceptionOperator(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true)
                  : base(new LocalSwitchboard(LocalConcurrencyType.OneThreadAllActors), storageConnectionString, queueName, createQueueIfItDoesNotExist, true, MessageSource.StringMessage, null, null, null)
         {
         }
 
-        public StorageQueueStringReceptionOperator(LocalConcurrencyType concurrencyType, string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true, uint concurrency = 1)
+        public StorageQueueStringReceptionOperator(LocalConcurrencyType concurrencyType, string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true, uint concurrency = DefaultConcurrency)
                  : base(new LocalSwitchboard(concurrencyType, concurrency), storageConnectionString, queueName, createQueueIfItDoesNotExist, true, MessageSource.StringMessage, null, null, null)
         {
         }
