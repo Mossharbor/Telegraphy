@@ -147,8 +147,12 @@
     <Compile Include="Operators\ServiceBusQueueActorMessageReceptionOperator.cs" />
     <Compile Include="Operators\ServiceBusQueueBaseOperator.cs" />
     <Compile Include="Operators\ServiceBusTopicActorMessageReceptionOperator.cs" />
+    <Compile Include="Operators\ServiceBusTopicByteArrayDeliveryOperator.cs" />
+    <Compile Include="Operators\ServiceBusTopicByteArrayReceptionOperator.cs" />
     <Compile Include="Operators\ServiceBusTopicReciever.cs" />
     <Compile Include="Operators\ServiceBusTopicDeliverer.cs" />
+    <Compile Include="Operators\ServiceBusTopicStringDeliveryOperator.cs" />
+    <Compile Include="Operators\ServiceBusTopicStringReceptionOperator.cs" />
     <Compile Include="Operators\StorageQueueBaseOperator.cs" />
     <Compile Include="Exceptions\CannotRegisterActionWithOperatorSinceWeAreSendingToAzureQueueOnly.cs" />
     <Compile Include="Exceptions\OperatorCannotRecieveMessages.cs" />

@@ -24,12 +24,12 @@ namespace Telegraphy.Azure
         {
         }
 
-        private static ServiceBusTopicDeliverer GetSender(string connectionString, string topicName, bool createTopicIfItDoesNotExist, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
+        internal static ServiceBusTopicDeliverer GetSender(string connectionString, string topicName, bool createTopicIfItDoesNotExist, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
         {
             return new ServiceBusTopicDeliverer(connectionString, topicName, createTopicIfItDoesNotExist, policy);
         }
 
-        private static ServiceBusTopicDeliverer GetSender(string connectionString, string topicName, string[] subscriptionNames, bool createTopicIfItDoesNotExist, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
+        internal static ServiceBusTopicDeliverer GetSender(string connectionString, string topicName, string[] subscriptionNames, bool createTopicIfItDoesNotExist, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
         {
             return new ServiceBusTopicDeliverer(connectionString, topicName, subscriptionNames, createTopicIfItDoesNotExist, policy);
         }

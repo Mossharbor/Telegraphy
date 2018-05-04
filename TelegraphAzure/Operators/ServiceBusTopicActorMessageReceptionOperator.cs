@@ -19,16 +19,16 @@ namespace Telegraphy.Azure
         }
 
         public ServiceBusTopicActorMessageReceptionOperator(LocalConcurrencyType concurrencyType, string connectionString, string topicName, string subscriptionName, bool createQueueIfItDoesNotExist, int maxDequeueCount = DefaultDequeueMaxCount, int prefetchCount = DefaultPrefetchCount, uint concurrency = DefaultConcurrency, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
-               : base(new LocalSwitchboard(concurrencyType, concurrency), GetSender(connectionString, topicName, subscriptionName, createQueueIfItDoesNotExist, prefetchCount, policy), maxDequeueCount)
+               : base(new LocalSwitchboard(concurrencyType, concurrency), GetSender(connectionString, topicName, subscriptionName, createQueueIfItDoesNotExist, prefetchCount, policy), maxDequeueCount, MessageSource.EntireIActor)
         {
         }
 
         public ServiceBusTopicActorMessageReceptionOperator(ILocalSwitchboard switchBoard, string connectionString, string topicName, string subscriptionName, bool createQueueIfItDoesNotExist, int maxDequeueCount = DefaultDequeueMaxCount, int prefetchCount = DefaultPrefetchCount, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
-               : base(switchBoard, GetSender(connectionString, topicName, subscriptionName, createQueueIfItDoesNotExist, prefetchCount, policy), maxDequeueCount)
+               : base(switchBoard, GetSender(connectionString, topicName, subscriptionName, createQueueIfItDoesNotExist, prefetchCount, policy), maxDequeueCount, MessageSource.EntireIActor)
         {
         }
         
-        private static ServiceBusTopicReciever GetSender(string connectionString, string topicName, string subscriptionName, bool createQueueIfItDoesNotExist, int prefetchCount = DefaultPrefetchCount, Microsoft.Azure.ServiceBus.RetryPolicy retryPolicy = null, Microsoft.Azure.ServiceBus.ReceiveMode receiveMode = Microsoft.Azure.ServiceBus.ReceiveMode.PeekLock)
+        internal static ServiceBusTopicReciever GetSender(string connectionString, string topicName, string subscriptionName, bool createQueueIfItDoesNotExist, int prefetchCount = DefaultPrefetchCount, Microsoft.Azure.ServiceBus.RetryPolicy retryPolicy = null, Microsoft.Azure.ServiceBus.ReceiveMode receiveMode = Microsoft.Azure.ServiceBus.ReceiveMode.PeekLock)
         {
             return new ServiceBusTopicReciever(connectionString, topicName, subscriptionName, createQueueIfItDoesNotExist, receiveMode, retryPolicy, prefetchCount);
         }
