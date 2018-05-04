@@ -126,8 +126,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actors\SendByteArrayToServiceBusQueue.cs" />
     <Compile Include="Actors\SendBytesToStorageQueue.cs" />
+    <Compile Include="Actors\SendMessageToServiceBusQueue.cs" />
     <Compile Include="Actors\SendMessageToStorageQueue.cs" />
+    <Compile Include="Actors\SendStringToServiceBusQueue.cs" />
     <Compile Include="Actors\SendStringToStorageQueue.cs" />
     <Compile Include="Exceptions\OperatorIsNotConfiguredToSerializeThisTypeOfMessage.cs" />
     <Compile Include="Exceptions\SendBytesActorCanOnlySendValueTypeByteArrayMessages.cs" />
@@ -180,7 +183,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ExtentionMethods\" />
-    <Folder Include="Switchboards\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -37,7 +37,7 @@ namespace Telegraphy.Azure
 
         }
 
-        internal ServiceBusQueueBaseOperator(ServiceBusQueue queue, bool recievingOnly, MessageSource messageSource = MessageSource.EntireIActor)
+        private ServiceBusQueueBaseOperator(ServiceBusQueue queue, bool recievingOnly, MessageSource messageSource = MessageSource.EntireIActor)
         {
             this.messageSource = messageSource;
             this.queue = queue;
@@ -155,8 +155,14 @@ namespace Telegraphy.Azure
                 throw new OperatorCannotSendMessagesException();
 
             System.Diagnostics.Debug.Assert(null != queue);
-            //var serializeTask = Telegraph.Instance.Ask(new SerializeMessage(msg));
-            //byte[] msgBytes = (serializeTask.Result.ProcessingResult as byte[]);
+            Message message = SerializeAndSend(msg, this.queue, this.messageSource);
+
+            if (null != msg.Status)
+                msg.Status?.SetResult(new ServiceBusMessage(message));
+        }
+        
+        internal static Message SerializeAndSend<T>(T msg, ServiceBusQueue queue, MessageSource messageSource) where T : class, IActorMessage
+        {
             byte[] msgBytes = null;
             switch (messageSource)
             {
@@ -206,10 +212,8 @@ namespace Telegraphy.Azure
                 message.MessageId = (msg as IActorMessageIdentifier).Id;
             }
 
-            this.queue.SendAsync(message).Wait();
-
-            if(null != msg.Status)
-                msg.Status?.SetResult(new ServiceBusMessage(message));
+            queue.SendAsync(message).Wait();
+            return message;
         }
 
         public IActorMessage GetMessage()

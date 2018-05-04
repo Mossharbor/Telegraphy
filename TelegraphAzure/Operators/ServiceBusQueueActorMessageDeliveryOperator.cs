@@ -12,16 +12,16 @@ namespace Telegraphy.Azure
     public class ServiceBusQueueActorMessageDeliveryOperator : ServiceBusQueueBaseOperator
     {
         public ServiceBusQueueActorMessageDeliveryOperator(string connectionString,string queueName, bool createQueueIfItDoesNotExist)
-            : this(GetQueue(connectionString, queueName), connectionString, createQueueIfItDoesNotExist)
+            : base (GetQueue(connectionString, queueName, createQueueIfItDoesNotExist), MessageSource.EntireIActor)
         { }
 
         public ServiceBusQueueActorMessageDeliveryOperator(QueueClient queue, string connectionString, bool createQueueIfItDoesNotExist)
             : base (new ServiceBusQueue(connectionString, queue, createQueueIfItDoesNotExist),MessageSource.EntireIActor)
         { }
 
-        internal static QueueClient GetQueue(string connectionString,string queueName)
+        internal static ServiceBusQueue GetQueue(string connectionString,string queueName,bool createQueueIfItDoesNotExist)
         {
-            return new QueueClient(connectionString, queueName);
+            return new ServiceBusQueue(connectionString, queueName, createQueueIfItDoesNotExist);
         }
 
         public override bool WaitTillEmpty(TimeSpan timeout)
