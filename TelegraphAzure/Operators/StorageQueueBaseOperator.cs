@@ -8,26 +8,30 @@ using Microsoft.WindowsAzure.Storage.Queue;
 using Microsoft.WindowsAzure.Storage;
 using Telegraphy.Azure.Exceptions;
 using System.Collections.Concurrent;
+using System.ServiceModel;
 
 namespace Telegraphy.Azure
 {
+    public enum MessageSource { ByteArrayMessage =0, StringMessage = 1, EntireIActor=2 }
+
     public abstract class StorageQueueBaseOperator : IOperator
     {
         ConcurrentDictionary<Type, Action<Exception>> _exceptionTypeToHandler = new ConcurrentDictionary<Type, Action<Exception>>();
         CloudQueue queue = null;
-        //MessageSerializationActor serializer = new MessageSerializationActor();
-        //MessageDeserializationActor deserializer = new MessageDeserializationActor();
         TimeSpan? retrieveVisibilityTimeout = null;
         QueueRequestOptions retrievalRequestOptions = null;
-        OperationContext retrievalOperationContext = null;
+        Microsoft.WindowsAzure.Storage.OperationContext retrievalOperationContext = null;
         bool recieveMessagesOnly = false;
         ControlMessages.HangUp hangUp = null;
-        protected StorageQueueBaseOperator(ILocalSwitchboard switchBoard, string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist, bool recieve, TimeSpan? retrieveVisibilityTimeout = null, QueueRequestOptions retrievalRequestOptions = null, OperationContext retrievalOperationContext = null)
-            : this (switchBoard, GetQueueFrom(storageConnectionString, queueName, createQueueIfItDoesNotExist), recieve, retrieveVisibilityTimeout, retrievalRequestOptions, retrievalOperationContext)
+        MessageSource messageSource = MessageSource.EntireIActor;
+        private System.ServiceModel.OperationContext retrievalOperationContext1;
+
+        protected StorageQueueBaseOperator(ILocalSwitchboard switchBoard, string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist, bool recieve, MessageSource messageSource = MessageSource.EntireIActor, TimeSpan? retrieveVisibilityTimeout = null, QueueRequestOptions retrievalRequestOptions = null, Microsoft.WindowsAzure.Storage.OperationContext retrievalOperationContext = null)
+            : this (switchBoard, GetQueueFrom(storageConnectionString, queueName, createQueueIfItDoesNotExist), recieve, messageSource, retrieveVisibilityTimeout, retrievalRequestOptions, retrievalOperationContext)
         {
         }
 
-        protected StorageQueueBaseOperator(ILocalSwitchboard switchBoard, CloudQueue queue, bool recieve, TimeSpan? retrieveVisibilityTimeout = null, QueueRequestOptions retrievalRequestOptions = null, OperationContext retrievalOperationContext = null)
+        protected StorageQueueBaseOperator(ILocalSwitchboard switchBoard, CloudQueue queue, bool recieve, MessageSource messageSource = MessageSource.EntireIActor, TimeSpan? retrieveVisibilityTimeout = null, QueueRequestOptions retrievalRequestOptions = null, Microsoft.WindowsAzure.Storage.OperationContext retrievalOperationContext = null)
         {
             this.recieveMessagesOnly = recieve;
             this.Switchboard = switchBoard;
@@ -36,13 +40,14 @@ namespace Telegraphy.Azure
             this.retrieveVisibilityTimeout = retrieveVisibilityTimeout;
             this.retrievalRequestOptions = retrievalRequestOptions;
             this.retrievalOperationContext = retrievalOperationContext;
+            this.messageSource = messageSource;
             if (null != switchBoard)
                 switchBoard.Operator = this;
 
             if (null == switchBoard && recieve)
                 throw new SwitchBoardNeededWhenRecievingMessagesException();
         }
-
+        
         internal static CloudQueue GetQueueFrom(string storageConnectionString,string queueName, bool createQueueIfItDoesNotExist)
         {
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageConnectionString);
@@ -114,7 +119,26 @@ namespace Telegraphy.Azure
             // Serialize the message first
             try
             {
-                SerializeAndSend(msg, queue);
+                switch(messageSource)
+                {
+                    case MessageSource.StringMessage:
+                        if ((msg as IActorMessage).Message.GetType().Name.Equals("String"))
+                            SerializeAndSend(msg, queue, (string)(msg as IActorMessage).Message);
+                        else
+                            throw new OperatorIsNotConfiguredToSerializeThisTypeOfMessageException("String");
+                        break;
+                    case MessageSource.ByteArrayMessage:
+                        if ((msg as IActorMessage).Message.GetType().Name.Equals("Byte[]"))
+                            SerializeAndSend(msg, queue, (byte[])(msg as IActorMessage).Message);
+                        else
+                            throw new OperatorIsNotConfiguredToSerializeThisTypeOfMessageException("Byte[]");
+                        break;
+                    case MessageSource.EntireIActor:
+                        SerializeAndSend(msg, queue);
+                        break;
+                    default:
+                        throw new OperatorIsNotConfiguredToSerializeThisTypeOfMessageException(messageSource.ToString());
+                }
             }
             catch(Exception ex)
             {
@@ -130,6 +154,9 @@ namespace Telegraphy.Azure
         {
             CloudQueueMessage cloudMessage = new CloudQueueMessage(msgString);
             AddMessageProperties(queue, cloudMessage, (msg is IStorageQueuePropertiesProvider) ? (msg as IStorageQueuePropertiesProvider) : null);
+            
+            if (null != msg.Status)
+                msg.Status?.SetResult(new QueuedCloudMessage(cloudMessage));
         }
 
         internal static void SerializeAndSend(IActorMessage msg, CloudQueue queue, byte[] msgBytes = null)
@@ -176,9 +203,24 @@ namespace Telegraphy.Azure
 
                 if (null == next)
                     return null;
-                byte[] msgBytes = next.AsBytes;
-                var t = Telegraph.Instance.Ask(new DeSerializeMessage(msgBytes));
-                IActorMessage msg = t.Result as IActorMessage;
+
+                IActorMessage msg = null;
+                switch (messageSource)
+                {
+                    case MessageSource.EntireIActor:
+                        {
+                            byte[] msgBytes = next.AsBytes;
+                            var t = Telegraph.Instance.Ask(new DeSerializeMessage(msgBytes));
+                            msg = t.Result as IActorMessage;
+                        }
+                        break;
+                    case MessageSource.StringMessage:
+                        msg = next.AsString.ToActorMessage();
+                        break;
+                    case MessageSource.ByteArrayMessage:
+                        msg = next.AsBytes.ToActorMessage();
+                        break;
+                }
 
                 if (null == msg.Status)
                     msg.Status = new TaskCompletionSource<IActorMessage>();

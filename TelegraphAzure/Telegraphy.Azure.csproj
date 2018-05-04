@@ -129,19 +129,24 @@
     <Compile Include="Actors\SendBytesToStorageQueue.cs" />
     <Compile Include="Actors\SendMessageToStorageQueue.cs" />
     <Compile Include="Actors\SendStringToStorageQueue.cs" />
+    <Compile Include="Exceptions\OperatorIsNotConfiguredToSerializeThisTypeOfMessage.cs" />
     <Compile Include="Exceptions\SendBytesActorCanOnlySendValueTypeByteArrayMessages.cs" />
     <Compile Include="Exceptions\SendStringActorCanOnlySendStringMessages.cs" />
     <Compile Include="Messages\EventHubMessage.cs" />
     <Compile Include="Messages\IServiceBusMessagePropertiesProvider.cs" />
     <Compile Include="Messages\ServiceBusMessage.cs" />
     <Compile Include="Operators\EventHubBaseOperator.cs" />
-    <Compile Include="Operators\ServiceBusTopicDeliveryOperator.cs" />
+    <Compile Include="Operators\ServiceBusQueueByteArrayDeliveryOperator.cs" />
+    <Compile Include="Operators\ServiceBusQueueByteArrayReceptionOperator.cs" />
+    <Compile Include="Operators\ServiceBusQueueStringDeliveryOperator.cs" />
+    <Compile Include="Operators\ServiceBusQueueStringReceptionOperator.cs" />
+    <Compile Include="Operators\ServiceBusTopicActorMessageDeliveryOperator.cs" />
     <Compile Include="Operators\ServiceBusTopicBaseOperator.cs" />
     <Compile Include="Operators\ServiceBusQueue.cs" />
-    <Compile Include="Operators\ServiceBusQueueDeliveryOperator.cs" />
-    <Compile Include="Operators\ServiceBusQueueReceptionOperator.cs" />
+    <Compile Include="Operators\ServiceBusQueueActorMessageDeliveryOperator.cs" />
+    <Compile Include="Operators\ServiceBusQueueActorMessageReceptionOperator.cs" />
     <Compile Include="Operators\ServiceBusQueueBaseOperator.cs" />
-    <Compile Include="Operators\ServiceBusTopicReceptionOperator.cs" />
+    <Compile Include="Operators\ServiceBusTopicActorMessageReceptionOperator.cs" />
     <Compile Include="Operators\ServiceBusTopicReciever.cs" />
     <Compile Include="Operators\ServiceBusTopicDeliverer.cs" />
     <Compile Include="Operators\StorageQueueBaseOperator.cs" />
@@ -151,9 +156,13 @@
     <Compile Include="Exceptions\SwitchBoardNeededWhenRecievingMessages.cs" />
     <Compile Include="Messages\IStorageQueuePropertiesProvider.cs" />
     <Compile Include="Messages\QueuedCloudMessage.cs" />
+    <Compile Include="Operators\StorageQueueByteArrayDeliveryOperator.cs" />
+    <Compile Include="Operators\StorageQueueByteArrayReceptionOperator.cs" />
+    <Compile Include="Operators\StorageQueueStringDeliveryOperator.cs" />
+    <Compile Include="Operators\StorageQueueStringReceptionOperator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Operators\StorageQueueReceptionOperator.cs" />
-    <Compile Include="Operators\StorageQueueDeliveryOperator.cs" />
+    <Compile Include="Operators\StorageQueueActorMessageReceptionOperator.cs" />
+    <Compile Include="Operators\StorageQueueActorMessageDeliveryOperator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Telegraph.net\Telegraphy.Net.csproj">

@@ -21,22 +21,25 @@ namespace Telegraphy.Azure
         private ControlMessages.HangUp hangUp = null;
         private int maxDequeueCount;
         private int maxConcurrentCalls = 1;
+        private MessageSource messageSource = MessageSource.EntireIActor;
 
-        internal ServiceBusQueueBaseOperator(ILocalSwitchboard switchBoard, ServiceBusQueue queue, int maxDequeueCount)
-            : this(queue, true)
+        internal ServiceBusQueueBaseOperator(ILocalSwitchboard switchBoard, ServiceBusQueue queue, int maxDequeueCount, MessageSource messageSource = MessageSource.EntireIActor)
+            : this(queue, true, messageSource)
         {
             this.Switchboard = switchBoard;
             this.Switchboard.Operator = this;
             this.maxDequeueCount = maxDequeueCount;
         }
 
-        internal ServiceBusQueueBaseOperator(ServiceBusQueue queue) :this(queue, false)
+        internal ServiceBusQueueBaseOperator(ServiceBusQueue queue, MessageSource messageSource = MessageSource.EntireIActor) 
+            :this(queue, false, messageSource)
         {
 
         }
 
-        internal ServiceBusQueueBaseOperator(ServiceBusQueue queue, bool recievingOnly)
+        internal ServiceBusQueueBaseOperator(ServiceBusQueue queue, bool recievingOnly, MessageSource messageSource = MessageSource.EntireIActor)
         {
+            this.messageSource = messageSource;
             this.queue = queue;
             this.recievingOnly = recievingOnly;
             
@@ -69,10 +72,22 @@ namespace Telegraphy.Azure
                 return queue.AbandonAsync(sbMessage.SystemProperties.LockToken);
             }
 
-            // Process the message
-            byte[] msgBytes = sbMessage.Body;
-            var t = Telegraph.Instance.Ask(new DeSerializeMessage(msgBytes));
-            IActorMessage msg = t.Result as IActorMessage;
+            IActorMessage msg = null;
+            switch (this.messageSource)
+            {
+                case MessageSource.EntireIActor:
+                    {
+                        byte[] msgBytes = sbMessage.Body;
+                        var t = Telegraph.Instance.Ask(new DeSerializeMessage(msgBytes));
+                        msg = t.Result as IActorMessage;
+                    }
+                    break;
+
+                case MessageSource.ByteArrayMessage:
+                    msg = sbMessage.Body.ToActorMessage(); break;
+                case MessageSource.StringMessage:
+                    msg = Encoding.UTF8.GetString(sbMessage.Body).ToActorMessage(); break;
+            }
 
             msgQueue.Enqueue(msg);
 
@@ -140,8 +155,31 @@ namespace Telegraphy.Azure
                 throw new OperatorCannotSendMessagesException();
 
             System.Diagnostics.Debug.Assert(null != queue);
-            var serializeTask = Telegraph.Instance.Ask(new SerializeMessage(msg));
-            byte[] msgBytes = (serializeTask.Result.ProcessingResult as byte[]);
+            //var serializeTask = Telegraph.Instance.Ask(new SerializeMessage(msg));
+            //byte[] msgBytes = (serializeTask.Result.ProcessingResult as byte[]);
+            byte[] msgBytes = null;
+            switch (messageSource)
+            {
+                case MessageSource.EntireIActor:
+                    {
+                        var serializeTask = Telegraph.Instance.Ask(new SerializeMessage(msg));
+                        msgBytes = (serializeTask.Result.ProcessingResult as byte[]);
+                    }
+                    break;
+
+                case MessageSource.ByteArrayMessage:
+                    if ((msg as IActorMessage).Message.GetType().Name.Equals("Byte[]"))
+                        msgBytes = (byte[])(msg as IActorMessage).Message;
+                    else
+                        throw new OperatorIsNotConfiguredToSerializeThisTypeOfMessageException("Byte[]");
+                    break;
+                case MessageSource.StringMessage:
+                    if ((msg as IActorMessage).Message.GetType().Name.Equals("String"))
+                        msgBytes = Encoding.UTF8.GetBytes((string)(msg as IActorMessage).Message);
+                    else
+                        throw new OperatorIsNotConfiguredToSerializeThisTypeOfMessageException("String");
+                    break;
+            }
 
             var message = new Message(msgBytes);
 

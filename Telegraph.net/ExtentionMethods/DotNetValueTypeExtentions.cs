@@ -8,6 +8,12 @@ namespace Telegraphy.Net
 {
     public static class DotNetValueTypeExtentions
     {
+        public static IActorMessage ToActorMessage(this string self)
+        {
+            // NOTE this is not a value type but it is so common we added here.
+            return new SimpleMessage<string>(self);
+        }
+
         public static IActorMessage ToActorMessage(this int self)
         {
             return new ValueTypeMessage<int>(self);

@@ -7,20 +7,20 @@ using System.Threading.Tasks;
 
 namespace Telegraphy.Azure
 {
-    public class ServiceBusTopicDeliveryOperator : ServiceBusTopicBaseOperator
+    public class ServiceBusTopicActorMessageDeliveryOperator : ServiceBusTopicBaseOperator
     {
-        public ServiceBusTopicDeliveryOperator(string connectionString, string topicName,string subscription, bool createTopicIfItDoesNotExist, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
+        public ServiceBusTopicActorMessageDeliveryOperator(string connectionString, string topicName,string subscription, bool createTopicIfItDoesNotExist, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
                : this(connectionString, topicName, new string[] { subscription }, createTopicIfItDoesNotExist, policy)
         {
         }
 
-        public ServiceBusTopicDeliveryOperator(string connectionString, string topicName, bool createTopicIfItDoesNotExist, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
-               : base(GetSender(connectionString, topicName, createTopicIfItDoesNotExist, policy))
+        public ServiceBusTopicActorMessageDeliveryOperator(string connectionString, string topicName, bool createTopicIfItDoesNotExist, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
+               : base(GetSender(connectionString, topicName, createTopicIfItDoesNotExist, policy), MessageSource.EntireIActor)
         {
         }
 
-        public ServiceBusTopicDeliveryOperator(string connectionString, string topicName, string[] subscriptionNames, bool createTopicIfItDoesNotExist, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
-               : base(GetSender(connectionString, topicName, subscriptionNames, createTopicIfItDoesNotExist, policy))
+        public ServiceBusTopicActorMessageDeliveryOperator(string connectionString, string topicName, string[] subscriptionNames, bool createTopicIfItDoesNotExist, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
+               : base(GetSender(connectionString, topicName, subscriptionNames, createTopicIfItDoesNotExist, policy), MessageSource.EntireIActor)
         {
         }
 

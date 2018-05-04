@@ -22,15 +22,18 @@ namespace Telegraphy.Azure
         private ServiceBusTopicReciever ServiceBusMsgReciever = null;
         ControlMessages.HangUp hangUp = null;
         ConcurrentQueue<IActorMessage> msgQueue = new ConcurrentQueue<IActorMessage>();
-        
-        internal ServiceBusTopicBaseOperator(ServiceBusTopicDeliverer serviceBusMsgSender)
+        MessageSource messageSource = MessageSource.EntireIActor;
+
+        internal ServiceBusTopicBaseOperator(ServiceBusTopicDeliverer serviceBusMsgSender, MessageSource messageSource = MessageSource.EntireIActor)
         {
+            this.messageSource = messageSource;
             this.ServiceBusMsgSender = serviceBusMsgSender;
             this.ID = 0;
         }
 
-        internal ServiceBusTopicBaseOperator(ILocalSwitchboard switchboard, ServiceBusTopicReciever serviceBusMsgReciever, int maxDequeueCount)
+        internal ServiceBusTopicBaseOperator(ILocalSwitchboard switchboard, ServiceBusTopicReciever serviceBusMsgReciever, int maxDequeueCount, MessageSource messageSource = MessageSource.EntireIActor)
         {
+            this.messageSource = messageSource;
             this.maxDequeueCount = maxDequeueCount;
             this.Switchboard = switchboard;
             this.ServiceBusMsgReciever = serviceBusMsgReciever;
@@ -55,9 +58,22 @@ namespace Telegraphy.Azure
                 return this.ServiceBusMsgReciever.AbandonAsync(sbMessage.SystemProperties.LockToken);
             }
 
-            byte[] msgBytes = sbMessage.Body;
-            var t = Telegraph.Instance.Ask(new DeSerializeMessage(msgBytes));
-            IActorMessage msg = t.Result as IActorMessage;
+            IActorMessage msg = null;
+            switch (this.messageSource)
+            {
+                case MessageSource.EntireIActor:
+                    {
+                        byte[] msgBytes = sbMessage.Body;
+                        var t = Telegraph.Instance.Ask(new DeSerializeMessage(msgBytes));
+                        msg = t.Result as IActorMessage;
+                    }
+                    break;
+
+                case MessageSource.ByteArrayMessage:
+                    msg = sbMessage.Body.ToActorMessage(); break;
+                case MessageSource.StringMessage:
+                    msg = Encoding.UTF8.GetString(sbMessage.Body).ToActorMessage(); break;
+            }
 
             msgQueue.Enqueue(msg);
 
@@ -120,8 +136,29 @@ namespace Telegraphy.Azure
             }
 
             System.Diagnostics.Debug.Assert(null != ServiceBusMsgSender);
-            var serializeTask = Telegraph.Instance.Ask(new SerializeMessage(msg));
-            byte[] msgBytes = (serializeTask.Result.ProcessingResult as byte[]);
+            byte[] msgBytes = null;
+            switch (messageSource)
+            {
+                case MessageSource.EntireIActor:
+                    {
+                        var serializeTask = Telegraph.Instance.Ask(new SerializeMessage(msg));
+                        msgBytes = (serializeTask.Result.ProcessingResult as byte[]);
+                    }
+                    break;
+
+                case MessageSource.ByteArrayMessage:
+                    if ((msg as IActorMessage).Message.GetType().Name.Equals("Byte[]"))
+                        msgBytes = (byte[])(msg as IActorMessage).Message;
+                    else
+                        throw new OperatorIsNotConfiguredToSerializeThisTypeOfMessageException("Byte[]");
+                    break;
+                case MessageSource.StringMessage:
+                    if ((msg as IActorMessage).Message.GetType().Name.Equals("String"))
+                        msgBytes = Encoding.UTF8.GetBytes((string)(msg as IActorMessage).Message);
+                    else
+                        throw new OperatorIsNotConfiguredToSerializeThisTypeOfMessageException("String");
+                    break;
+            }
 
             var message = new Message(msgBytes);
 
