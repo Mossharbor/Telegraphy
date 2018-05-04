@@ -162,6 +162,10 @@
     <Compile Include="AzureWrappers\ServiceBusTopicDeliverer.cs" />
     <Compile Include="Operators\ServiceBusTopicDeadLetterActorMessageDeliveryOperator.cs" />
     <Compile Include="Operators\ServiceBusTopicDeadLetterActorMessageReceptionOperator.cs" />
+    <Compile Include="Operators\ServiceBusTopicDeadLetterByteArrayDeliveryOperator.cs" />
+    <Compile Include="Operators\ServiceBusTopicDeadLetterByteArrayReceptionOperator.cs" />
+    <Compile Include="Operators\ServiceBusTopicDeadLetterStringDeliveryOperator.cs" />
+    <Compile Include="Operators\ServiceBusTopicDeadLetterStringReceptionOperator.cs" />
     <Compile Include="Operators\ServiceBusTopicStringDeliveryOperator.cs" />
     <Compile Include="Operators\ServiceBusTopicStringReceptionOperator.cs" />
     <Compile Include="Operators\StorageQueueBaseOperator.cs" />

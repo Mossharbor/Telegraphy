@@ -62,14 +62,14 @@ namespace Telegraphy.Azure
             };
 
             // Register the function that will process messages
-            queue.RegisterMessageHandler(ProcessMessages, messageHandlerOptions);
+            queue.RegisterMessageHandler(RecieveMessages, messageHandlerOptions);
         }
 
-        private Task ProcessMessages(Message sbMessage, CancellationToken token)
+        private Task RecieveMessages(Message sbMessage, CancellationToken token)
         {
             if (sbMessage.SystemProperties.DeliveryCount >= maxDequeueCount)
             {
-                return queue.AbandonAsync(sbMessage.SystemProperties.LockToken);
+                return queue.DeadLetterAsync(sbMessage.SystemProperties.LockToken);
             }
 
             IActorMessage msg = null;
