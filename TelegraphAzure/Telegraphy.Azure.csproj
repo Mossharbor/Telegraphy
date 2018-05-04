@@ -184,6 +184,12 @@
     <Compile Include="Messages\QueuedCloudMessage.cs" />
     <Compile Include="Operators\StorageQueueByteArrayDeliveryOperator.cs" />
     <Compile Include="Operators\StorageQueueByteArrayReceptionOperator.cs" />
+    <Compile Include="Operators\StorageQueueDeadLetterActorMessageDeliveryOperator.cs" />
+    <Compile Include="Operators\StorageQueueDeadLetterActorMessageReceptionOperator.cs" />
+    <Compile Include="Operators\StorageQueueDeadLetterByteArrayDeliveryOperator.cs" />
+    <Compile Include="Operators\StorageQueueDeadLetterByteArrayReceptionOperator.cs" />
+    <Compile Include="Operators\StorageQueueDeadLetterStringDeliveryOperator.cs" />
+    <Compile Include="Operators\StorageQueueDeadLetterStringReceptionOperator.cs" />
     <Compile Include="Operators\StorageQueueStringDeliveryOperator.cs" />
     <Compile Include="Operators\StorageQueueStringReceptionOperator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

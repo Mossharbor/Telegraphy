@@ -14,23 +14,23 @@ namespace Telegraphy.Azure
         const int DefaultConcurrency = ServiceBusTopicActorMessageReceptionOperator.DefaultConcurrency;
         const int DefaultDequeueMaxCount = ServiceBusTopicActorMessageReceptionOperator.DefaultDequeueMaxCount;
 
-        public StorageQueueActorMessageReceptionOperator(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true, int maxDequeuCount = DefaultDequeueMaxCount)
-                 : base(new LocalSwitchboard(LocalConcurrencyType.OneThreadAllActors), storageConnectionString, queueName, createQueueIfItDoesNotExist, true, MessageSource.EntireIActor, maxDequeuCount, null, null, null)
+        public StorageQueueActorMessageReceptionOperator(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true, int maxDequeueCount = DefaultDequeueMaxCount)
+                 : base(new LocalSwitchboard(LocalConcurrencyType.OneThreadAllActors), storageConnectionString, queueName, createQueueIfItDoesNotExist, true, MessageSource.EntireIActor, maxDequeueCount, null, null, null)
         {
         }
 
-        public StorageQueueActorMessageReceptionOperator(LocalConcurrencyType concurrencyType, string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true, int maxDequeuCount = DefaultDequeueMaxCount, uint concurrency = DefaultConcurrency)
-                 : base(new LocalSwitchboard(concurrencyType, concurrency), storageConnectionString, queueName, createQueueIfItDoesNotExist, true, MessageSource.EntireIActor, maxDequeuCount, null, null, null)
+        public StorageQueueActorMessageReceptionOperator(LocalConcurrencyType concurrencyType, string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true, int maxDequeueCount = DefaultDequeueMaxCount, uint concurrency = DefaultConcurrency)
+                 : base(new LocalSwitchboard(concurrencyType, concurrency), storageConnectionString, queueName, createQueueIfItDoesNotExist, true, MessageSource.EntireIActor, maxDequeueCount, null, null, null)
         {
         }
 
-        public StorageQueueActorMessageReceptionOperator(ILocalSwitchboard switchBoard, string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true, int maxDequeuCount = DefaultDequeueMaxCount)
-               : base(switchBoard, storageConnectionString, queueName, createQueueIfItDoesNotExist, true, MessageSource.EntireIActor, maxDequeuCount, null, null, null)
+        public StorageQueueActorMessageReceptionOperator(ILocalSwitchboard switchBoard, string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true, int maxDequeueCount = DefaultDequeueMaxCount)
+               : base(switchBoard, storageConnectionString, queueName, createQueueIfItDoesNotExist, true, MessageSource.EntireIActor, maxDequeueCount, null, null, null)
         {
         }
 
-        public StorageQueueActorMessageReceptionOperator(ILocalSwitchboard switchBoard, CloudQueue queue, CloudQueue deadLetterQueue, int maxDequeuCount = DefaultDequeueMaxCount, TimeSpan? retrieveVisibilityTimeout = null, QueueRequestOptions retrievalRequestOptions = null, OperationContext retrievalOperationContext = null) 
-            : base(switchBoard, queue, deadLetterQueue, true, MessageSource.EntireIActor, maxDequeuCount, retrieveVisibilityTimeout, retrievalRequestOptions, retrievalOperationContext)
+        public StorageQueueActorMessageReceptionOperator(ILocalSwitchboard switchBoard, CloudQueue queue, CloudQueue deadLetterQueue, int maxDequeueCount = DefaultDequeueMaxCount, TimeSpan? retrieveVisibilityTimeout = null, QueueRequestOptions retrievalRequestOptions = null, OperationContext retrievalOperationContext = null) 
+            : base(switchBoard, queue, deadLetterQueue, true, MessageSource.EntireIActor, maxDequeueCount, retrieveVisibilityTimeout, retrievalRequestOptions, retrievalOperationContext)
         {
         }
     }
