@@ -138,6 +138,7 @@
     <Compile Include="Actors\SendStringToServiceBusQueue.cs" />
     <Compile Include="Actors\SendStringToServiceBusTopic.cs" />
     <Compile Include="Actors\SendStringToStorageQueue.cs" />
+    <Compile Include="AzureWrappers\ServiceBusDeadLetterQueue.cs" />
     <Compile Include="Exceptions\NotConfiguredToSerializeThisTypeOfMessageException.cs" />
     <Compile Include="Exceptions\SendBytesActorCanOnlySendValueTypeByteArrayMessages.cs" />
     <Compile Include="Exceptions\SendStringActorCanOnlySendStringMessages.cs" />
@@ -145,6 +146,12 @@
     <Compile Include="Messages\ServiceBusMessage.cs" />
     <Compile Include="Operators\ServiceBusQueueByteArrayDeliveryOperator.cs" />
     <Compile Include="Operators\ServiceBusQueueByteArrayReceptionOperator.cs" />
+    <Compile Include="Operators\ServiceBusQueueDeadLetterActorMessageDeliveryOperator.cs" />
+    <Compile Include="Operators\ServiceBusQueueDeadLetterActorMessageReceptionOperator.cs" />
+    <Compile Include="Operators\ServiceBusQueueDeadLetterByteArrayDeliveryOperator.cs" />
+    <Compile Include="Operators\ServiceBusQueueDeadLetterByteArrayReceptionOperator.cs" />
+    <Compile Include="Operators\ServiceBusQueueDeadLetterStringDeliveryOperator.cs" />
+    <Compile Include="Operators\ServiceBusQueueDeadLetterStringReceptionOperator.cs" />
     <Compile Include="Operators\ServiceBusQueueStringDeliveryOperator.cs" />
     <Compile Include="Operators\ServiceBusQueueStringReceptionOperator.cs" />
     <Compile Include="Operators\ServiceBusTopicActorMessageDeliveryOperator.cs" />

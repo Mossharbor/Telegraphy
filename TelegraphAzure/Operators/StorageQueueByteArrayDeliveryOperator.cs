@@ -9,13 +9,15 @@ namespace Telegraphy.Azure
 {
     public class StorageQueueByteArrayDeliveryOperator : StorageQueueBaseOperator
     {
+        const int DefaultDequeueMaxCount = ServiceBusTopicActorMessageReceptionOperator.DefaultDequeueMaxCount;
+
         public StorageQueueByteArrayDeliveryOperator(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true)
-            : base(null, storageConnectionString, queueName, createQueueIfItDoesNotExist, false, MessageSource.ByteArrayMessage, null, null, null)
+            : base(null, storageConnectionString, queueName, createQueueIfItDoesNotExist, false, MessageSource.ByteArrayMessage, DefaultDequeueMaxCount, null, null, null)
         {
         }
 
-        public StorageQueueByteArrayDeliveryOperator(CloudQueue queue)
-            : base(null, queue, false, MessageSource.ByteArrayMessage, null, null, null)
+        public StorageQueueByteArrayDeliveryOperator(CloudQueue queue, CloudQueue deadLetterQueue)
+            : base(null, queue, deadLetterQueue, false, MessageSource.ByteArrayMessage, DefaultDequeueMaxCount, null, null, null)
         {
         }
 

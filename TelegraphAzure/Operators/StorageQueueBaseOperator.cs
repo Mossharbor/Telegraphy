@@ -18,25 +18,54 @@ namespace Telegraphy.Azure
     {
         ConcurrentDictionary<Type, Action<Exception>> _exceptionTypeToHandler = new ConcurrentDictionary<Type, Action<Exception>>();
         CloudQueue queue = null;
+        CloudQueue deadLetterQueue = null;
         TimeSpan? retrieveVisibilityTimeout = null;
         QueueRequestOptions retrievalRequestOptions = null;
         Microsoft.WindowsAzure.Storage.OperationContext retrievalOperationContext = null;
         bool recieveMessagesOnly = false;
         ControlMessages.HangUp hangUp = null;
         MessageSource messageSource = MessageSource.EntireIActor;
-        private System.ServiceModel.OperationContext retrievalOperationContext1;
+        private int maxDequeueCount = 1;
 
-        protected StorageQueueBaseOperator(ILocalSwitchboard switchBoard, string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist, bool recieve, MessageSource messageSource = MessageSource.EntireIActor, TimeSpan? retrieveVisibilityTimeout = null, QueueRequestOptions retrievalRequestOptions = null, Microsoft.WindowsAzure.Storage.OperationContext retrievalOperationContext = null)
-            : this (switchBoard, GetQueueFrom(storageConnectionString, queueName, createQueueIfItDoesNotExist), recieve, messageSource, retrieveVisibilityTimeout, retrievalRequestOptions, retrievalOperationContext)
+        protected StorageQueueBaseOperator(
+            ILocalSwitchboard switchBoard,
+            string storageConnectionString, 
+            string queueName, 
+            bool createQueueIfItDoesNotExist,
+            bool recieve, 
+            MessageSource messageSource = MessageSource.EntireIActor,
+            int maxDequeueCount = ServiceBusTopicActorMessageReceptionOperator.DefaultDequeueMaxCount,
+            TimeSpan? retrieveVisibilityTimeout = null, 
+            QueueRequestOptions retrievalRequestOptions = null,
+            Microsoft.WindowsAzure.Storage.OperationContext retrievalOperationContext = null)
+            : this (switchBoard,
+                  GetQueueFrom(storageConnectionString, queueName, createQueueIfItDoesNotExist),
+                  GetDeadLetterQueueFrom(storageConnectionString, queueName),
+                  recieve, 
+                  messageSource,
+                  maxDequeueCount,
+                  retrieveVisibilityTimeout,
+                  retrievalRequestOptions,
+                  retrievalOperationContext)
         {
         }
 
-        protected StorageQueueBaseOperator(ILocalSwitchboard switchBoard, CloudQueue queue, bool recieve, MessageSource messageSource = MessageSource.EntireIActor, TimeSpan? retrieveVisibilityTimeout = null, QueueRequestOptions retrievalRequestOptions = null, Microsoft.WindowsAzure.Storage.OperationContext retrievalOperationContext = null)
+        protected StorageQueueBaseOperator(
+            ILocalSwitchboard switchBoard,
+            CloudQueue queue,
+            CloudQueue deadLetterQueue,
+            bool recieve,
+            MessageSource messageSource = MessageSource.EntireIActor,
+            int maxDequeueCount = ServiceBusTopicActorMessageReceptionOperator.DefaultDequeueMaxCount,
+            TimeSpan? retrieveVisibilityTimeout = null,
+            QueueRequestOptions retrievalRequestOptions = null,
+            Microsoft.WindowsAzure.Storage.OperationContext retrievalOperationContext = null)
         {
             this.recieveMessagesOnly = recieve;
             this.Switchboard = switchBoard;
             this.ID = 0;
             this.queue = queue;
+            this.deadLetterQueue = deadLetterQueue;
             this.retrieveVisibilityTimeout = retrieveVisibilityTimeout;
             this.retrievalRequestOptions = retrievalRequestOptions;
             this.retrievalOperationContext = retrievalOperationContext;
@@ -48,7 +77,7 @@ namespace Telegraphy.Azure
                 throw new SwitchBoardNeededWhenRecievingMessagesException();
         }
         
-        internal static CloudQueue GetQueueFrom(string storageConnectionString,string queueName, bool createQueueIfItDoesNotExist)
+        internal static CloudQueue GetQueueFrom(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist)
         {
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageConnectionString);
             CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
@@ -56,6 +85,17 @@ namespace Telegraphy.Azure
 
             if (createQueueIfItDoesNotExist)
                 queue.CreateIfNotExists();
+
+            return queue;
+        }
+
+        internal static CloudQueue GetDeadLetterQueueFrom(string storageConnectionString, string queueName)
+        {
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageConnectionString);
+            CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
+            CloudQueue queue = queueClient.GetQueueReference(queueName+"_deadletter".ToLower());
+
+            queue.CreateIfNotExists();
 
             return queue;
         }
@@ -187,7 +227,6 @@ namespace Telegraphy.Azure
             }
         }
 
-
         public IActorMessage GetMessage()
         {
             if (!recieveMessagesOnly)
@@ -203,6 +242,15 @@ namespace Telegraphy.Azure
 
                 if (null == next)
                     return null;
+                
+                if (next.DequeueCount > maxDequeueCount)
+                {
+                    if (null != this.deadLetterQueue)
+                        deadLetterQueue.AddMessage(next);
+                    queue.DeleteMessage(next);
+                    return null;
+                }
+
 
                 IActorMessage msg = null;
                 switch (messageSource)
