@@ -136,60 +136,20 @@ namespace Telegraphy.Azure
             }
 
             System.Diagnostics.Debug.Assert(null != ServiceBusMsgSender);
-            byte[] msgBytes = null;
-            switch (messageSource)
-            {
-                case MessageSource.EntireIActor:
-                    {
-                        var serializeTask = Telegraph.Instance.Ask(new SerializeMessage(msg));
-                        msgBytes = (serializeTask.Result.ProcessingResult as byte[]);
-                    }
-                    break;
-
-                case MessageSource.ByteArrayMessage:
-                    if ((msg as IActorMessage).Message.GetType().Name.Equals("Byte[]"))
-                        msgBytes = (byte[])(msg as IActorMessage).Message;
-                    else
-                        throw new OperatorIsNotConfiguredToSerializeThisTypeOfMessageException("Byte[]");
-                    break;
-                case MessageSource.StringMessage:
-                    if ((msg as IActorMessage).Message.GetType().Name.Equals("String"))
-                        msgBytes = Encoding.UTF8.GetBytes((string)(msg as IActorMessage).Message);
-                    else
-                        throw new OperatorIsNotConfiguredToSerializeThisTypeOfMessageException("String");
-                    break;
-            }
-
-            var message = new Message(msgBytes);
-
-            if (msg is IServiceBusMessagePropertiesProvider)
-            {
-                message.ScheduledEnqueueTimeUtc = (msg as IServiceBusMessagePropertiesProvider).ScheduledEnqueueTimeUtc.HasValue ? (msg as IServiceBusMessagePropertiesProvider).ScheduledEnqueueTimeUtc.Value : message.ScheduledEnqueueTimeUtc;
-                message.TimeToLive = (msg as IServiceBusMessagePropertiesProvider).TimeToLive.HasValue ? (msg as IServiceBusMessagePropertiesProvider).TimeToLive.Value : message.TimeToLive;
-                message.ContentType = (msg as IServiceBusMessagePropertiesProvider).ContentType ?? message.ContentType;
-                message.Label = (msg as IServiceBusMessagePropertiesProvider).Label ?? message.Label;
-                message.CorrelationId = (msg as IServiceBusMessagePropertiesProvider).CorrelationId ?? message.CorrelationId;
-                message.ReplyToSessionId = (msg as IServiceBusMessagePropertiesProvider).ReplyToSessionId ?? message.ReplyToSessionId;
-                message.SessionId = (msg as IServiceBusMessagePropertiesProvider).SessionId ?? message.SessionId;
-                message.MessageId = (msg as IServiceBusMessagePropertiesProvider).MessageId ?? message.MessageId;
-                if (null != (msg as IServiceBusMessagePropertiesProvider).UserProperties)
-                {
-                    foreach (var t in (msg as IServiceBusMessagePropertiesProvider).UserProperties)
-                        message.UserProperties.Add(t);
-                }
-            }
-
-            if ((message is IActorMessageIdentifier) && String.IsNullOrWhiteSpace(message.MessageId))
-            {
-                message.MessageId = (msg as IActorMessageIdentifier).Id;
-            }
-
-            this.ServiceBusMsgSender.SendAsync(message).Wait();
+            Message message = SerializeAndSend(msg, this.ServiceBusMsgSender, this.messageSource);
 
             if (null != msg.Status)
                 msg.Status?.SetResult(new ServiceBusMessage(message));
         }
-        
+
+        internal static Message SerializeAndSend<T>(T msg, ServiceBusTopicDeliverer queue, MessageSource messageSource) where T : class, IActorMessage
+        {
+            Message message = ServiceBusQueueBaseOperator.BuildMessage(msg, messageSource);
+
+            queue.SendAsync(message).Wait();
+            return message;
+        }
+
         public IActorMessage GetMessage()
         {
             System.Diagnostics.Debug.Assert(null != ServiceBusMsgReciever);

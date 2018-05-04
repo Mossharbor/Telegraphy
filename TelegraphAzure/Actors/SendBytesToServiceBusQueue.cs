@@ -7,11 +7,11 @@ using Telegraphy.Net;
 
 namespace Telegraphy.Azure
 {
-    class SendByteArrayToServiceBusQueue : IActor
+    class SendBytesToServiceBusQueue : IActor
     {
         ServiceBusQueue queue = null;
 
-        public SendByteArrayToServiceBusQueue(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true)
+        public SendBytesToServiceBusQueue(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true)
         {
             queue = ServiceBusQueueActorMessageDeliveryOperator.GetQueue(storageConnectionString, queueName, createQueueIfItDoesNotExist);
         }

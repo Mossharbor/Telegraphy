@@ -160,8 +160,8 @@ namespace Telegraphy.Azure
             if (null != msg.Status)
                 msg.Status?.SetResult(new ServiceBusMessage(message));
         }
-        
-        internal static Message SerializeAndSend<T>(T msg, ServiceBusQueue queue, MessageSource messageSource) where T : class, IActorMessage
+
+        internal static Message BuildMessage<T>(T msg, MessageSource messageSource) where T : class, IActorMessage
         {
             byte[] msgBytes = null;
             switch (messageSource)
@@ -211,6 +211,13 @@ namespace Telegraphy.Azure
             {
                 message.MessageId = (msg as IActorMessageIdentifier).Id;
             }
+
+            return message;
+        }
+
+        internal static Message SerializeAndSend<T>(T msg, ServiceBusQueue queue, MessageSource messageSource) where T : class, IActorMessage
+        {
+            Message message = BuildMessage(msg, messageSource);
 
             queue.SendAsync(message).Wait();
             return message;

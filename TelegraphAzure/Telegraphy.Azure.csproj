@@ -126,11 +126,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Actors\SendByteArrayToServiceBusQueue.cs" />
+    <Compile Include="Actors\SendBytesToServiceBusQueue.cs" />
+    <Compile Include="Actors\SendBytesToServiceBusTopic.cs" />
     <Compile Include="Actors\SendBytesToStorageQueue.cs" />
     <Compile Include="Actors\SendMessageToServiceBusQueue.cs" />
+    <Compile Include="Actors\SendMessageToServiceBusTopic.cs" />
     <Compile Include="Actors\SendMessageToStorageQueue.cs" />
     <Compile Include="Actors\SendStringToServiceBusQueue.cs" />
+    <Compile Include="Actors\SendStringToServiceBusTopic.cs" />
     <Compile Include="Actors\SendStringToStorageQueue.cs" />
     <Compile Include="Exceptions\OperatorIsNotConfiguredToSerializeThisTypeOfMessage.cs" />
     <Compile Include="Exceptions\SendBytesActorCanOnlySendValueTypeByteArrayMessages.cs" />
