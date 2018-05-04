@@ -11,15 +11,22 @@ namespace Telegraphy.Azure
     class ServiceBusTopicReciever : Microsoft.Azure.ServiceBus.Core.MessageReceiver
     {
         string connectionString;
-        string subscription = null;
-        string topic = null;
+        protected string subscription = null;
+        protected string topic = null;
+        string entityPath = null;
 
         public ServiceBusTopicReciever(string connectionString, string topicName, string subscriptionName, bool createQueueIfItDoesNotExist, ReceiveMode receiveMode = ReceiveMode.PeekLock, RetryPolicy retryPolicy = null, int prefetchCount = 0)
-            : base(connectionString, EntityNameHelper.FormatSubscriptionPath(topicName, subscriptionName), receiveMode, retryPolicy, prefetchCount)
+            : this(connectionString, EntityNameHelper.FormatSubscriptionPath(topicName, subscriptionName), createQueueIfItDoesNotExist, receiveMode, retryPolicy, prefetchCount)
         {
-            this.connectionString = connectionString;
             this.topic = topicName;
             this.subscription = subscriptionName;
+        }
+
+        public ServiceBusTopicReciever(string connectionString, string entityPath, bool createQueueIfItDoesNotExist, ReceiveMode receiveMode = ReceiveMode.PeekLock, RetryPolicy retryPolicy = null, int prefetchCount = 0)
+            : base(connectionString, entityPath, receiveMode, retryPolicy, prefetchCount)
+        {
+            this.entityPath = entityPath;
+            this.connectionString = connectionString;
 
             if (createQueueIfItDoesNotExist)
                 this.CreateIfNotExists();

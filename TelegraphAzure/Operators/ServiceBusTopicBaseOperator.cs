@@ -55,7 +55,7 @@ namespace Telegraphy.Azure
         {
             if (sbMessage.SystemProperties.DeliveryCount > maxDequeueCount)
             {
-                return this.ServiceBusMsgReciever.AbandonAsync(sbMessage.SystemProperties.LockToken);
+                return this.ServiceBusMsgReciever.DeadLetterAsync(sbMessage.SystemProperties.LockToken);
             }
 
             IActorMessage msg = null;
