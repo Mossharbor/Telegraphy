@@ -7,24 +7,24 @@ using Telegraphy.Net;
 
 namespace Telegraphy.Azure
 {
-    class ServiceBusTopicStringReceptionOperator : ServiceBusTopicBaseOperator
+    public class ServiceBusTopicStringReceptionOperator : ServiceBusTopicBaseOperator
     {
         const int DefaultDequeueMaxCount = ServiceBusTopicActorMessageReceptionOperator.DefaultDequeueMaxCount;
         const int DefaultPrefetchCount = ServiceBusTopicActorMessageReceptionOperator.DefaultPrefetchCount;
         const int DefaultConcurrency = ServiceBusTopicActorMessageReceptionOperator.DefaultConcurrency;
 
-        public ServiceBusTopicStringReceptionOperator(LocalConcurrencyType concurrencyType, string connectionString, string topicName, string subscriptionName, bool createQueueIfItDoesNotExist, uint concurrency = DefaultConcurrency)
-            : this(concurrencyType, connectionString, topicName, subscriptionName, createQueueIfItDoesNotExist, DefaultDequeueMaxCount, DefaultPrefetchCount, concurrency)
+        public ServiceBusTopicStringReceptionOperator(LocalConcurrencyType concurrencyType, string connectionString, string topicName, string subscriptionName, bool createTopicAndSubscriptionIfTheyDoNotExist, uint concurrency = DefaultConcurrency)
+            : this(concurrencyType, connectionString, topicName, subscriptionName, createTopicAndSubscriptionIfTheyDoNotExist, DefaultDequeueMaxCount, DefaultPrefetchCount, concurrency)
         {
         }
 
-        public ServiceBusTopicStringReceptionOperator(LocalConcurrencyType concurrencyType, string connectionString, string topicName, string subscriptionName, bool createQueueIfItDoesNotExist, int maxDequeueCount = DefaultDequeueMaxCount, int prefetchCount = DefaultPrefetchCount, uint concurrency = DefaultConcurrency, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
-               : base(new LocalSwitchboard(concurrencyType, concurrency), ServiceBusTopicActorMessageReceptionOperator.GetSender(connectionString, topicName, subscriptionName, createQueueIfItDoesNotExist, prefetchCount, policy), maxDequeueCount, MessageSource.StringMessage)
+        public ServiceBusTopicStringReceptionOperator(LocalConcurrencyType concurrencyType, string connectionString, string topicName, string subscriptionName, bool createTopicAndSubscriptionIfTheyDoNotExist, int maxDequeueCount = DefaultDequeueMaxCount, int prefetchCount = DefaultPrefetchCount, uint concurrency = DefaultConcurrency, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
+               : base(new LocalSwitchboard(concurrencyType, concurrency), ServiceBusTopicActorMessageReceptionOperator.GetSender(connectionString, topicName, subscriptionName, createTopicAndSubscriptionIfTheyDoNotExist, prefetchCount, policy), maxDequeueCount, MessageSource.StringMessage)
         {
         }
 
-        public ServiceBusTopicStringReceptionOperator(ILocalSwitchboard switchBoard, string connectionString, string topicName, string subscriptionName, bool createQueueIfItDoesNotExist, int maxDequeueCount = DefaultDequeueMaxCount, int prefetchCount = DefaultPrefetchCount, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
-               : base(switchBoard, ServiceBusTopicActorMessageReceptionOperator.GetSender(connectionString, topicName, subscriptionName, createQueueIfItDoesNotExist, prefetchCount, policy), maxDequeueCount, MessageSource.StringMessage)
+        public ServiceBusTopicStringReceptionOperator(ILocalSwitchboard switchBoard, string connectionString, string topicName, string subscriptionName, bool createTopicAndSubscriptionIfTheyDoNotExist, int maxDequeueCount = DefaultDequeueMaxCount, int prefetchCount = DefaultPrefetchCount, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
+               : base(switchBoard, ServiceBusTopicActorMessageReceptionOperator.GetSender(connectionString, topicName, subscriptionName, createTopicAndSubscriptionIfTheyDoNotExist, prefetchCount, policy), maxDequeueCount, MessageSource.StringMessage)
         {
         }
     }

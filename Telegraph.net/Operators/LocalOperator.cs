@@ -15,7 +15,7 @@ namespace Telegraphy.Net
         private Semaphore _dataExists = new Semaphore(0, int.MaxValue);
         ConcurrentQueue<IActorMessage> actorMessages = new ConcurrentQueue<IActorMessage>();
 
-        public LocalOperator() :this(new LocalSwitchboard(LocalConcurrencyType.OneThreadAllActors))
+        public LocalOperator() :this(new LocalSwitchboard(LocalConcurrencyType.OneActorPerThread))
         { }
 
         public LocalOperator(LocalConcurrencyType concurrencyType, uint concurrency = 1) : this (new LocalSwitchboard(concurrencyType, concurrency))

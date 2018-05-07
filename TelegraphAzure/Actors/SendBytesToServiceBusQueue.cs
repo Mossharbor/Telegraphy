@@ -7,7 +7,7 @@ using Telegraphy.Net;
 
 namespace Telegraphy.Azure
 {
-    class SendBytesToServiceBusQueue : IActor
+    public class SendBytesToServiceBusQueue : IActor
     {
         ServiceBusQueue queue = null;
 

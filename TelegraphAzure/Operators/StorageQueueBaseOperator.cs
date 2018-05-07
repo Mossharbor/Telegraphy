@@ -93,7 +93,7 @@ namespace Telegraphy.Azure
         {
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageConnectionString);
             CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
-            CloudQueue queue = queueClient.GetQueueReference(queueName+"_deadletter".ToLower());
+            CloudQueue queue = queueClient.GetQueueReference(queueName+"-deadletter".ToLower());
 
             queue.CreateIfNotExists();
 
@@ -203,7 +203,7 @@ namespace Telegraphy.Azure
         {
             if (null == msgBytes)
             {
-                var serializeTask = Telegraph.Instance.Ask(new SerializeMessage(msg));
+                var serializeTask = Telegraph.Instance.Ask(new SerializeMessage(msg)); //TODO timeout the wait here!!
                 msgBytes = (serializeTask.Result.ProcessingResult as byte[]);
             }
 

@@ -18,7 +18,7 @@ namespace Telegraphy.Azure
 
         bool IActor.OnMessageRecieved<T>(T msg)
         {
-            ServiceBusTopicBaseOperator.SerializeAndSend(msg, queue, MessageSource.EntireIActor);
+            ServiceBusTopicBaseOperator.SerializeAndSend(msg, queue, MessageSource.StringMessage);
             return true;
         }
     }

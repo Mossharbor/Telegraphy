@@ -22,10 +22,11 @@ namespace Telegraphy.Net
         protected long tellingCount = 0;
         protected long threadExitFlag = 0;
         protected long exitedFlag = 0;
+        private static uint DefaultConcurrency = 3;
         static object _threadAllocationLock = new object();
 
         public LocalSwitchboard(LocalConcurrencyType concurrencyType)
-            : this(concurrencyType, (LocalConcurrencyType.ActorsOnThreadPool != concurrencyType) ? (uint)1 : (uint)System.Environment.ProcessorCount - 1)
+            : this(concurrencyType, (LocalConcurrencyType.ActorsOnThreadPool != concurrencyType) ? (uint)DefaultConcurrency : (uint)System.Environment.ProcessorCount - 1)
         { }
 
         public LocalSwitchboard(LocalConcurrencyType concurrencyType, uint concurrency)
@@ -53,9 +54,11 @@ namespace Telegraphy.Net
             bool decorateActorWithMailbox = LocalConcurrencyType.OneThreadPerActor == this.LocalConcurrencyType;
             bool isManyThreads = LocalConcurrencyType.OneActorPerThread == this.LocalConcurrencyType;
 
-            IActor anonActor = new AnonActor<T>(action);
+            IActor anonActor = null;
             if (decorateActorWithMailbox)
                 anonActor = new MailBoxActor(anonActor);
+            else
+                anonActor = new AnonActor<T>(action);
 
             // For invocation return the anonActor we just created always.
             ActorInvocationBase invoker = new ActorInvocation<IActor>(() => anonActor);
