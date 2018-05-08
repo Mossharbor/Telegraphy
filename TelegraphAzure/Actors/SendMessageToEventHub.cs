@@ -24,7 +24,7 @@ namespace Telegraphy.Azure
         bool IActor.OnMessageRecieved<T>(T msg)
         {
             EventData eventData = SendBytesToEventHub.BuildMessage(msg, MessageSource.EntireIActor);
-            eventHubClient.SendAsync(eventData);
+            eventHubClient.SendAsync(eventData).Wait();
             return true;
         }
     }

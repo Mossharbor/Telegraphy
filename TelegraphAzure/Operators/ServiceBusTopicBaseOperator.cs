@@ -165,8 +165,8 @@ namespace Telegraphy.Azure
         {
             if (null == ServiceBusMsgReciever ? this.ServiceBusMsgSender.IsClosedOrClosing : this.ServiceBusMsgReciever.IsClosedOrClosing)
                 return false;
-            
-            return this.Switchboard.IsDisabled();
+
+            return null != this.Switchboard ? this.Switchboard.IsDisabled() : true;
         }
 
         public void Kill()
@@ -180,7 +180,7 @@ namespace Telegraphy.Azure
                 this.ServiceBusMsgReciever.CloseAsync().Wait();
             }
 
-            this.Switchboard.Disable();
+            this.Switchboard?.Disable();
         }
 
         public void Register<T>(Action<T> action) where T : class

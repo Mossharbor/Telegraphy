@@ -140,7 +140,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AzureOperatorTests.cs" />
-    <Compile Include="Serilization.cs" />
+    <Compile Include="Serialization.cs" />
     <Compile Include="Examples.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -8,7 +8,7 @@ namespace UnitTests
     using System.Threading.Tasks;
 
     [TestClass]
-    public class Serilization
+    public class Serialization
     {
         public static TaskCompletionSource<IActorMessage> GetMessageCompletionMonitor()
         {
