@@ -144,6 +144,7 @@
     <Compile Include="Exceptions\NotConfiguredToSerializeThisTypeOfMessageException.cs" />
     <Compile Include="Exceptions\SendBytesActorCanOnlySendValueTypeByteArrayMessages.cs" />
     <Compile Include="Exceptions\SendStringActorCanOnlySendStringMessages.cs" />
+    <Compile Include="Messages\EventHubMessage.cs" />
     <Compile Include="Messages\IServiceBusMessagePropertiesProvider.cs" />
     <Compile Include="Messages\ServiceBusMessage.cs" />
     <Compile Include="Operators\EventHubActorMessageDeliveryOperator.cs" />

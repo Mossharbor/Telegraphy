@@ -20,8 +20,10 @@ namespace Telegraphy.Azure
         private EventHubDataDeliverer EventHubClient;
         private ConcurrentQueue<IActorMessage> msgQueue = new ConcurrentQueue<IActorMessage>();
 
-        internal EventHubBaseOperator(EventHubDataReciever eventHubMsgReciever, MessageSource messageSource = MessageSource.EntireIActor)
+        internal EventHubBaseOperator(ILocalSwitchboard switchBoard, EventHubDataReciever eventHubMsgReciever, MessageSource messageSource = MessageSource.EntireIActor)
         {
+            this.Switchboard = switchBoard;
+            this.Switchboard.Operator = this;
             this.EventHubMsgReciever = eventHubMsgReciever;
             this.MessageSource = messageSource;
             this.ID = 0;
@@ -70,6 +72,11 @@ namespace Telegraphy.Azure
         {
             EventData eventData = SendBytesToEventHub.BuildMessage(msg, this.MessageSource);
             EventHubClient.Send(eventData);
+            
+            if (null == msg.Status)
+                msg.Status = new TaskCompletionSource<IActorMessage>();
+
+            msg.Status?.SetResult(new EventHubMessage(eventData));
         }
 
         public IActorMessage GetMessage()

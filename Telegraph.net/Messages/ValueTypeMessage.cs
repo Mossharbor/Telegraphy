@@ -120,6 +120,13 @@ namespace Telegraphy.Net
         public object ProcessingResult { get; set; }
         public TaskCompletionSource<IActorMessage> Status { get; set; }
 
+        public T[] ToArray()
+        {
+            if (isArray)
+                return (T[])this.Message;
+            return new T[] { (T)this.Message };
+        }
+
         #region IActorMessageIdentifier
         private string id = null;
         public string Id

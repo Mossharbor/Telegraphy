@@ -157,12 +157,25 @@ namespace UnitTests
             });
         }
 
+        private void WaitForQueue<T>(ConcurrentQueue<T> queue, out T data) where T: class
+        {
+            int attempts = 0;
+            data = default(T);
+            while (!queue.TryDequeue(out data) && attempts < 10)
+            {
+                ++attempts;
+                System.Threading.Thread.Sleep(1000);
+            }
+            if (attempts >= 10)
+                Assert.Fail("We took way too long to get data back from the queue");
+        }
+
         #region eventHub
         [TestMethod]
         public void SendActorMessageToEventHub()
         {
             string eventHubName = "test-" + "SendActorMessageToEventHub".ToLower();
-            string consumerGroup = eventHubName + "myyconsumergroup";
+            string consumerGroup = eventHubName + Guid.NewGuid().ToString().Substring(0, 6);
             CreateEventHub(eventHubName, consumerGroup);
             try
             {
@@ -174,13 +187,13 @@ namespace UnitTests
                 Telegraph.Instance.Register<PingPong.Ping, SendMessageToEventHub>(() => new SendMessageToEventHub(EventHubConnectionString, eventHubName, true));
                 Telegraph.Instance.Register<SerializeMessage, MessageSerializationActor>(() => serializer);
 
-                Telegraph.Instance.Ask(aMsg).Wait();
-
-
+                if (!Telegraph.Instance.Ask(aMsg).Wait(new TimeSpan(0, 0, 10)))
+                    Assert.Fail("Waited too long to send a message");
+                
                 MessageDeserializationActor deserializer = new MessageDeserializationActor();
                 deserializer.Register<PingPong.Ping>((object msg) => (PingPong.Ping)msg);
                 EventData ehMessage = null;
-                while (!ehMsgQueue.TryDequeue(out ehMessage)) { System.Threading.Thread.Sleep(100); }
+                WaitForQueue(ehMsgQueue, out ehMessage);
                 DeSerializeMessage dMsg = new DeSerializeMessage(ehMessage.Body.Array);
                 deserializer.Ask(dMsg);
                 var retMsgs = (PingPong.Ping)dMsg.ProcessingResult;
@@ -194,21 +207,35 @@ namespace UnitTests
         }
         
         [TestMethod]
-        public void SendStringToEventHub()
+        public void SendActorMessageToEventHubViaOperator()
         {
-            string eventHubName = "test-" + "SendStringToEventHub".ToLower();
-            string consumerGroup = eventHubName + "myyconsumergroup";
+            string eventHubName = "test-" + "SendActorMessageToEventHubViaOperator".ToLower();
+            string consumerGroup = eventHubName + Guid.NewGuid().ToString().Substring(0, 6);
             CreateEventHub(eventHubName, consumerGroup);
             try
             {
                 StartEventHubReciever(eventHubName, consumerGroup);
-
                 string message = "HelloWorld";
-                Telegraph.Instance.Register<string, SendStringToEventHub>(() => new SendStringToEventHub(EventHubConnectionString, eventHubName, true));
-                Telegraph.Instance.Ask(message).Wait();
+                PingPong.Ping aMsg = new PingPong.Ping(message);
+
+                long localOperatorID = Telegraph.Instance.Register(new LocalOperator(LocalConcurrencyType.DedicatedThreadCount, 2));
+                long azureOperatorId = Telegraph.Instance.Register(new EventHubActorMessageDeliveryOperator(EventHubConnectionString, eventHubName, true));
+                Telegraph.Instance.Register<PingPong.Ping>(azureOperatorId);
+                MessageSerializationActor serializer = new MessageSerializationActor();
+                Telegraph.Instance.Register<SerializeMessage, MessageSerializationActor>(localOperatorID, () => serializer);
+
+                if (!Telegraph.Instance.Ask(aMsg).Wait(new TimeSpan(0, 0, 10)))
+                    Assert.Fail("Waited too long to send a message");
+
+                MessageDeserializationActor deserializer = new MessageDeserializationActor();
+                deserializer.Register<PingPong.Ping>((object msg) => (PingPong.Ping)msg);
                 EventData ehMessage = null;
-                while (!ehMsgQueue.TryDequeue(out ehMessage)) { System.Threading.Thread.Sleep(5000); }
-                Assert.IsTrue(Encoding.UTF8.GetString(ehMessage.Body.Array).Equals(message, StringComparison.CurrentCulture));
+                WaitForQueue(ehMsgQueue, out ehMessage);
+
+                DeSerializeMessage dMsg = new DeSerializeMessage(ehMessage.Body.Array);
+                deserializer.Ask(dMsg);
+                var retMsgs = (PingPong.Ping)dMsg.ProcessingResult;
+                Assert.IsTrue(((string)retMsgs.Message).Equals(message));
             }
             finally
             {
@@ -218,10 +245,115 @@ namespace UnitTests
         }
 
         [TestMethod]
+        public void RecieveActorMessageFromEventHub()
+        { 
+            string eventHubName = "test-" + "RecieveActorMessageFromEventHub".ToLower();
+            string consumerGroup = eventHubName + Guid.NewGuid().ToString().Substring(0, 6);
+            CreateEventHub(eventHubName, consumerGroup);
+            var connectionStringBuilder = new EventHubsConnectionStringBuilder(EventHubConnectionString) { EntityPath = eventHubName };
+            EventHubClient queue = EventHubClient.CreateFromConnectionString(connectionStringBuilder.ToString());
+            try
+            {
+                string message = "HelloWorld";
+                var actorMessage = new PingPong.Ping(message);
+                SerializeMessage sMsg = new SerializeMessage(actorMessage);
+                MessageSerializationActor serializer = new MessageSerializationActor();
+                serializer.OnMessageRecieved(sMsg);
+                byte[] msgBytes = (byte[])sMsg.ProcessingResult;
+                queue.SendAsync(new EventData(msgBytes));
+
+                long azureOperatorID = Telegraph.Instance.Register(
+                     new EventHubActorMessageReceptionOperator(EventHubConnectionString, eventHubName, false),
+                    (PingPong.Ping foo) => { Assert.IsTrue(message.Equals((string)foo.Message, StringComparison.InvariantCulture)); });
+            }
+            finally
+            {
+                Telegraph.Instance.UnRegisterAll();
+                DeleteEventHub(eventHubName);
+            }
+        }
+
+        [TestMethod]
+        public void SendStringToEventHub()
+        {
+            string eventHubName = "test-" + "SendStringToEventHub".ToLower();
+            string consumerGroup = eventHubName + Guid.NewGuid().ToString().Substring(0, 6);
+            CreateEventHub(eventHubName, consumerGroup);
+            try
+            {
+                StartEventHubReciever(eventHubName, consumerGroup);
+
+                string message = "HelloWorld";
+                Telegraph.Instance.Register<string, SendStringToEventHub>(() => new SendStringToEventHub(EventHubConnectionString, eventHubName, true));
+                Telegraph.Instance.Ask(message).Wait();
+                EventData ehMessage = null;
+                WaitForQueue(ehMsgQueue, out ehMessage);
+                Assert.IsTrue(Encoding.UTF8.GetString(ehMessage.Body.Array).Equals(message, StringComparison.CurrentCulture));
+            }
+            finally
+            {
+                Telegraph.Instance.UnRegisterAll();
+                DeleteEventHub(eventHubName);
+            }
+        }
+        
+        [TestMethod]
+        public void SendStringToEventHubViaOperator()
+        {
+            string eventHubName = "test-" + "SendStringToEventHubViaOperator".ToLower();
+            string consumerGroup = eventHubName + Guid.NewGuid().ToString().Substring(0, 6);
+            CreateEventHub(eventHubName, consumerGroup);
+            try
+            {
+                StartEventHubReciever(eventHubName, consumerGroup);
+                string message = "HelloWorld";
+
+               Telegraph.Instance.Register(new EventHubStringDeliveryOperator(EventHubConnectionString, eventHubName, true));
+               if (!Telegraph.Instance.Ask(message).Wait(new TimeSpan(0, 0, 10)))
+                    Assert.Fail("Waited too long to send a message");
+                EventData ehMessage = null;
+                WaitForQueue(ehMsgQueue, out ehMessage);
+
+                Assert.IsTrue(Encoding.UTF8.GetString(ehMessage.Body.Array).Equals(message));
+            }
+            finally
+            {
+                Telegraph.Instance.UnRegisterAll();
+                DeleteEventHub(eventHubName);
+            }
+        }
+        
+        [TestMethod]
+        public void RecieveStringFromEventHub()
+        {
+            string eventHubName = "test-" + "RecieveStringFromEventHub".ToLower();
+            string consumerGroup = eventHubName + Guid.NewGuid().ToString().Substring(0, 6);
+            CreateEventHub(eventHubName, consumerGroup);
+            var connectionStringBuilder = new EventHubsConnectionStringBuilder(EventHubConnectionString) { EntityPath = eventHubName };
+            EventHubClient queue = EventHubClient.CreateFromConnectionString(connectionStringBuilder.ToString());
+            try
+            {
+                string message = "HelloWorld";
+                byte[] msgBytes = Encoding.UTF8.GetBytes(message);
+                queue.SendAsync(new EventData(msgBytes));
+
+                long azureOperatorID = Telegraph.Instance.Register(
+                     new EventHubStringReceptionOperator(EventHubConnectionString, eventHubName, false),
+                    (string foo) => { Assert.IsTrue(message.Equals(foo, StringComparison.InvariantCulture)); });
+            }
+            finally
+            {
+                Telegraph.Instance.UnRegisterAll();
+                DeleteEventHub(eventHubName);
+            }
+        }
+
+
+        [TestMethod]
         public void SendBytesToEventHub()
         {
             string eventHubName = "test-" + "SendBytesToEventHub".ToLower();
-            string consumerGroup = eventHubName+"myyconsumergroup";
+            string consumerGroup = eventHubName + Guid.NewGuid().ToString().Substring(0, 6);
             CreateEventHub(eventHubName, consumerGroup);
             try
             {
@@ -233,8 +365,61 @@ namespace UnitTests
                 Telegraph.Instance.Register<ValueTypeMessage<byte>, SendBytesToEventHub>(() => new SendBytesToEventHub(EventHubConnectionString, eventHubName, true));
                 Telegraph.Instance.Ask(messageBytes.ToActorMessage()).Wait();
                 EventData ehMessage = null;
-                while (!ehMsgQueue.TryDequeue(out ehMessage)) { System.Threading.Thread.Sleep(100); }
+                WaitForQueue(ehMsgQueue, out ehMessage);
                 Assert.IsTrue(Encoding.UTF8.GetString(ehMessage.Body.Array).Equals(message));
+            }
+            finally
+            {
+                Telegraph.Instance.UnRegisterAll();
+                DeleteEventHub(eventHubName);
+            }
+        }
+        
+        [TestMethod]
+        public void SendBytesToEventHubViaOperator()
+        {
+            string eventHubName = "test-" + "SendBytesToEventHubViaOperator".ToLower();
+            string consumerGroup = eventHubName + Guid.NewGuid().ToString().Substring(0, 6);
+            CreateEventHub(eventHubName, consumerGroup);
+            try
+            {
+                StartEventHubReciever(eventHubName, consumerGroup);
+                string message = "HelloWorld";
+                byte[] messageBytes = Encoding.UTF8.GetBytes(message);
+
+                Telegraph.Instance.Register(new EventHubByteArrayDeliveryOperator(EventHubConnectionString, eventHubName, true));
+
+                if (!Telegraph.Instance.Ask(messageBytes.ToActorMessage()).Wait(new TimeSpan(0, 0, 10)))
+                    Assert.Fail("Waited too long to send a message");
+                EventData ehMessage = null;
+                WaitForQueue(ehMsgQueue, out ehMessage);
+
+                Assert.IsTrue(Encoding.UTF8.GetString(ehMessage.Body.Array).Equals(message));
+            }
+            finally
+            {
+                Telegraph.Instance.UnRegisterAll();
+                DeleteEventHub(eventHubName);
+            }
+        }
+
+        [TestMethod]
+        public void RecieveBytesFromEventHub()
+        {
+            string eventHubName = "test-" + "RecieveBytesFromEventHub".ToLower();
+            string consumerGroup = eventHubName + Guid.NewGuid().ToString().Substring(0, 6);
+            CreateEventHub(eventHubName, consumerGroup);
+            var connectionStringBuilder = new EventHubsConnectionStringBuilder(EventHubConnectionString) { EntityPath = eventHubName };
+            EventHubClient queue = EventHubClient.CreateFromConnectionString(connectionStringBuilder.ToString());
+            try
+            {
+                string message = "HelloWorld";
+                byte[] msgBytes = Encoding.UTF8.GetBytes(message);
+                queue.SendAsync(new EventData(msgBytes));
+
+                long azureOperatorID = Telegraph.Instance.Register(
+                     new EventHubStringReceptionOperator(EventHubConnectionString, eventHubName, false),
+                    (ValueTypeMessage<byte> foo) => { Assert.IsTrue(message.Equals(Encoding.UTF8.GetString(foo.ToArray()), StringComparison.InvariantCulture)); });
             }
             finally
             {
@@ -287,7 +472,9 @@ namespace UnitTests
                 Telegraph.Instance.Register<PingPong.Ping, SendMessageToStorageQueue>(() => new SendMessageToStorageQueue(StorageConnectionString, queueName, true));
                 Telegraph.Instance.Register<SerializeMessage, MessageSerializationActor>(() => serializer);
 
-                Telegraph.Instance.Ask(aMsg).Wait();
+                if (!Telegraph.Instance.Ask(aMsg).Wait(new TimeSpan(0, 0, 10)))
+                    Assert.Fail("Waited too long to send a message");
+
                 MessageDeserializationActor deserializer = new MessageDeserializationActor();
                 deserializer.Register<PingPong.Ping>((object msg) => (PingPong.Ping)msg);
                 DeSerializeMessage dMsg = new DeSerializeMessage(queue.GetMessage().AsBytes);
@@ -435,11 +622,12 @@ namespace UnitTests
                 Telegraph.Instance.Register<PingPong.Ping, SendMessageToServiceBusQueue>(() => new SendMessageToServiceBusQueue(ServiceBusConnectionString, queueName, true));
                 Telegraph.Instance.Register<SerializeMessage, MessageSerializationActor>(() => serializer);
 
-                Telegraph.Instance.Ask(aMsg).Wait();
+                if (!Telegraph.Instance.Ask(aMsg).Wait(new TimeSpan(0, 0, 10)))
+                    Assert.Fail("Waited too long to send a message");
                 MessageDeserializationActor deserializer = new MessageDeserializationActor();
                 deserializer.Register<PingPong.Ping>((object msg) => (PingPong.Ping)msg);
                 Message sbMessage = null;
-                 while (!sbMsgQueue.TryDequeue(out sbMessage)) { System.Threading.Thread.Sleep(100); } { }
+                WaitForQueue(sbMsgQueue, out sbMessage);
                 DeSerializeMessage dMsg = new DeSerializeMessage(sbMessage.Body);
                 deserializer.Ask(dMsg);
                 var retMsgs = (PingPong.Ping)dMsg.ProcessingResult;
@@ -469,12 +657,13 @@ namespace UnitTests
                 MessageSerializationActor serializer = new MessageSerializationActor();
                 Telegraph.Instance.Register<SerializeMessage, MessageSerializationActor>(localOperatorID, () => serializer);
 
-                Telegraph.Instance.Ask(aMsg).Wait();
+                if (!Telegraph.Instance.Ask(aMsg).Wait(new TimeSpan(0, 0, 10)))
+                    Assert.Fail("Waited too long to send a message");
 
                 MessageDeserializationActor deserializer = new MessageDeserializationActor();
                 deserializer.Register<PingPong.Ping>((object msg) => (PingPong.Ping)msg);
                 Message sbMessage = null;
-                 while (!sbMsgQueue.TryDequeue(out sbMessage)) { System.Threading.Thread.Sleep(100); } { }
+                WaitForQueue(sbMsgQueue, out sbMessage);
                 DeSerializeMessage dMsg = new DeSerializeMessage(sbMessage.Body);
                 deserializer.Ask(dMsg);
                 var retMsgs = (PingPong.Ping)dMsg.ProcessingResult;
@@ -526,7 +715,7 @@ namespace UnitTests
                 Telegraph.Instance.Register<string, SendStringToServiceBusQueue>(() => new SendStringToServiceBusQueue(ServiceBusConnectionString, queueName, true));
                 Telegraph.Instance.Ask(message).Wait();
                 Message sbMessage = null;
-                 while (!sbMsgQueue.TryDequeue(out sbMessage)) { System.Threading.Thread.Sleep(100); } { }
+                WaitForQueue(sbMsgQueue, out sbMessage);
                 Assert.IsTrue(Encoding.UTF8.GetString(sbMessage.Body).Equals(message,StringComparison.CurrentCulture));
             }
             finally
@@ -555,7 +744,7 @@ namespace UnitTests
                 Telegraph.Instance.Ask(message).Wait();
                 
                 Message sbMessage = null;
-                 while (!sbMsgQueue.TryDequeue(out sbMessage)) { System.Threading.Thread.Sleep(100); } { }
+                WaitForQueue(sbMsgQueue, out sbMessage);
                 var retMsgs = Encoding.UTF8.GetString(sbMessage.Body);
                 Assert.IsTrue((retMsgs).Equals(message));
             }
@@ -603,7 +792,7 @@ namespace UnitTests
                 Telegraph.Instance.Register<ValueTypeMessage<byte>, SendBytesToServiceBusQueue>(() => new SendBytesToServiceBusQueue(ServiceBusConnectionString, queueName, true));
                 Telegraph.Instance.Ask(messageBytes.ToActorMessage()).Wait();
                 Message sbMessage = null;
-                 while (!sbMsgQueue.TryDequeue(out sbMessage)) { System.Threading.Thread.Sleep(100); } { }
+                WaitForQueue(sbMsgQueue, out sbMessage);
                 Assert.IsTrue(Encoding.UTF8.GetString(sbMessage.Body).Equals(message));
             }
             finally
@@ -657,9 +846,10 @@ namespace UnitTests
                 MessageDeserializationActor deserializer = new MessageDeserializationActor();
                 deserializer.Register<PingPong.Ping>((object msg) => (PingPong.Ping)msg);
 
-                Telegraph.Instance.Ask(aMsg).Wait();
+                if (!Telegraph.Instance.Ask(aMsg).Wait(new TimeSpan(0, 0, 10)))
+                    Assert.Fail("Waited too long to send a message");
                 Message sbMessage = null;
-                while (!sbMsgQueue.TryDequeue(out sbMessage)) { System.Threading.Thread.Sleep(100); }
+                WaitForQueue(sbMsgQueue, out sbMessage);
                 DeSerializeMessage dMsg = new DeSerializeMessage(sbMessage.Body);
                 deserializer.Ask(dMsg);
                 var retMsgs = (PingPong.Ping)dMsg.ProcessingResult;
@@ -690,12 +880,13 @@ namespace UnitTests
                 MessageSerializationActor serializer = new MessageSerializationActor();
                 Telegraph.Instance.Register<SerializeMessage, MessageSerializationActor>(localOperatorID, () => serializer);
 
-                Telegraph.Instance.Ask(aMsg).Wait();
+                if (!Telegraph.Instance.Ask(aMsg).Wait(new TimeSpan(0, 0, 10)))
+                    Assert.Fail("Waited too long to send a message");
 
                 MessageDeserializationActor deserializer = new MessageDeserializationActor();
                 deserializer.Register<PingPong.Ping>((object msg) => (PingPong.Ping)msg);
                 Message sbMessage = null;
-                while (!sbMsgQueue.TryDequeue(out sbMessage)) { System.Threading.Thread.Sleep(100); } { }
+                WaitForQueue(sbMsgQueue, out sbMessage);
                 DeSerializeMessage dMsg = new DeSerializeMessage(sbMessage.Body);
                 deserializer.Ask(dMsg);
                 var retMsgs = (PingPong.Ping)dMsg.ProcessingResult;
@@ -750,7 +941,7 @@ namespace UnitTests
                 Telegraph.Instance.Register<string, SendStringToServiceBusTopic>(() => new SendStringToServiceBusTopic(ServiceBusConnectionString, TopicName, true));
                 Telegraph.Instance.Ask(message).Wait();
                 Message sbMessage = null;
-                 while (!sbMsgQueue.TryDequeue(out sbMessage)) { System.Threading.Thread.Sleep(100); } { }
+                WaitForQueue(sbMsgQueue, out sbMessage);
                 Assert.IsTrue(Encoding.UTF8.GetString(sbMessage.Body).Equals(message, StringComparison.CurrentCulture));
             }
             finally
@@ -780,7 +971,7 @@ namespace UnitTests
                 Telegraph.Instance.Ask(message).Wait();
 
                 Message sbMessage = null;
-                 while (!sbMsgQueue.TryDequeue(out sbMessage)) { System.Threading.Thread.Sleep(100); } { }
+                WaitForQueue(sbMsgQueue, out sbMessage);
                 var retMsgs = Encoding.UTF8.GetString(sbMessage.Body);
                 Assert.IsTrue((retMsgs).Equals(message));
             }
@@ -831,7 +1022,7 @@ namespace UnitTests
                 Telegraph.Instance.Register<ValueTypeMessage<byte>, SendBytesToServiceBusTopic>(() => new SendBytesToServiceBusTopic(ServiceBusConnectionString, TopicName, true));
                 Telegraph.Instance.Ask(messageBytes.ToActorMessage()).Wait();
                 Message sbMessage = null;
-                while (!sbMsgQueue.TryDequeue(out sbMessage)) { System.Threading.Thread.Sleep(100); } { }
+                WaitForQueue(sbMsgQueue, out sbMessage);
                 Assert.IsTrue(Encoding.UTF8.GetString(sbMessage.Body).Equals(message));
             }
             finally

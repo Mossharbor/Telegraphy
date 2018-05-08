@@ -38,16 +38,20 @@ namespace Telegraphy.Azure
         public EventHubDataReciever(string connectionstring, string eventHubName, string consumerGroup, string partitionId)
             : this(connectionstring, eventHubName, consumerGroup, partitionId, EventPosition.FromEnd())
         { }
-        
+
         public EventHubDataReciever(string connectionstring, string eventHubName, string consumerGroup, string partitionId, EventPosition position)
         {
             this.connectionString = connectionstring;
-            if (connectionstring.Contains("EntityPath")) // https://github.com/Azure/azure-webjobs-sdk/commit/be47a3075076c0094a1358dadada01954ec28c79#diff-c255f38efc7c153a9ce53cecefe7b7b0R44
-                connectionstring += ";EntityPath" + eventHubName;
+            string connectionStringWithEntityPath = connectionstring;
+            if (!connectionStringWithEntityPath.Contains("EntityPath")) // https://github.com/Azure/azure-webjobs-sdk/commit/be47a3075076c0094a1358dadada01954ec28c79#diff-c255f38efc7c153a9ce53cecefe7b7b0R44
+            {
+                var connectionStringBuilder = new EventHubsConnectionStringBuilder(connectionstring) { EntityPath = eventHubName };
+                connectionStringWithEntityPath = connectionStringBuilder.ToString();
+            }
 
             //"Endpoint=sb://test89123-ns-x.servicebus.windows.net/;SharedAccessKeyName=ReceiveRule;SharedAccessKey=secretkey;EntityPath=path2"
 
-            client = EventHubClient.CreateFromConnectionString(connectionstring);
+            client = EventHubClient.CreateFromConnectionString(connectionStringWithEntityPath);
             reciever = client.CreateReceiver(consumerGroup, partitionId, position);
             this.eventHubName = eventHubName;
             this.consumerGroup = consumerGroup;
