@@ -17,6 +17,7 @@ namespace Telegraphy.Azure
         long lastSequenceNumber = 0;
         string connectionString = null;
         string eventHubName, consumerGroup, partition;
+        string[] consumerGroups;
 
         public EventHubDataReciever(string connectionstring, string eventHubName)
             : this(connectionstring, eventHubName, PartitionReceiver.DefaultConsumerGroupName, "1", EventPosition.FromEnd())
@@ -50,6 +51,7 @@ namespace Telegraphy.Azure
             reciever = client.CreateReceiver(consumerGroup, partitionId, position);
             this.eventHubName = eventHubName;
             this.consumerGroup = consumerGroup;
+            this.consumerGroups = new string[] { consumerGroup };
             this.partition = partitionId;
         }
 
@@ -92,6 +94,28 @@ namespace Telegraphy.Azure
         public long ApproximateCount()
         {
             return client.GetPartitionRuntimeInformationAsync(this.partition).Result.LastEnqueuedSequenceNumber - lastSequenceNumber;
+        }
+
+
+        public void CreateIfNotExists()
+        {
+            NamespaceManager ns = NamespaceManager.CreateFromConnectionString(connectionString);
+            EventHubDescription qd;
+            if (!ns.EventHubExists(this.eventHubName, out qd))
+                ns.CreateTopic(this.eventHubName);
+
+            if (null != consumerGroups && consumerGroups.Any())
+            {
+                Parallel.ForEach(consumerGroups, consumerGroup =>
+                {
+                    if (consumerGroup.Equals(PartitionReceiver.DefaultConsumerGroupName))
+                        return;
+
+                    ConsumerGroupDescription sd;
+                    if (!ns.ConsumerGroupExists(this.eventHubName, consumerGroup, out sd))
+                        ns.CreateConsumerGroup(this.eventHubName, consumerGroup);
+                });
+            }
         }
     }
 }

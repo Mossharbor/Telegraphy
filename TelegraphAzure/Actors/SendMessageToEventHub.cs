@@ -10,21 +10,17 @@ namespace Telegraphy.Azure
 {
     public class SendMessageToEventHub : IActor
     {
-        EventHubClient eventHubClient;
+        EventHubDataDeliverer eventHubClient;
 
-        public SendMessageToEventHub(string eventHubonnectionString, string eventHubName, bool createQueueIfItDoesNotExist = true)
+        public SendMessageToEventHub(string eventHubonnectionString, string eventHubName, bool createEventHubIfItDoesNotExist = true)
         {
-            var connectionStringBuilder = new EventHubsConnectionStringBuilder(eventHubonnectionString)
-            {
-                EntityPath = eventHubName
-            };
-            eventHubClient = EventHubClient.CreateFromConnectionString(connectionStringBuilder.ToString());
+            eventHubClient = EventHubActorMessageDeliveryOperator.GetEventHubClient(eventHubonnectionString, eventHubName, createEventHubIfItDoesNotExist);
         }
 
         bool IActor.OnMessageRecieved<T>(T msg)
         {
             EventData eventData = SendBytesToEventHub.BuildMessage(msg, MessageSource.EntireIActor);
-            eventHubClient.SendAsync(eventData).Wait();
+            eventHubClient.Send(eventData);
             return true;
         }
     }

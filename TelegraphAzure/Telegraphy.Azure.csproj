@@ -138,6 +138,7 @@
     <Compile Include="Actors\SendStringToServiceBusQueue.cs" />
     <Compile Include="Actors\SendStringToServiceBusTopic.cs" />
     <Compile Include="Actors\SendStringToStorageQueue.cs" />
+    <Compile Include="AzureWrappers\EventHubDataDeliverer.cs" />
     <Compile Include="AzureWrappers\EventHubDataReciever.cs" />
     <Compile Include="AzureWrappers\ServiceBusDeadLetterQueue.cs" />
     <Compile Include="Exceptions\NotConfiguredToSerializeThisTypeOfMessageException.cs" />
@@ -145,7 +146,13 @@
     <Compile Include="Exceptions\SendStringActorCanOnlySendStringMessages.cs" />
     <Compile Include="Messages\IServiceBusMessagePropertiesProvider.cs" />
     <Compile Include="Messages\ServiceBusMessage.cs" />
+    <Compile Include="Operators\EventHubActorMessageDeliveryOperator.cs" />
+    <Compile Include="Operators\EventHubActorMessageReceptionOperator.cs" />
     <Compile Include="Operators\EventHubBaseOperator.cs" />
+    <Compile Include="Operators\EventHubByteArrayDeliveryOperator.cs" />
+    <Compile Include="Operators\EventHubByteArrayReceptionOperator.cs" />
+    <Compile Include="Operators\EventHubStringDeliveryOperator.cs" />
+    <Compile Include="Operators\EventHubStringReceptionOperator.cs" />
     <Compile Include="Operators\ServiceBusQueueByteArrayDeliveryOperator.cs" />
     <Compile Include="Operators\ServiceBusQueueByteArrayReceptionOperator.cs" />
     <Compile Include="Operators\ServiceBusQueueDeadLetterActorMessageDeliveryOperator.cs" />

@@ -10,24 +10,24 @@ using System.Collections.Concurrent;
 using Telegraphy.Azure.Exceptions;
 using Microsoft.Azure.EventHubs;
 
-namespace Telegraphy.Azure.Operators
+namespace Telegraphy.Azure
 {
-    internal class EventHubBaseOperator : IOperator
+    public class EventHubBaseOperator : IOperator
     {
         private ConcurrentDictionary<Type, Action<Exception>> _exceptionTypeToHandler = new ConcurrentDictionary<Type, Action<Exception>>();
         private int maxDequeueCount = 1;
         private EventHubDataReciever EventHubMsgReciever;
-        private EventHubClient EventHubClient;
+        private EventHubDataDeliverer EventHubClient;
         private ConcurrentQueue<IActorMessage> msgQueue = new ConcurrentQueue<IActorMessage>();
 
-        public EventHubBaseOperator(EventHubDataReciever eventHubMsgReciever, MessageSource messageSource = MessageSource.EntireIActor)
+        internal EventHubBaseOperator(EventHubDataReciever eventHubMsgReciever, MessageSource messageSource = MessageSource.EntireIActor)
         {
             this.EventHubMsgReciever = eventHubMsgReciever;
             this.MessageSource = messageSource;
             this.ID = 0;
         }
 
-        public EventHubBaseOperator(EventHubClient eventHubClient, MessageSource messageSource = MessageSource.EntireIActor)
+        internal EventHubBaseOperator(EventHubDataDeliverer eventHubClient, MessageSource messageSource = MessageSource.EntireIActor)
         {
             this.EventHubClient = eventHubClient;
             this.MessageSource = messageSource;
@@ -69,7 +69,7 @@ namespace Telegraphy.Azure.Operators
         public void AddMessage(IActorMessage msg)
         {
             EventData eventData = SendBytesToEventHub.BuildMessage(msg, this.MessageSource);
-            EventHubClient.SendAsync(eventData).Wait();
+            EventHubClient.Send(eventData);
         }
 
         public IActorMessage GetMessage()
