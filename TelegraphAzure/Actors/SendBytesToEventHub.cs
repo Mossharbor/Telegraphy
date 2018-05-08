@@ -24,7 +24,7 @@ namespace Telegraphy.Azure
 
         bool IActor.OnMessageRecieved<T>(T msg)
         {
-            EventData eventData = SendBytesToEventHub.BuildMessage(msg, MessageSource.EntireIActor);
+            EventData eventData = SendBytesToEventHub.BuildMessage(msg, MessageSource.ByteArrayMessage);
             eventHubClient.SendAsync(eventData);
             return true;
         }
@@ -53,6 +53,8 @@ namespace Telegraphy.Azure
                     else
                         throw new NotConfiguredToSerializeThisTypeOfMessageException("String");
                     break;
+                default:
+                    throw new NotImplementedException(messageSource.ToString());
             }
             return new EventData(msgBytes);
         }

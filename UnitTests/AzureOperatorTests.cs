@@ -13,6 +13,8 @@ namespace UnitTests
     using Microsoft.WindowsAzure.Storage.Queue;
     using Microsoft.Azure.ServiceBus;
     using Mossharbor.AzureWorkArounds.ServiceBus;
+    using Microsoft.Azure.EventHubs.Processor;
+    using Microsoft.Azure.EventHubs;
     using System.Threading;
     using System.Collections.Concurrent;
     using Microsoft.Azure.ServiceBus.Core;
@@ -22,11 +24,13 @@ namespace UnitTests
     {
         static string serviceBusKey = "kCxvZWTdqMCSVjsur+MTiB1J3MwV0p8Cq3eRlZm9HUk=";
         static string storageAccountKey = @"E8vxv+2T+TKMfGBDYoWT8rSt0NINfoUOU8KP8AHmdTi8+dBdjIweeH3UvYfq6dA1PDtB3ky52hl0ZlAx3g1R6A==";
-
+        
+        private string StorageContainerName = "telagraphytesteventhub";
         private string ServiceBusConnectionString { get { return @"Endpoint=sb://telagraphytest.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=" + serviceBusKey + ""; } }
         private string StorageConnectionString { get { return @"DefaultEndpointsProtocol=https;AccountName=telegraphytest;AccountKey=" + storageAccountKey + ";EndpointSuffix=core.windows.net"; } }
-        private string EventHubConnectionString { get { return ""; } }
+        private string EventHubConnectionString { get { return "Endpoint=sb://telagraphyeventhub.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=xB1cB7sxM0KlaE1XZbGq/JXZAESC+Pk504RJndkV8R4="; } }
         ConcurrentQueue<Message> sbMsgQueue = new ConcurrentQueue<Message>();
+        static ConcurrentQueue<EventData> ehMsgQueue = new ConcurrentQueue<EventData>();
 
         private CloudQueue GetStorageQueue(string queueName)
         {
@@ -61,6 +65,31 @@ namespace UnitTests
 
             reciever.RegisterMessageHandler(RecieveMessages, options);
             return reciever;
+        }
+
+        private void StartEventHubReciever(string eventHubName,string consumerGroup)
+        {
+            var eventProcessorHost = new EventProcessorHost(
+                eventHubName,
+                consumerGroup, //GroupPartitionReceiver.DefaultConsumerGroupName,
+                EventHubConnectionString,
+                StorageConnectionString,
+                StorageContainerName);
+
+
+            eventProcessorHost.RegisterEventProcessorAsync<SimpleEventProcessor>().Wait();
+        }
+
+        private void CreateEventHub(string eventHubName,string consumerGroup)
+        {
+            NamespaceManager ns = NamespaceManager.CreateFromConnectionString(EventHubConnectionString);
+            EventHubDescription qd;
+            if (!ns.EventHubExists(eventHubName, out qd))
+                ns.CreateEventHub(eventHubName);
+
+            ConsumerGroupDescription cgd;
+            if (!ns.ConsumerGroupExists(eventHubName, consumerGroup, out cgd))
+                ns.CreateConsumerGroup(eventHubName, consumerGroup);
         }
 
         private void CreateTopicAndSubscriptions(string topicName, string[] subscriptions)
@@ -104,6 +133,14 @@ namespace UnitTests
                 ns.DeleteTopic(topic);
         }
 
+        private void DeleteEventHub(string eventHubName)
+        {
+            NamespaceManager ns = NamespaceManager.CreateFromConnectionString(EventHubConnectionString);
+            EventHubDescription qd;
+            if (ns.EventHubExists(eventHubName, out qd))
+                ns.DeleteEventHub(eventHubName);
+        }
+
         private Task RecieveMessages(Message sbMessage, CancellationToken token)
         {
             return Task.Factory.StartNew(() =>
@@ -112,13 +149,129 @@ namespace UnitTests
             });
         }
         
-        private Task HandleExceptions(ExceptionReceivedEventArgs eargs)
+        private Task HandleExceptions(Microsoft.Azure.ServiceBus.ExceptionReceivedEventArgs eargs)
         {
             return Task.Factory.StartNew(() =>
             {
                 Assert.Fail(eargs.Exception.Message);
             });
         }
+
+        #region eventHub
+        [TestMethod]
+        public void SendActorMessageToEventHub()
+        {
+            string eventHubName = "test-" + "SendActorMessageToEventHub".ToLower();
+            string consumerGroup = eventHubName + "myyconsumergroup";
+            CreateEventHub(eventHubName, consumerGroup);
+            try
+            {
+                StartEventHubReciever(eventHubName, consumerGroup);
+
+                string message = "HelloWorld";
+                PingPong.Ping aMsg = new PingPong.Ping(message);
+                MessageSerializationActor serializer = new MessageSerializationActor();
+                Telegraph.Instance.Register<PingPong.Ping, SendMessageToEventHub>(() => new SendMessageToEventHub(EventHubConnectionString, eventHubName, true));
+                Telegraph.Instance.Register<SerializeMessage, MessageSerializationActor>(() => serializer);
+
+                Telegraph.Instance.Ask(aMsg).Wait();
+
+
+                MessageDeserializationActor deserializer = new MessageDeserializationActor();
+                deserializer.Register<PingPong.Ping>((object msg) => (PingPong.Ping)msg);
+                EventData ehMessage = null;
+                while (!ehMsgQueue.TryDequeue(out ehMessage)) { System.Threading.Thread.Sleep(100); }
+                DeSerializeMessage dMsg = new DeSerializeMessage(ehMessage.Body.Array);
+                deserializer.Ask(dMsg);
+                var retMsgs = (PingPong.Ping)dMsg.ProcessingResult;
+                Assert.IsTrue(((string)retMsgs.Message).Equals(message));
+            }
+            finally
+            {
+                Telegraph.Instance.UnRegisterAll();
+                DeleteEventHub(eventHubName);
+            }
+        }
+        
+        [TestMethod]
+        public void SendStringToEventHub()
+        {
+            string eventHubName = "test-" + "SendStringToEventHub".ToLower();
+            string consumerGroup = eventHubName + "myyconsumergroup";
+            CreateEventHub(eventHubName, consumerGroup);
+            try
+            {
+                StartEventHubReciever(eventHubName, consumerGroup);
+
+                string message = "HelloWorld";
+                Telegraph.Instance.Register<string, SendStringToEventHub>(() => new SendStringToEventHub(EventHubConnectionString, eventHubName, true));
+                Telegraph.Instance.Ask(message).Wait();
+                EventData ehMessage = null;
+                while (!ehMsgQueue.TryDequeue(out ehMessage)) { System.Threading.Thread.Sleep(5000); }
+                Assert.IsTrue(Encoding.UTF8.GetString(ehMessage.Body.Array).Equals(message, StringComparison.CurrentCulture));
+            }
+            finally
+            {
+                Telegraph.Instance.UnRegisterAll();
+                DeleteEventHub(eventHubName);
+            }
+        }
+
+        [TestMethod]
+        public void SendBytesToEventHub()
+        {
+            string eventHubName = "test-" + "SendBytesToEventHub".ToLower();
+            string consumerGroup = eventHubName+"myyconsumergroup";
+            CreateEventHub(eventHubName, consumerGroup);
+            try
+            {
+                StartEventHubReciever(eventHubName, consumerGroup);
+
+                string message = "HelloWorld";
+                byte[] messageBytes = Encoding.UTF8.GetBytes(message);
+
+                Telegraph.Instance.Register<ValueTypeMessage<byte>, SendBytesToEventHub>(() => new SendBytesToEventHub(EventHubConnectionString, eventHubName, true));
+                Telegraph.Instance.Ask(messageBytes.ToActorMessage()).Wait();
+                EventData ehMessage = null;
+                while (!ehMsgQueue.TryDequeue(out ehMessage)) { System.Threading.Thread.Sleep(100); }
+                Assert.IsTrue(Encoding.UTF8.GetString(ehMessage.Body.Array).Equals(message));
+            }
+            finally
+            {
+                Telegraph.Instance.UnRegisterAll();
+                DeleteEventHub(eventHubName);
+            }
+        }
+
+        public class SimpleEventProcessor: IEventProcessor
+        {
+            public Task CloseAsync(PartitionContext context, CloseReason reason)
+            {
+                return Task.CompletedTask;
+            }
+
+            public Task OpenAsync(PartitionContext context)
+            {
+                return Task.CompletedTask;
+            }
+
+            public Task ProcessErrorAsync(PartitionContext context, Exception error)
+            {
+                return Task.CompletedTask;
+            }
+
+            public Task ProcessEventsAsync(PartitionContext context, IEnumerable<EventData> messages)
+            {
+                foreach (var eventData in messages)
+                {
+                    ehMsgQueue.Enqueue(eventData);
+                }
+
+                return context.CheckpointAsync();
+            }
+        }
+
+        #endregion
 
         #region Storage Queue
         [TestMethod]
