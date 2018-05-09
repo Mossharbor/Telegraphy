@@ -37,6 +37,7 @@ namespace Telegraphy.Azure
                 throw new CantSendFileDataWhenFileDoesNotExistException(fileName);
 
             blob = container.GetBlockBlobReference(blobNameFcn(fileName));
+            blob.UploadFromFile(fileName);
             return true;
         }
     }
