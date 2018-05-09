@@ -53,12 +53,12 @@ namespace Telegraphy.Net
             var handlesType = typeof(T);
             bool decorateActorWithMailbox = LocalConcurrencyType.OneThreadPerActor == this.LocalConcurrencyType;
             bool isManyThreads = LocalConcurrencyType.OneActorPerThread == this.LocalConcurrencyType;
-
-            IActor anonActor = null;
+            
+            IActor anonActor = new AnonActor<T>(action);
             if (decorateActorWithMailbox)
                 anonActor = new MailBoxActor(anonActor);
-            else
-                anonActor = new AnonActor<T>(action);
+            //else
+            //   anonActor = new AnonActor<T>(action);
 
             // For invocation return the anonActor we just created always.
             ActorInvocationBase invoker = new ActorInvocation<IActor>(() => anonActor);

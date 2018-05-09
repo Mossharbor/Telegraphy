@@ -180,13 +180,14 @@ namespace Telegraphy.Azure
                         throw new NotConfiguredToSerializeThisTypeOfMessageException("Byte[]");
                     break;
                 case MessageSource.StringMessage:
+                    System.Diagnostics.Debug.WriteLine("Serializing " + (string)(msg as IActorMessage).Message);
                     if ((msg as IActorMessage).Message.GetType().Name.Equals("String"))
                         msgBytes = Encoding.UTF8.GetBytes((string)(msg as IActorMessage).Message);
                     else
                         throw new NotConfiguredToSerializeThisTypeOfMessageException("String");
                     break;
             }
-
+            System.Diagnostics.Debug.WriteLine("Serializing Bytes:" + msgBytes.Count());
             var message = new Message(msgBytes);
 
             if (msg is IServiceBusMessagePropertiesProvider)

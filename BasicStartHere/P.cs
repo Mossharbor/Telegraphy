@@ -121,9 +121,9 @@ namespace BasicStartHere
                 throw;
             }
 
+            Telegraph.Instance.WaitTillEmpty(TimeSpan.FromSeconds(1));
             Task task = Telegraph.Instance.Ask(new ControlMessages.HangUp());
             task.Wait();
-            System.Threading.Thread.Sleep(100);
             System.Diagnostics.Debug.Assert(11 == msgCount);
         }
 
@@ -143,6 +143,7 @@ namespace BasicStartHere
                 Telegraph.Instance.Tell("ThreadPool was executed." + i.ToString());
 
             Telegraph.Instance.MainOperator.WaitTillEmpty(new TimeSpan(1, 0, 0));
+            System.Threading.Thread.Sleep(100); // wait for items in the queue to be processed.
             System.Diagnostics.Debug.Assert(10 == msgCount);
         }
 
@@ -162,6 +163,7 @@ namespace BasicStartHere
                 Telegraph.Instance.Tell("LimitedThreadPool was executed." + i.ToString());
 
             Telegraph.Instance.MainOperator.WaitTillEmpty(new TimeSpan(1, 0, 0));
+            System.Threading.Thread.Sleep(100); // wait for items in the queue to be processed.
             System.Diagnostics.Debug.Assert(10 == msgCount);
         }
 
@@ -181,9 +183,9 @@ namespace BasicStartHere
             {
                 Telegraph.Instance.Tell("Worker was executed." + i.ToString());
             }
-
-            System.Threading.Thread.Sleep(1000);
+            
             Telegraph.Instance.MainOperator.WaitTillEmpty(new TimeSpan(1, 0, 0));
+            System.Threading.Thread.Sleep(100); // wait for items in the queue to be processed.
             System.Diagnostics.Debug.Assert(10 == msgCount);
         }
 
@@ -228,8 +230,9 @@ namespace BasicStartHere
             Telegraph.Instance.MainOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneActorPerThread, 20)); // performs a reset.
             string messageStr = "WaitOnMultipleMessagesToComplete.";
 
+            int msgCount = 0;
             LazyInstantiationActor lzyActor = new LazyInstantiationActor();
-            Func<IActorMessage,bool> writeFcn = delegate(IActorMessage s) { lzyActor.Print(s); return true; };
+            Func<IActorMessage,bool> writeFcn = delegate(IActorMessage s) { ++msgCount;  lzyActor.Print(s); return true; };
 
             // this is using the local threadpool concurrency type which will create a new Actor for each message.
             Telegraph.Instance.Register<byte[], DefaultActor>(() => new DefaultActor(writeFcn));
@@ -246,6 +249,8 @@ namespace BasicStartHere
             }
 
             Task.WaitAll(tasksToWaitOn);
+            System.Threading.Thread.Sleep(100); // wait for items in the queue to be processed.
+            System.Diagnostics.Debug.Assert(10 == msgCount);
         }
 
         public static void WaitForCompletion()

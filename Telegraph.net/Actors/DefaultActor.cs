@@ -11,7 +11,7 @@ namespace Telegraphy.Net
         public DefaultActor()
         {
         }
-
+        
         public DefaultActor(Func<IActorMessage,bool> msgFcn)
         {
             this.OnMessageHandler = msgFcn;

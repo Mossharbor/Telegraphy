@@ -939,10 +939,16 @@ namespace UnitTests
             { 
                 string message = "HelloWorld";
                 Telegraph.Instance.Register<string, SendStringToServiceBusTopic>(() => new SendStringToServiceBusTopic(ServiceBusConnectionString, TopicName, true));
-                Telegraph.Instance.Ask(message).Wait();
-                Message sbMessage = null;
-                WaitForQueue(sbMsgQueue, out sbMessage);
-                Assert.IsTrue(Encoding.UTF8.GetString(sbMessage.Body).Equals(message, StringComparison.CurrentCulture));
+
+                for (int i = 0; i < 100; ++i)
+                {
+                    Telegraph.Instance.Ask(message).Wait();
+                    Message sbMessage = null;
+                    WaitForQueue(sbMsgQueue, out sbMessage);
+                    string returnedString = Encoding.UTF8.GetString(sbMessage.Body);
+                    bool passed = returnedString.Equals(message, StringComparison.CurrentCulture);
+                    Assert.IsTrue(passed);
+                }
             }
             finally
             {

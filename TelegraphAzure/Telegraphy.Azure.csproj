@@ -130,6 +130,7 @@
     <Compile Include="Actors\SendBytesToServiceBusQueue.cs" />
     <Compile Include="Actors\SendBytesToServiceBusTopic.cs" />
     <Compile Include="Actors\SendBytesToStorageQueue.cs" />
+    <Compile Include="Actors\SendDataToBlobStorage.cs" />
     <Compile Include="Actors\SendMessageToEventHub.cs" />
     <Compile Include="Actors\SendMessageToServiceBusQueue.cs" />
     <Compile Include="Actors\SendMessageToServiceBusTopic.cs" />
