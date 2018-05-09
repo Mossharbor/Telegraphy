@@ -16,11 +16,12 @@ namespace Telegraphy.Azure.Actors
         CloudBlockBlob blob = null;
         Encoding encoding = Encoding.UTF8;
 
-        public SendStreamToBlobStorage(string storageConnectionString, string containerName)
+        public SendStreamToBlobStorage(string storageConnectionString, string containerName, string blobName)
         {
             var acct = CloudStorageAccount.Parse(storageConnectionString);
             var client = acct.CreateCloudBlobClient();
             CloudBlobContainer container = client.GetContainerReference(containerName);
+            blob = container.GetBlockBlobReference(blobName);
         }
 
         bool IActor.OnMessageRecieved<T>(T msg)

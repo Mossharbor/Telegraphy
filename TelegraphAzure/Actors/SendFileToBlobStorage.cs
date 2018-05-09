@@ -13,6 +13,7 @@ namespace Telegraphy.Azure
 {
     public class SendFileToBlobStorage : IActor
     {
+        CloudBlobContainer container = null;
         CloudBlockBlob blob = null;
         Encoding encoding = Encoding.UTF8;
 
@@ -20,7 +21,7 @@ namespace Telegraphy.Azure
         {
             var acct = CloudStorageAccount.Parse(storageConnectionString);
             var client = acct.CreateCloudBlobClient();
-            CloudBlobContainer container = client.GetContainerReference(containerName);
+            container = client.GetContainerReference(containerName);
         }
 
         bool IActor.OnMessageRecieved<T>(T msg)
@@ -32,7 +33,8 @@ namespace Telegraphy.Azure
 
             if (!File.Exists(fileName))
                 throw new CantSendFileDataWhenFileDoesNotExistException(fileName);
-            
+
+            blob = container.GetBlockBlobReference(fileName);
             blob.UploadFromFile(fileName);
             return true;
         }
