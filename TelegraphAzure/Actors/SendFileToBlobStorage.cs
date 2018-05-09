@@ -16,12 +16,14 @@ namespace Telegraphy.Azure
         CloudBlobContainer container = null;
         CloudBlockBlob blob = null;
         Encoding encoding = Encoding.UTF8;
+        Func<string, string> blobNameFcn;
 
-        public SendFileToBlobStorage(string storageConnectionString, string containerName)
+        public SendFileToBlobStorage(string storageConnectionString, string containerName, Func<string,string> blobNameFcn)
         {
             var acct = CloudStorageAccount.Parse(storageConnectionString);
             var client = acct.CreateCloudBlobClient();
             container = client.GetContainerReference(containerName);
+            this.blobNameFcn = blobNameFcn;
         }
 
         bool IActor.OnMessageRecieved<T>(T msg)
@@ -34,7 +36,7 @@ namespace Telegraphy.Azure
             if (!File.Exists(fileName))
                 throw new CantSendFileDataWhenFileDoesNotExistException(fileName);
 
-            blob = container.GetBlockBlobReference(fileName);
+            blob = container.GetBlockBlobReference(blobNameFcn(fileName));
             blob.UploadFromFile(fileName);
             return true;
         }
