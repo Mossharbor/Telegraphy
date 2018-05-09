@@ -126,15 +126,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\CannotSendNonStreamMessagesToBlobStorage.cs" />
     <Compile Include="Actors\SendBytesToEventHub.cs" />
     <Compile Include="Actors\SendBytesToServiceBusQueue.cs" />
     <Compile Include="Actors\SendBytesToServiceBusTopic.cs" />
     <Compile Include="Actors\SendBytesToStorageQueue.cs" />
-    <Compile Include="Actors\SendDataToBlobStorage.cs" />
+    <Compile Include="Actors\SendBytesToBlobStorage.cs" />
+    <Compile Include="Actors\SendFileToBlobStorage.cs" />
     <Compile Include="Actors\SendMessageToEventHub.cs" />
     <Compile Include="Actors\SendMessageToServiceBusQueue.cs" />
     <Compile Include="Actors\SendMessageToServiceBusTopic.cs" />
     <Compile Include="Actors\SendMessageToStorageQueue.cs" />
+    <Compile Include="Actors\SendStreamToBlobStorage.cs" />
+    <Compile Include="Actors\SendStringToBlobStorage.cs" />
     <Compile Include="Actors\SendStringToEventHub.cs" />
     <Compile Include="Actors\SendStringToServiceBusQueue.cs" />
     <Compile Include="Actors\SendStringToServiceBusTopic.cs" />
@@ -142,6 +146,9 @@
     <Compile Include="AzureWrappers\EventHubDataDeliverer.cs" />
     <Compile Include="AzureWrappers\EventHubDataReciever.cs" />
     <Compile Include="AzureWrappers\ServiceBusDeadLetterQueue.cs" />
+    <Compile Include="Exceptions\CannotSendNonByteArrayMessagesToBlobStorage.cs" />
+    <Compile Include="Exceptions\CannotSendNonStringMessagesToBlobStorage.cs" />
+    <Compile Include="Exceptions\CantSendFileDataWhenFileDoesNotExist.cs" />
     <Compile Include="Exceptions\NotConfiguredToSerializeThisTypeOfMessageException.cs" />
     <Compile Include="Exceptions\SendBytesActorCanOnlySendValueTypeByteArrayMessages.cs" />
     <Compile Include="Exceptions\SendStringActorCanOnlySendStringMessages.cs" />
