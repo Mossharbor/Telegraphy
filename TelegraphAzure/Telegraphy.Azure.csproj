@@ -126,6 +126,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actors\DeleteBlobInStorage.cs" />
+    <Compile Include="Actors\RecieveBytesFromBlobStorage.cs" />
+    <Compile Include="Actors\RecieveFileFromBlobStorage.cs" />
+    <Compile Include="Actors\RecieveStreamFromBlobStorage.cs" />
+    <Compile Include="Actors\RecieveStringFromBlobStorage.cs" />
     <Compile Include="Actors\SendBytesToAppendBlobStorage.cs" />
     <Compile Include="Actors\SendBytesToPageBlobStorage.cs" />
     <Compile Include="Actors\SendFileToAppendBlobStorage.cs" />
@@ -158,6 +163,8 @@
     <Compile Include="Exceptions\CannotSendNonByteArrayMessagesToBlobStorage.cs" />
     <Compile Include="Exceptions\CannotSendNonStringMessagesToBlobStorage.cs" />
     <Compile Include="Exceptions\CantSendFileDataWhenFileDoesNotExist.cs" />
+    <Compile Include="Exceptions\MessageTypeWasNotAFileNameCannotDeleteBlobData.cs" />
+    <Compile Include="Exceptions\MessageTypeWasNotAFileNameCannotDownloadBlobToLocalFileStore.cs" />
     <Compile Include="Exceptions\NotConfiguredToSerializeThisTypeOfMessageException.cs" />
     <Compile Include="Exceptions\SendBytesActorCanOnlySendValueTypeByteArrayMessages.cs" />
     <Compile Include="Exceptions\SendStringActorCanOnlySendStringMessages.cs" />

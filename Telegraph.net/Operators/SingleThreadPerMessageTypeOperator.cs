@@ -121,7 +121,7 @@ namespace Telegraphy.Net
         }
 
         public void Register<T, K>(System.Linq.Expressions.Expression<Func<K>> factory)
-            //where T : IActorMessage
+            where T : class
             where K : IActor
         {
             var handlesType = typeof(T);

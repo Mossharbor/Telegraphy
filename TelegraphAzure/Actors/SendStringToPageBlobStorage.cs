@@ -8,7 +8,7 @@ using Telegraphy.Net;
 
 namespace Telegraphy.Azure
 {
-    public class SendStringToPageBlobStorage : SendToBlobBase, IActor
+    public class SendStringToPageBlobStorage : SendAndRecieveBlobBase, IActor
     {
         public SendStringToPageBlobStorage(string storageConnectionString, string containerName, Func<string> blobNameFcn) :
             this(storageConnectionString, containerName, blobNameFcn, null)

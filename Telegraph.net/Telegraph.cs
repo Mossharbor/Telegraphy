@@ -259,6 +259,7 @@ namespace Telegraphy.Net
         }
 
         public void Register<T, K>(System.Linq.Expressions.Expression<Func<K>> factory)
+            where T : class
             where K : IActor
         {
             if (IsUsingSingleOperator())
@@ -353,6 +354,7 @@ namespace Telegraphy.Net
         }
 
         public void Register<T, K>(long opID, System.Linq.Expressions.Expression<Func<K>> factory)
+            where T : class
             where K : IActor
         {
             IOperator op = null;
@@ -363,6 +365,7 @@ namespace Telegraphy.Net
         }
 
         public long Register<T, K>(IOperator op, System.Linq.Expressions.Expression<Func<K>> factory)
+            where T : class
             where K : IActor
         {
             long nextID = Register(op);

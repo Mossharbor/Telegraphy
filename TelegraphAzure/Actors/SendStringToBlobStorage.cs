@@ -10,7 +10,7 @@ using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace Telegraphy.Azure
 {
-    public class SendStringToBlobStorage : SendToBlobBase, IActor
+    public class SendStringToBlobStorage : SendAndRecieveBlobBase, IActor
     {
         public SendStringToBlobStorage(string storageConnectionString, string containerName, Func<string> blobNameFcn) : 
             this(storageConnectionString, containerName, blobNameFcn, null)

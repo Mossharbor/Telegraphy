@@ -256,7 +256,9 @@ namespace Telegraphy.Azure
             this.Switchboard.Register<T>(action);
         }
 
-        public void Register<T, K>(Expression<Func<K>> factory) where K : IActor
+        public void Register<T, K>(Expression<Func<K>> factory)
+            where T : class
+            where K : IActor
         {
             if (null == this.Switchboard && !recievingOnly)
                 throw new CannotRegisterActionWithOperatorSinceWeAreSendingToAzureQueueOnlyException();

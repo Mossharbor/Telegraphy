@@ -24,7 +24,7 @@ namespace Telegraphy.Net
         void Register<T>(Action<T> action) where T : class;
 
         void Register<T, K>(System.Linq.Expressions.Expression<Func<K>> factory)
-            //where T : IActorMessage
+            where T : class
             where K : IActor;
 
         void Register(Type exceptionType, Action<Exception> handler);

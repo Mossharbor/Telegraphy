@@ -11,7 +11,7 @@ using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace Telegraphy.Azure
 {
-    public class SendFileToBlobStorage : SendToBlobBase, IActor
+    public class SendFileToBlobStorage : SendAndRecieveBlobBase, IActor
     {
         public SendFileToBlobStorage(string storageConnectionString, string containerName, Func<string,string> blobTransformNameFcn)
             :base(storageConnectionString, containerName, blobTransformNameFcn)

@@ -10,15 +10,14 @@ using Telegraphy.Azure.Exceptions;
 
 namespace Telegraphy.Azure
 {
-    public class SendToBlobBase
+    public class SendAndRecieveBlobBase
     {
-        CloudBlockBlob blob = null;
         protected CloudBlobContainer container;
         protected Func<string> blobNameFcn;
         protected Func<string, string> blobTransformNameFcn;
-        Encoding encoding = Encoding.UTF8;
+        protected Encoding encoding = Encoding.UTF8;
 
-        public SendToBlobBase(string storageConnectionString, string containerName, Func<string, string> blobNameFcn)
+        public SendAndRecieveBlobBase(string storageConnectionString, string containerName, Func<string, string> blobNameFcn)
         {
             var acct = CloudStorageAccount.Parse(storageConnectionString);
             var client = acct.CreateCloudBlobClient();
@@ -26,7 +25,7 @@ namespace Telegraphy.Azure
             this.blobTransformNameFcn = blobNameFcn;
         }
 
-        protected SendToBlobBase(string storageConnectionString, string containerName, Func<string> blobNameFcn, Encoding encoding)
+        protected SendAndRecieveBlobBase(string storageConnectionString, string containerName, Func<string> blobNameFcn, Encoding encoding)
         {
             var acct = CloudStorageAccount.Parse(storageConnectionString);
             var client = acct.CreateCloudBlobClient();
@@ -52,6 +51,13 @@ namespace Telegraphy.Azure
             blob.UploadFromByteArray(msgBytes, 0, msgBytes.Length);
         }
 
+        protected string RecieveString(CloudBlob blob)
+        {
+            int size;
+            byte[] msgBytes = RecieveBytes(blob, out size);
+            return encoding.GetString(msgBytes);
+        }
+        
         protected void SendFile(CloudBlockBlob blob,string fileNameAndPath)
         {
             if (!File.Exists(fileNameAndPath))
@@ -76,6 +82,11 @@ namespace Telegraphy.Azure
             blob.UploadFromFile(fileNameAndPath);
         }
 
+        protected void RecieveFile(CloudBlob blob, string fileNameAndPath, FileMode mode)
+        {
+            blob.DownloadToFile(fileNameAndPath,  mode);
+        }
+
         protected void SendStream(CloudBlockBlob blob, Stream stream)
         {
             blob.UploadFromStream(stream);
@@ -91,6 +102,11 @@ namespace Telegraphy.Azure
             blob.UploadFromStream(stream);
         }
 
+        protected void RecieveStream(CloudBlob blob, Stream stream)
+        {
+            blob.DownloadToStream(stream);
+        }
+        
         protected void SendBytes(CloudBlockBlob blob, byte[] msgBytes)
         {
             blob.UploadFromByteArray(msgBytes, 0, msgBytes.Length);
@@ -104,6 +120,13 @@ namespace Telegraphy.Azure
         protected void SendBytes(CloudAppendBlob blob, byte[] msgBytes)
         {
             blob.UploadFromByteArray(msgBytes, 0, msgBytes.Length);
+        }
+
+        protected byte[] RecieveBytes(CloudBlob blob, out int size)
+        {
+            byte[] msgBytes = null;
+            size = blob.DownloadToByteArray(msgBytes, 0);
+            return msgBytes;
         }
     }
 }

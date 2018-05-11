@@ -310,7 +310,7 @@ namespace Telegraphy.Azure
         }
 
         public void Register<T, K>(System.Linq.Expressions.Expression<Func<K>> factory)
-            //where T : IActorMessage
+            where T : class
             where K : IActor
         {
             if (null == this.Switchboard && !recieveMessagesOnly)

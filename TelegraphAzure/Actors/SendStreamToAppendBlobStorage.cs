@@ -9,7 +9,7 @@ using Telegraphy.Net;
 
 namespace Telegraphy.Azure
 {
-    public class SendStreamToAppendBlobStorage : SendToBlobBase, IActor
+    public class SendStreamToAppendBlobStorage : SendAndRecieveBlobBase, IActor
     {
         public SendStreamToAppendBlobStorage(string storageConnectionString, string containerName, Func<string> blobNameFcn) :
             base(storageConnectionString, containerName, blobNameFcn, null)

@@ -9,9 +9,9 @@ using Telegraphy.Net;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
-namespace Telegraphy.Azure.Actors
+namespace Telegraphy.Azure
 {
-    public class SendStreamToBlobStorage : SendToBlobBase, IActor
+    public class SendStreamToBlobStorage : SendAndRecieveBlobBase, IActor
     {
         public SendStreamToBlobStorage(string storageConnectionString, string containerName, Func<string> blobNameFcn) :
             base(storageConnectionString, containerName, blobNameFcn, null)

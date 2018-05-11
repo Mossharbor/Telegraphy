@@ -10,7 +10,7 @@ using Telegraphy.Net;
 
 namespace Telegraphy.Azure
 {
-    public class SendBytesToBlobStorage : SendToBlobBase, IActor
+    public class SendBytesToBlobStorage : SendAndRecieveBlobBase, IActor
     {
         public SendBytesToBlobStorage(string storageConnectionString, string containerName, Func<string> blobNameFcn)
             : base(storageConnectionString, containerName, blobNameFcn, null)
