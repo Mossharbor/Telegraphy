@@ -1072,72 +1072,100 @@ namespace UnitTests
 
         public void TestSendStreamToStorage(Action setupFunction, string firstFile)
         {
-            setupFunction();
+            try
+            {
+                setupFunction();
 
-            Telegraph.Instance.Ask((System.IO.Stream)System.IO.File.OpenRead(firstFile)).Wait();
+                Telegraph.Instance.Ask((System.IO.Stream)System.IO.File.OpenRead(firstFile)).Wait();
 
-            var acct = CloudStorageAccount.Parse(StorageConnectionString);
-            var client = acct.CreateCloudBlobClient();
-            var container = client.GetContainerReference(StorageContainerName);
-            var blob = container.GetBlobReference(System.IO.Path.GetFileName(firstFile));
+                var acct = CloudStorageAccount.Parse(StorageConnectionString);
+                var client = acct.CreateCloudBlobClient();
+                var container = client.GetContainerReference(StorageContainerName);
+                var blob = container.GetBlobReference(System.IO.Path.GetFileName(firstFile));
 
-            Assert.IsTrue(blob.Exists());
-            blob.Delete();
+                Assert.IsTrue(blob.Exists());
+                blob.Delete();
+            }
+            finally
+            {
+                Telegraph.Instance.UnRegisterAll();
+            }
 
         }
 
         public void TestSendFileToStorage(Action setupFunction)
         {
-            string localMusicFolder = System.Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
-            string firstFile = System.IO.Directory.GetFiles(localMusicFolder, "*.mp3").First();
+            try
+            {
+                string localMusicFolder = System.Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+                string firstFile = System.IO.Directory.GetFiles(localMusicFolder, "*.mp3").First();
 
-            setupFunction();
+                setupFunction();
 
-            Telegraph.Instance.Ask(firstFile).Wait();
+                Telegraph.Instance.Ask(firstFile).Wait();
 
-            var acct = CloudStorageAccount.Parse(StorageConnectionString);
-            var client = acct.CreateCloudBlobClient();
-            var container = client.GetContainerReference(StorageContainerName);
-            var blob = container.GetBlobReference(System.IO.Path.GetFileName(firstFile));
+                var acct = CloudStorageAccount.Parse(StorageConnectionString);
+                var client = acct.CreateCloudBlobClient();
+                var container = client.GetContainerReference(StorageContainerName);
+                var blob = container.GetBlobReference(System.IO.Path.GetFileName(firstFile));
 
-            Assert.IsTrue(blob.Exists());
-            blob.Delete();
+                Assert.IsTrue(blob.Exists());
+                blob.Delete();
+            }
+            finally
+            {
+                Telegraph.Instance.UnRegisterAll();
+            }
 
         }
 
         public void TestSendBytesToStorage(Action setupFunction, byte[] data = null)
         {
-            string stringToSend = "Foobar";
-            byte[] msgBytes = (null == data) ? Encoding.UTF8.GetBytes(stringToSend) : data;
+            try
+            {
+                string stringToSend = "Foobar";
+                byte[] msgBytes = (null == data) ? Encoding.UTF8.GetBytes(stringToSend) : data;
 
-            int index = 0;
-            setupFunction();
+                int index = 0;
+                setupFunction();
 
-            Telegraph.Instance.Ask(msgBytes.ToActorMessage()).Wait();
+                Telegraph.Instance.Ask(msgBytes.ToActorMessage()).Wait();
 
-            var acct = CloudStorageAccount.Parse(StorageConnectionString);
-            var client = acct.CreateCloudBlobClient();
-            var container = client.GetContainerReference(StorageContainerName);
-            var blob = container.GetBlobReference("0.txt");
+                var acct = CloudStorageAccount.Parse(StorageConnectionString);
+                var client = acct.CreateCloudBlobClient();
+                var container = client.GetContainerReference(StorageContainerName);
+                var blob = container.GetBlobReference("0.txt");
 
-            Assert.IsTrue(blob.Exists());
-            blob.Delete();
+                Assert.IsTrue(blob.Exists());
+                blob.Delete();
+            }
+            finally
+            {
+                Telegraph.Instance.UnRegisterAll();
+            }
         }
 
         public void TestSendStringToStorage(Action setupFunction, string stringToSend)
         {
-            int index = 0;
-            setupFunction();
+            try
+            {
+                int index = 0;
+                setupFunction();
 
-            Telegraph.Instance.Ask(stringToSend).Wait();
+                Telegraph.Instance.Ask(stringToSend).Wait();
 
-            var acct = CloudStorageAccount.Parse(StorageConnectionString);
-            var client = acct.CreateCloudBlobClient();
-            var container = client.GetContainerReference(StorageContainerName);
-            var blob = container.GetBlobReference("0.txt");
+                var acct = CloudStorageAccount.Parse(StorageConnectionString);
+                var client = acct.CreateCloudBlobClient();
+                var container = client.GetContainerReference(StorageContainerName);
+                var blob = container.GetBlobReference("0.txt");
 
-            Assert.IsTrue(blob.Exists());
-            blob.Delete();
+                Assert.IsTrue(blob.Exists());
+                blob.Delete();
+            }
+            finally
+            {
+                Telegraph.Instance.UnRegisterAll();
+            }
         }
 
         [TestMethod]
@@ -1169,6 +1197,7 @@ namespace UnitTests
                 () => new Telegraphy.Azure.SendStreamToAppendBlobStorage(
                     StorageConnectionString,
                     StorageContainerName,
+                    true,
                     () => System.IO.Path.GetFileName(firstFile)));
             }
             , firstFile);
@@ -1225,6 +1254,7 @@ namespace UnitTests
                 () => new Telegraphy.Azure.SendFileToAppendBlobStorage(
                     StorageConnectionString,
                     StorageContainerName,
+                    true,
                     (string fileName) => System.IO.Path.GetFileName(fileName)));
             });
         }
@@ -1277,6 +1307,7 @@ namespace UnitTests
                     () => new Telegraphy.Azure.SendStringToAppendBlobStorage(
                         StorageConnectionString,
                         StorageContainerName,
+                        true,
                         () => index.ToString() + ".txt"));
             },
              stringToSend);
@@ -1306,6 +1337,7 @@ namespace UnitTests
                () => new Telegraphy.Azure.SendBytesToAppendBlobStorage(
                    StorageConnectionString,
                    StorageContainerName,
+                    true,
                    () => index.ToString() + ".txt"));
             });
         }
@@ -1357,6 +1389,7 @@ namespace UnitTests
 
             blob.Delete();
             Assert.IsTrue(sentString.Equals(stringToSend));
+            Telegraph.Instance.UnRegisterAll();
         }
 
         [TestMethod]
@@ -1390,6 +1423,7 @@ namespace UnitTests
 
             blob.Delete();
             Assert.IsTrue(sentString.Equals(stringToSend));
+            Telegraph.Instance.UnRegisterAll();
         }
 
         [TestMethod]
@@ -1426,6 +1460,7 @@ namespace UnitTests
 
             blob.Delete();
             Assert.IsTrue(sentString.Equals(stringToSend));
+            Telegraph.Instance.UnRegisterAll();
         }
 
         [TestMethod]
@@ -1457,6 +1492,7 @@ namespace UnitTests
             blob.Delete();
             Assert.IsTrue(File.Exists(dest));
             File.Delete(dest);
+            Telegraph.Instance.UnRegisterAll();
         }
 
         [TestMethod]
@@ -1488,6 +1524,7 @@ namespace UnitTests
             blob.Delete();
             Assert.IsTrue(File.Exists(dest));
             File.Delete(dest);
+            Telegraph.Instance.UnRegisterAll();
         }
 
         [TestMethod]
@@ -1523,8 +1560,82 @@ namespace UnitTests
             blob.Delete();
             Assert.IsTrue(File.Exists(dest));
             File.Delete(dest);
+            Telegraph.Instance.UnRegisterAll();
+        }
+
+        [TestMethod]
+        public void TestBlobPipeline()
+        {
+            string localMusicFolder = System.Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+            IEnumerable<string> files = System.IO.Directory.GetFiles(localMusicFolder, "*.mp3").Take(2);
+
+            // register sending the file themselves to blob storage
+            Telegraph.Instance.Register<Messages.UploadMessage, SendFileToBlobStorage>(
+               () => new Telegraphy.Azure.SendFileToBlobStorage(
+                   StorageConnectionString,
+                   StorageContainerName,
+                   (string fileName) => System.IO.Path.GetFileName(fileName)));
+
+            // register sending the file names to blob storage to be appended as a list
+            Telegraph.Instance.Register<Messages.AppendNameToFileMessage, SendStringToAppendBlobStorage>(
+                () => new Telegraphy.Azure.SendStringToAppendBlobStorage(
+                    StorageConnectionString,
+                    StorageContainerName,
+                    true,
+                    () => "Mp3List.txt"));
+
+            Telegraph.Instance.Register<Messages.DeleteAllBlobsMsg, DeleteAllBlobsInContainer>(
+                () => new Telegraphy.Azure.DeleteAllBlobsInContainer(StorageConnectionString));
+
+            var pipeline = Telegraphy.Net.Pipeline
+                // We are creating a pipeline that takes in a string (filename) and returns an UploadMessage
+                .Create<string, Messages.UploadMessage>((string fileName) => 
+                {
+                    return new Messages.UploadMessage(fileName);
+                })
+                // We are sending that upload message to be uploaded to blob storage
+                .Next<string>((Messages.UploadMessage msg) =>
+                {
+                   // Telegraph.Instance.Ask(msg).Wait();
+                    return (string)msg.Message;
+                })
+                // we are sending name of the file we uploaded returns an upload message
+                .Next<Messages.AppendNameToFileMessage>((string fileName) =>
+                {
+                    return new Messages.AppendNameToFileMessage(fileName);
+                })
+                // We are creating a pipeline that takes in an UploadMessage (filename) appends it to the append blob storage file
+                .Next<string>((Messages.AppendNameToFileMessage msg) =>
+                {
+                    Telegraph.Instance.Ask(msg).Wait();
+                    return (string)msg.Message; // fileName
+                });
+
+            // Process all fo the files in the list
+            var filesNames = pipeline.Process(files).ToArray();
+
+            Telegraph.Instance.Ask(new Messages.DeleteAllBlobsMsg(StorageContainerName));
+            Telegraph.Instance.UnRegisterAll();
         }
 
         #endregion
+
+        public class Messages
+        {
+            public class UploadMessage : SimpleMessage<UploadMessage>
+            {
+                public UploadMessage(string fileName){ this.Message = fileName; }
+            }
+
+            public class AppendNameToFileMessage : SimpleMessage<AppendNameToFileMessage>
+            {
+                public AppendNameToFileMessage(string fileName) { this.Message = fileName+System.Environment.NewLine; }
+            }
+
+            public class DeleteAllBlobsMsg : SimpleMessage<DeleteAllBlobsMsg>
+            {
+                public DeleteAllBlobsMsg(string container) { this.Message = container; }
+            }
+        }
     }
 }

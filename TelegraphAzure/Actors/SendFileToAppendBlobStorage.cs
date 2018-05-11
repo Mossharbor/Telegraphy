@@ -6,9 +6,12 @@ namespace Telegraphy.Azure
 {
     public class SendFileToAppendBlobStorage : SendAndRecieveBlobBase, IActor
     {
-        public SendFileToAppendBlobStorage(string storageConnectionString, string containerName, Func<string, string> blobTransformNameFcn)
+        bool checkExistsAndCreate = true;
+
+        public SendFileToAppendBlobStorage(string storageConnectionString, string containerName, bool checkExistsAndCreate, Func<string, string> blobTransformNameFcn)
             : base(storageConnectionString, containerName, blobTransformNameFcn)
         {
+            this.checkExistsAndCreate = checkExistsAndCreate;
         }
 
         bool IActor.OnMessageRecieved<T>(T msg)
@@ -18,6 +21,8 @@ namespace Telegraphy.Azure
 
             string fileName = (string)msg.Message;
             var blob = container.GetAppendBlobReference(blobTransformNameFcn(fileName));
+            if (checkExistsAndCreate && !blob.Exists())
+                blob.CreateOrReplace();
             SendFile(blob, fileName);
             return true;
         }

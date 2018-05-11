@@ -10,14 +10,17 @@ namespace Telegraphy.Azure
 {
     public class SendStringToAppendBlobStorage : SendAndRecieveBlobBase, IActor
     {
-        public SendStringToAppendBlobStorage(string storageConnectionString, string containerName, Func<string> blobNameFcn) :
-            this(storageConnectionString, containerName, blobNameFcn, null)
+        bool checkExistsAndCreate = true;
+
+        public SendStringToAppendBlobStorage(string storageConnectionString, string containerName, bool checkExistsAndCreate, Func<string> blobNameFcn) :
+            this(storageConnectionString, containerName, checkExistsAndCreate, blobNameFcn, null)
         {
         }
 
-        public SendStringToAppendBlobStorage(string storageConnectionString, string containerName, Func<string> blobNameFcn, Encoding encoding)
+        public SendStringToAppendBlobStorage(string storageConnectionString, string containerName, bool checkExistsAndCreate, Func<string> blobNameFcn, Encoding encoding)
             : base(storageConnectionString, containerName, blobNameFcn, encoding)
         {
+            this.checkExistsAndCreate = checkExistsAndCreate;
         }
 
         bool IActor.OnMessageRecieved<T>(T msg)
@@ -26,6 +29,8 @@ namespace Telegraphy.Azure
                 throw new CannotSendNonStringMessagesToBlobStorageException();
 
             var blob = container.GetAppendBlobReference(blobNameFcn());
+            if (checkExistsAndCreate && !blob.Exists())
+                blob.CreateOrReplace();
             string msgString = (string)msg.Message;
             SendString(blob, msgString);
             return true;

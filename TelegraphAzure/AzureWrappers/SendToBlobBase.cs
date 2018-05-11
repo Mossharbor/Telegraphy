@@ -42,7 +42,7 @@ namespace Telegraphy.Azure
 
         protected void SendString(CloudAppendBlob blob, string message)
         {
-            blob.UploadText(message, encoding);
+            blob.AppendText(message);
         }
 
         protected void SendString(CloudPageBlob blob, string message)
@@ -71,7 +71,7 @@ namespace Telegraphy.Azure
             if (!File.Exists(fileNameAndPath))
                 throw new CantSendFileDataWhenFileDoesNotExistException(fileNameAndPath);
 
-            blob.UploadFromFile(fileNameAndPath);
+            blob.AppendFromFile(fileNameAndPath);
         }
 
         protected void SendFile(CloudPageBlob blob, string fileNameAndPath)
@@ -94,7 +94,7 @@ namespace Telegraphy.Azure
 
         protected void SendStream(CloudAppendBlob blob, Stream stream)
         {
-            blob.UploadFromStream(stream);
+            blob.AppendFromStream(stream);
         }
 
         protected void SendStream(CloudPageBlob blob, Stream stream)
@@ -119,7 +119,7 @@ namespace Telegraphy.Azure
 
         protected void SendBytes(CloudAppendBlob blob, byte[] msgBytes)
         {
-            blob.UploadFromByteArray(msgBytes, 0, msgBytes.Length);
+            blob.AppendFromByteArray(msgBytes, 0, msgBytes.Length);
         }
 
         protected byte[] RecieveBytes(CloudBlob blob, out int size)

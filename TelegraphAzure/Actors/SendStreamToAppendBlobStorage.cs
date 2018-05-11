@@ -11,9 +11,12 @@ namespace Telegraphy.Azure
 {
     public class SendStreamToAppendBlobStorage : SendAndRecieveBlobBase, IActor
     {
-        public SendStreamToAppendBlobStorage(string storageConnectionString, string containerName, Func<string> blobNameFcn) :
+        bool checkExistsAndCreate = true;
+
+        public SendStreamToAppendBlobStorage(string storageConnectionString, string containerName, bool checkExistsAndCreate, Func<string> blobNameFcn) :
             base(storageConnectionString, containerName, blobNameFcn, null)
         {
+            this.checkExistsAndCreate = checkExistsAndCreate;
         }
 
         bool IActor.OnMessageRecieved<T>(T msg)
@@ -21,6 +24,8 @@ namespace Telegraphy.Azure
             if (!((msg as IActorMessage).Message is Stream))
                 throw new CannotSendNonStreamMessagesToBlobStorageException();
             var blob = container.GetAppendBlobReference(blobNameFcn());
+            if (checkExistsAndCreate && !blob.Exists())
+                blob.CreateOrReplace();
             this.SendStream(blob, (Stream)msg.Message);
             return true;
         }

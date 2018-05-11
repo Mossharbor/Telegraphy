@@ -24,8 +24,10 @@ namespace Telegraphy.Azure
                 throw new CannotSendNonStringMessagesToBlobStorageException();
 
             string fileName = (string)msg.Message;
+            string blobFileName = blobTransformNameFcn(fileName);
             var blob = container.GetBlockBlobReference(blobTransformNameFcn(fileName));
             SendFile(blob, fileName);
+            msg.ProcessingResult = blobFileName;
             return true;
         }
     }

@@ -10,9 +10,12 @@ namespace Telegraphy.Azure
 {
     public class SendBytesToAppendBlobStorage : SendAndRecieveBlobBase, IActor
     {
-        public SendBytesToAppendBlobStorage(string storageConnectionString, string containerName, Func<string> blobNameFcn)
+        bool checkExistsAndCreate = true;
+
+        public SendBytesToAppendBlobStorage(string storageConnectionString, string containerName, bool checkExistsAndCreate, Func<string> blobNameFcn)
             : base(storageConnectionString, containerName, blobNameFcn, null)
         {
+            this.checkExistsAndCreate = checkExistsAndCreate;
         }
 
         bool IActor.OnMessageRecieved<T>(T msg)
@@ -23,6 +26,8 @@ namespace Telegraphy.Azure
 
             byte[] msgBytes = (byte[])msg.Message;
             var blob = container.GetAppendBlobReference(blobNameFcn());
+            if (checkExistsAndCreate && !blob.Exists())
+                blob.CreateOrReplace();
             SendBytes(blob, msgBytes);
             return true;
 
