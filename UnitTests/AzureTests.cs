@@ -1326,6 +1326,40 @@ namespace UnitTests
         }
 
         [TestMethod]
+        public void RecieveBytesFromBlobStorage()
+        {
+            string stringToSend = "RecieveBytesFromBlobStorage";
+
+            Telegraph.Instance.Register<string, SendStringToBlobStorage>(
+                () => new Telegraphy.Azure.SendStringToBlobStorage(
+                    StorageConnectionString,
+                    StorageContainerName,
+                    () => "RecieveBytesFromBlobStorage.txt"));
+
+            Telegraph.Instance.Ask(stringToSend).Wait();
+
+            var acct = CloudStorageAccount.Parse(StorageConnectionString);
+            var client = acct.CreateCloudBlobClient();
+            var container = client.GetContainerReference(StorageContainerName);
+            var blob = container.GetBlobReference("RecieveBytesFromBlobStorage.txt");
+
+            Assert.IsTrue(blob.Exists());
+
+            Telegraph.Instance.UnRegisterAll();
+
+            Telegraph.Instance.Register<string, RecieveBytesFromBlobStorage>(
+               () => new Telegraphy.Azure.RecieveBytesFromBlobStorage(
+                   StorageConnectionString,
+                   StorageContainerName));
+
+            byte[] sentBytes = (byte[])Telegraph.Instance.Ask("RecieveBytesFromBlobStorage.txt").Result.ProcessingResult;
+            string sentString = Encoding.UTF8.GetString(sentBytes);
+
+            blob.Delete();
+            Assert.IsTrue(sentString.Equals(stringToSend));
+        }
+
+        [TestMethod]
         public void RecieveStringFromBlobStorage()
         {
             string stringToSend = "RecieveStringFromBlobStorage";
@@ -1353,6 +1387,42 @@ namespace UnitTests
                    StorageContainerName, Encoding.UTF8));
 
             string sentString = (string)Telegraph.Instance.Ask("RecieveStringFromBlobStorage.txt").Result.ProcessingResult;
+
+            blob.Delete();
+            Assert.IsTrue(sentString.Equals(stringToSend));
+        }
+
+        [TestMethod]
+        public void RecieveStreamFromBlobStorage()
+        {
+            string stringToSend = "RecieveStreamFromBlobStorage";
+
+            Telegraph.Instance.Register<string, SendStringToBlobStorage>(
+                () => new Telegraphy.Azure.SendStringToBlobStorage(
+                    StorageConnectionString,
+                    StorageContainerName,
+                    () => "RecieveStreamFromBlobStorage.txt"));
+
+            Telegraph.Instance.Ask(stringToSend).Wait();
+
+            var acct = CloudStorageAccount.Parse(StorageConnectionString);
+            var client = acct.CreateCloudBlobClient();
+            var container = client.GetContainerReference(StorageContainerName);
+            var blob = container.GetBlobReference("RecieveStreamFromBlobStorage.txt");
+
+            Assert.IsTrue(blob.Exists());
+
+            Telegraph.Instance.UnRegisterAll();
+
+            Telegraph.Instance.Register<string, RecieveStreamFromBlobStorage>(
+               () => new Telegraphy.Azure.RecieveStreamFromBlobStorage(
+                   StorageConnectionString,
+                   StorageContainerName));
+
+            Stream sentStream = (Stream)Telegraph.Instance.Ask("RecieveStreamFromBlobStorage.txt").Result.ProcessingResult;
+
+            StreamReader sr = new StreamReader(sentStream);
+            string sentString = sr.ReadLine();
 
             blob.Delete();
             Assert.IsTrue(sentString.Equals(stringToSend));

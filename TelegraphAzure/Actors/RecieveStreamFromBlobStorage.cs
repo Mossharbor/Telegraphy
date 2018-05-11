@@ -10,9 +10,19 @@ namespace Telegraphy.Azure
 {
     public class RecieveStreamFromBlobStorage : SendAndRecieveBlobBase, IActor
     {
+        Func<System.IO.Stream> getStreamFunc = () => { return new System.IO.MemoryStream(); };
+
         public RecieveStreamFromBlobStorage(string storageConnectionString, string containerName)
+            : this(storageConnectionString, containerName, null)
+        {
+        }
+
+        public RecieveStreamFromBlobStorage(string storageConnectionString, string containerName,Func<System.IO.Stream> getStreamFunc)
             : base(storageConnectionString, containerName, null, null)
         {
+            if (null != getStreamFunc)
+                this.getStreamFunc = getStreamFunc;
+
         }
 
         bool IActor.OnMessageRecieved<T>(T msg)
@@ -22,8 +32,9 @@ namespace Telegraphy.Azure
 
             string blobName = (msg.Message as string);
             var blob = container.GetBlobReference(blobName);
-            msg.ProcessingResult = new System.IO.MemoryStream();
-            base.RecieveStream(blob, (System.IO.MemoryStream)msg.ProcessingResult);
+            msg.ProcessingResult = getStreamFunc();
+            base.RecieveStream(blob, (System.IO.Stream)msg.ProcessingResult);
+            (msg.ProcessingResult as System.IO.Stream).Position = 0;
             return true;
         }
     }

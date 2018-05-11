@@ -124,7 +124,8 @@ namespace Telegraphy.Azure
 
         protected byte[] RecieveBytes(CloudBlob blob, out int size)
         {
-            byte[] msgBytes = null;
+            blob.FetchAttributes();
+            byte[] msgBytes = new byte[blob.Properties.Length];
             size = blob.DownloadToByteArray(msgBytes, 0);
             return msgBytes;
         }
