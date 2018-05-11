@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
 using Telegraphy.Azure.Exceptions;
 using Telegraphy.Net;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
 
-namespace Telegraphy.Azure.Actors
+namespace Telegraphy.Azure
 {
-    public class SendStreamToBlobStorage : SendToBlobBase, IActor
+    public class SendStreamToAppendBlobStorage : SendToBlobBase, IActor
     {
-        public SendStreamToBlobStorage(string storageConnectionString, string containerName, Func<string> blobNameFcn) :
+        public SendStreamToAppendBlobStorage(string storageConnectionString, string containerName, Func<string> blobNameFcn) :
             base(storageConnectionString, containerName, blobNameFcn, null)
         {
         }
@@ -22,7 +20,7 @@ namespace Telegraphy.Azure.Actors
         {
             if (!((msg as IActorMessage).Message is Stream))
                 throw new CannotSendNonStreamMessagesToBlobStorageException();
-            var blob = container.GetBlockBlobReference(blobNameFcn());
+            var blob = container.GetAppendBlobReference(blobNameFcn());
             this.SendStream(blob, (Stream)msg.Message);
             return true;
         }

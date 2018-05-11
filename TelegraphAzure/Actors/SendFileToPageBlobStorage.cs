@@ -3,18 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
 using Telegraphy.Azure.Exceptions;
 using Telegraphy.Net;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace Telegraphy.Azure
 {
-    public class SendFileToBlobStorage : SendToBlobBase, IActor
+    public class SendFileToPageBlobStorage : SendToBlobBase, IActor
     {
-        public SendFileToBlobStorage(string storageConnectionString, string containerName, Func<string,string> blobTransformNameFcn)
-            :base(storageConnectionString, containerName, blobTransformNameFcn)
+        public SendFileToPageBlobStorage(string storageConnectionString, string containerName, Func<string, string> blobTransformNameFcn)
+            : base(storageConnectionString, containerName, blobTransformNameFcn)
         {
         }
 
@@ -24,7 +21,7 @@ namespace Telegraphy.Azure
                 throw new CannotSendNonStringMessagesToBlobStorageException();
 
             string fileName = (string)msg.Message;
-            var blob = container.GetBlockBlobReference(blobTransformNameFcn(fileName));
+            var blob = container.GetPageBlobReference(blobTransformNameFcn(fileName));
             SendFile(blob, fileName);
             return true;
         }

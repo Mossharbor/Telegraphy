@@ -126,6 +126,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actors\SendBytesToAppendBlobStorage.cs" />
+    <Compile Include="Actors\SendBytesToPageBlobStorage.cs" />
+    <Compile Include="Actors\SendFileToAppendBlobStorage.cs" />
+    <Compile Include="Actors\SendFileToPageBlobStorage.cs" />
+    <Compile Include="Actors\SendStreamToAppendBlobStorage.cs" />
+    <Compile Include="Actors\SendStreamToPageBlobStorage.cs" />
+    <Compile Include="Actors\SendStringToAppendBlobStorage.cs" />
+    <Compile Include="Actors\SendStringToPageBlobStorage.cs" />
+    <Compile Include="AzureWrappers\SendToBlobBase.cs" />
     <Compile Include="Exceptions\CannotSendNonStreamMessagesToBlobStorage.cs" />
     <Compile Include="Actors\SendBytesToEventHub.cs" />
     <Compile Include="Actors\SendBytesToServiceBusQueue.cs" />

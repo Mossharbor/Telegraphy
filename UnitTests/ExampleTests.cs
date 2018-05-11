@@ -7,7 +7,7 @@ namespace UnitTests
     using Telegraphy.Net;
 
     [TestClass]
-    public class Examples
+    public class ExampleTests
     {
         [TestMethod]
         public void HelloWorld()

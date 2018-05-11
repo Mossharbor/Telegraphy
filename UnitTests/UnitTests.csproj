@@ -139,9 +139,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="AzureOperatorTests.cs" />
+    <Compile Include="AzureTests.cs" />
     <Compile Include="Serialization.cs" />
-    <Compile Include="Examples.cs" />
+    <Compile Include="ExampleTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,4 @@
-﻿using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,9 +8,9 @@ using Telegraphy.Net;
 
 namespace Telegraphy.Azure
 {
-    public class SendBytesToBlobStorage : SendToBlobBase, IActor
+    public class SendBytesToAppendBlobStorage : SendToBlobBase, IActor
     {
-        public SendBytesToBlobStorage(string storageConnectionString, string containerName, Func<string> blobNameFcn)
+        public SendBytesToAppendBlobStorage(string storageConnectionString, string containerName, Func<string> blobNameFcn)
             : base(storageConnectionString, containerName, blobNameFcn, null)
         {
         }
@@ -24,7 +22,7 @@ namespace Telegraphy.Azure
                 throw new CannotSendNonByteArrayMessagesToBlobStorageException();
 
             byte[] msgBytes = (byte[])msg.Message;
-            var blob = container.GetBlockBlobReference(blobNameFcn());
+            var blob = container.GetAppendBlobReference(blobNameFcn());
             SendBytes(blob, msgBytes);
             return true;
 

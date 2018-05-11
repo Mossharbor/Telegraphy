@@ -20,7 +20,7 @@ namespace UnitTests
     using Microsoft.Azure.ServiceBus.Core;
 
     [TestClass]
-    public class AzureOperatorTests
+    public class AzureTests
     {
         static string serviceBusKey = "kCxvZWTdqMCSVjsur+MTiB1J3MwV0p8Cq3eRlZm9HUk=";
         static string storageAccountKey = @"E8vxv+2T+TKMfGBDYoWT8rSt0NINfoUOU8KP8AHmdTi8+dBdjIweeH3UvYfq6dA1PDtB3ky52hl0ZlAx3g1R6A==";
@@ -29,6 +29,8 @@ namespace UnitTests
         private string ServiceBusConnectionString { get { return @"Endpoint=sb://telagraphytest.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=" + serviceBusKey + ""; } }
         private string StorageConnectionString { get { return @"DefaultEndpointsProtocol=https;AccountName=telegraphytest;AccountKey=" + storageAccountKey + ";EndpointSuffix=core.windows.net"; } }
         private string EventHubConnectionString { get { return "Endpoint=sb://telagraphyeventhub.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=xB1cB7sxM0KlaE1XZbGq/JXZAESC+Pk504RJndkV8R4="; } }
+
+        #region Storage Queue ServiceBus and Event Hub Helpers
         ConcurrentQueue<Message> sbMsgQueue = new ConcurrentQueue<Message>();
         static ConcurrentQueue<EventData> ehMsgQueue = new ConcurrentQueue<EventData>();
 
@@ -169,6 +171,7 @@ namespace UnitTests
             if (attempts >= 10)
                 Assert.Fail("We took way too long to get data back from the queue");
         }
+        #endregion
 
         #region eventHub
         [TestMethod]
@@ -1061,6 +1064,55 @@ namespace UnitTests
                 Telegraph.Instance.UnRegisterAll();
                 DeleteServiceBusTopic(TopicName);
             }
+        }
+        #endregion
+
+        #region blob storage
+
+        [TestMethod]
+        public void SendFileToBlobStorage()
+        {
+            string localMusicFolder = System.Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+            string firstFile = System.IO.Directory.GetFiles(localMusicFolder, "*.mp3").First();
+
+            Telegraph.Instance.Register<string, SendFileToBlobStorage>(
+                () => new Telegraphy.Azure.SendFileToBlobStorage(
+                    StorageConnectionString,
+                    StorageContainerName,
+                    (string fileName) => System.IO.Path.GetFileName(fileName)));
+
+            Telegraph.Instance.Ask(firstFile).Wait();
+            
+            var acct = CloudStorageAccount.Parse(StorageConnectionString);
+            var client = acct.CreateCloudBlobClient();
+            var container = client.GetContainerReference(StorageContainerName);
+            var blob = container.GetBlockBlobReference(System.IO.Path.GetFileName(firstFile));
+
+            Assert.IsTrue(blob.Exists());
+            blob.Delete();
+        }
+
+        [TestMethod]
+        public void SendStringToBlobStorage()
+        {
+            string stringToSend = "Foobar";
+
+            int index = 0;
+            Telegraph.Instance.Register<string, SendStringToBlobStorage>(
+                () => new Telegraphy.Azure.SendStringToBlobStorage(
+                    StorageConnectionString,
+                    StorageContainerName,
+                    () => index.ToString()+".txt"));
+
+            Telegraph.Instance.Ask(stringToSend).Wait();
+
+            var acct = CloudStorageAccount.Parse(StorageConnectionString);
+            var client = acct.CreateCloudBlobClient();
+            var container = client.GetContainerReference(StorageContainerName);
+            var blob = container.GetBlockBlobReference("0.txt");
+
+            Assert.IsTrue(blob.Exists());
+            blob.Delete();
         }
         #endregion
     }
