@@ -1068,7 +1068,7 @@ namespace UnitTests
         }
         #endregion
 
-        #region blob storage
+        #region Blob Storage
 
         public void TestSendStreamToStorage(Action setupFunction, string firstFile)
         {
@@ -1618,18 +1618,16 @@ namespace UnitTests
             Telegraph.Instance.UnRegisterAll();
         }
 
-        #endregion
-
         public class Messages
         {
             public class UploadMessage : SimpleMessage<UploadMessage>
             {
-                public UploadMessage(string fileName){ this.Message = fileName; }
+                public UploadMessage(string fileName) { this.Message = fileName; }
             }
 
             public class AppendNameToFileMessage : SimpleMessage<AppendNameToFileMessage>
             {
-                public AppendNameToFileMessage(string fileName) { this.Message = fileName+System.Environment.NewLine; }
+                public AppendNameToFileMessage(string fileName) { this.Message = fileName + System.Environment.NewLine; }
             }
 
             public class DeleteAllBlobsMsg : SimpleMessage<DeleteAllBlobsMsg>
@@ -1637,5 +1635,35 @@ namespace UnitTests
                 public DeleteAllBlobsMsg(string container) { this.Message = container; }
             }
         }
+        #endregion
+
+        #region Table storage
+        [TestMethod]
+        public void InsertStringIntoTableStorage()
+        {
+            Telegraph.Instance.Register<InsertStringIntoTableStorageMessage, SendITableEntityToTableStorage>(
+                    () => new Telegraphy.Azure.SendITableEntityToTableStorage(
+                        StorageConnectionString,
+                        "telegraphytesttable",
+                        TableOperationType.InsertOrReplace));
+
+            Telegraph.Instance.Register<RetrieveFromTableStorageMessage, RetrieveFromTableStorage<string>>(
+                    () => new Telegraphy.Azure.RetrieveFromTableStorage<string>(
+                        StorageConnectionString,
+                        "telegraphytesttable"));
+
+            Telegraph.Instance.Register<DeleteFromTableStorageMessage, DeleteFromTableStorage>(
+                    () => new Telegraphy.Azure.DeleteFromTableStorage(
+                        StorageConnectionString,
+                        "telegraphytesttable"));
+
+            Telegraph.Instance.Ask(new InsertStringIntoTableStorageMessage("foo", "bar", "hello")).Wait();
+            Telegraph.Instance.Ask(new InsertStringIntoTableStorageMessage("foo", "bar2", "world")).Wait();
+            string retString = (string)Telegraph.Instance.Ask(new RetrieveFromTableStorageMessage("foo", "bar")).Result.ProcessingResult;
+            Telegraph.Instance.Ask(new DeleteFromTableStorageMessage("foo", "bar")).Wait();
+            Telegraph.Instance.Ask(new DeleteFromTableStorageMessage("foo", "bar2")).Wait();
+            Assert.IsTrue(retString.Equals("hello"));
+        }
+        #endregion
     }
 }

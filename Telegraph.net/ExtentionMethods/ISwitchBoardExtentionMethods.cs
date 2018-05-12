@@ -20,8 +20,8 @@ namespace Telegraphy.Net
                     found = true;
                     break;
                 }
-                foundEx = ex.InnerException;
-            } while (null != ex.InnerException);
+                foundEx = foundEx.InnerException;
+            } while (null != foundEx);
 
             if (!found)
                 foundEx = ex;
