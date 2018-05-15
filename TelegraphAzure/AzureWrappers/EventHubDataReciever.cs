@@ -48,9 +48,7 @@ namespace Telegraphy.Azure
                 var connectionStringBuilder = new EventHubsConnectionStringBuilder(connectionstring) { EntityPath = eventHubName };
                 connectionStringWithEntityPath = connectionStringBuilder.ToString();
             }
-
-            //"Endpoint=sb://test89123-ns-x.servicebus.windows.net/;SharedAccessKeyName=ReceiveRule;SharedAccessKey=secretkey;EntityPath=path2"
-
+            
             client = EventHubClient.CreateFromConnectionString(connectionStringWithEntityPath);
             reciever = client.CreateReceiver(consumerGroup, partitionId, position);
             this.eventHubName = eventHubName;

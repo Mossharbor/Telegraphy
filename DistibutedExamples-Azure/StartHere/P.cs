@@ -10,13 +10,9 @@ namespace StartHere
 
     class P
     {
-        static string queueAccountKey = @"E8vxv+2T+TKMfGBDYoWT8rSt0NINfoUOU8KP8AHmdTi8+dBdjIweeH3UvYfq6dA1PDtB3ky52hl0ZlAx3g1R6A==";
-        static string queueAccountConnectionString = @"DefaultEndpointsProtocol=https;AccountName=telegraphytest;AccountKey=" + queueAccountKey + ";EndpointSuffix=core.windows.net";
-
-        static string serviceBusKey = "kCxvZWTdqMCSVjsur+MTiB1J3MwV0p8Cq3eRlZm9HUk=";
-        static string serviceBusConnectionString = @"Endpoint=sb://telagraphytest.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey="+ serviceBusKey+"";
-
-        static string eventHubConnectionString = @"Endpoint=sb://telagraphyeventhub.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=xB1cB7sxM0KlaE1XZbGq/JXZAESC+Pk504RJndkV8R4=";
+        static string queueAccountConnectionString = @"";
+        static string serviceBusConnectionString = @"";
+        static string eventHubConnectionString =
 
         static void Main(string[] args)
         {

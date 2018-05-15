@@ -23,13 +23,11 @@ namespace UnitTests
     [TestClass]
     public class AzureTests
     {
-        static string serviceBusKey = "kCxvZWTdqMCSVjsur+MTiB1J3MwV0p8Cq3eRlZm9HUk=";
-        static string storageAccountKey = @"E8vxv+2T+TKMfGBDYoWT8rSt0NINfoUOU8KP8AHmdTi8+dBdjIweeH3UvYfq6dA1PDtB3ky52hl0ZlAx3g1R6A==";
-
-        private string StorageContainerName = "telagraphytesteventhub";
-        private string ServiceBusConnectionString { get { return @"Endpoint=sb://telagraphytest.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=" + serviceBusKey + ""; } }
-        private string StorageConnectionString { get { return @"DefaultEndpointsProtocol=https;AccountName=telegraphytest;AccountKey=" + storageAccountKey + ";EndpointSuffix=core.windows.net"; } }
-        private string EventHubConnectionString { get { return "Endpoint=sb://telagraphyeventhub.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=xB1cB7sxM0KlaE1XZbGq/JXZAESC+Pk504RJndkV8R4="; } }
+        static string storageAccountKey = @"";
+        private string StorageContainerName = "";
+        private string ServiceBusConnectionString { get { return @""; } }
+        private string StorageConnectionString { get { return @""; } }
+        private string EventHubConnectionString { get { return ""; } }
 
         #region Storage Queue ServiceBus and Event Hub Helpers
         ConcurrentQueue<Message> sbMsgQueue = new ConcurrentQueue<Message>();
