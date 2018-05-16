@@ -1,17 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E4EA221A-70E9-44AE-ABFD-6F6DCBE609DE}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Telegraphy.Azure</RootNamespace>
+    <TargetFrameworks>netstandard2.0;net461;net462</TargetFrameworks>
+    <Configurations>Debug;Release</Configurations>
     <AssemblyName>TelegraphyAzure</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,240 +29,56 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E4EA221A-70E9-44AE-ABFD-6F6DCBE609DE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Telegraphy.Azure</RootNamespace>
+    <AssemblyName>TelegraphyAzure</AssemblyName>
+    <!--<TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>-->
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup />
   <ItemGroup>
-    <Reference Include="Microsoft.Azure.Amqp, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Azure.Amqp.2.2.0\lib\net45\Microsoft.Azure.Amqp.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Azure.EventHubs, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7e34167dcc6d6d8c, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Azure.EventHubs.2.0.0\lib\net461\Microsoft.Azure.EventHubs.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.1.0.0\lib\net40\Microsoft.Azure.KeyVault.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Azure.Management.ServiceBus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Azure.Management.ServiceBus.1.2.0\lib\net452\Microsoft.Azure.Management.ServiceBus.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Azure.ServiceBus, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7e34167dcc6d6d8c, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Azure.ServiceBus.2.0.0\lib\net461\Microsoft.Azure.ServiceBus.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory, Version=3.19.1.3001, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.3.19.1\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory.Platform, Version=3.19.1.3001, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.3.19.1\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.IdentityModel.Logging, Version=5.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IdentityModel.Logging.5.2.1\lib\net451\Microsoft.IdentityModel.Logging.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.IdentityModel.Tokens, Version=5.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IdentityModel.Tokens.5.2.1\lib\net451\Microsoft.IdentityModel.Tokens.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Rest.ClientRuntime, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Rest.ClientRuntime.2.3.11\lib\net452\Microsoft.Rest.ClientRuntime.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Rest.ClientRuntime.Azure, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Rest.ClientRuntime.Azure.3.3.12\lib\net452\Microsoft.Rest.ClientRuntime.Azure.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Storage, Version=9.1.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\WindowsAzure.Storage.9.1.1\lib\net45\Microsoft.WindowsAzure.Storage.dll</HintPath>
-    </Reference>
-    <Reference Include="Mossharbor.AzureWorkArounds.ServiceBus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Mossharbor.AzureWorkArounds.ServiceBus.1.0.2\lib\netstandard2.0\Mossharbor.AzureWorkArounds.ServiceBus.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.2.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.4.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
-    </Reference>
-    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=5.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.5.2.1\lib\net451\System.IdentityModel.Tokens.Jwt.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http, Version=4.1.1.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Net.Http.4.3.3\lib\net46\System.Net.Http.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Net.WebSockets, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Net.WebSockets.4.0.0\lib\net46\System.Net.WebSockets.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Net.WebSockets.Client, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Net.WebSockets.Client.4.0.0\lib\net46\System.Net.WebSockets.Client.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Reflection.TypeExtensions, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Reflection.TypeExtensions.4.4.0\lib\net461\System.Reflection.TypeExtensions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Runtime.Serialization.Primitives, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.Serialization.Primitives.4.3.0\lib\net46\System.Runtime.Serialization.Primitives.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization.Xml, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.Serialization.Xml.4.3.0\lib\net46\System.Runtime.Serialization.Xml.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <ProjectReference Include="..\Telegraph.net\Telegraphy.Net.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Azure.Amqp" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Azure.EventHubs" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Azure.KeyVault.Core" Version="1.0.0" />
+    <PackageReference Include="Microsoft.Azure.Management.ServiceBus" Version="1.2.0" />
+    <PackageReference Include="Microsoft.Azure.ServiceBus" Version="2.0.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="3.19.1" />
+    <PackageReference Include="Microsoft.IdentityModel.Logging" Version="5.2.1" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.2.1" />
+    <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.11" />
+    <PackageReference Include="Microsoft.Rest.ClientRuntime.Azure" Version="3.3.12" />
+    <PackageReference Include="Mossharbor.AzureWorkArounds.ServiceBus" Version="1.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="4.4.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.2.1" />
+    <PackageReference Include="System.Net.Http" Version="4.3.3" />
+    <PackageReference Include="System.Net.WebSockets" Version="4.0.0" />
+    <PackageReference Include="System.Net.WebSockets.Client" Version="4.0.0" />
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.4.0" />
+    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
+    <PackageReference Include="System.Runtime.Serialization.Xml" Version="4.3.0" />
+    <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.0" />
+    <PackageReference Include="System.Security.Cryptography.Encoding" Version="4.3.0" />
+    <PackageReference Include="System.Security.Cryptography.Primitives" Version="4.3.0" />
+    <PackageReference Include="System.Security.Cryptography.X509Certificates" Version="4.3.0" />
+    <PackageReference Include="WindowsAzure.Storage" Version="9.1.1" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)'=='net40' OR '$(TargetFramework)'=='net45' OR '$(TargetFramework)'=='net46' OR '$(TargetFramework)'=='net461' OR '$(TargetFramework)'=='net462'">
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Actors\DeleteAllBlobsInContainer.cs" />
-    <Compile Include="Actors\DeleteBlobInStorage.cs" />
-    <Compile Include="Actors\DeleteFromTableStorage.cs" />
-    <Compile Include="Actors\RecieveBytesFromBlobStorage.cs" />
-    <Compile Include="Actors\RecieveFileFromBlobStorage.cs" />
-    <Compile Include="Actors\RecieveStreamFromBlobStorage.cs" />
-    <Compile Include="Actors\RecieveStringFromBlobStorage.cs" />
-    <Compile Include="Actors\RetrieveFromTableStorage.cs" />
-    <Compile Include="Actors\SendBytesToAppendBlobStorage.cs" />
-    <Compile Include="Actors\SendBytesToPageBlobStorage.cs" />
-    <Compile Include="Actors\SendFileToAppendBlobStorage.cs" />
-    <Compile Include="Actors\SendFileToPageBlobStorage.cs" />
-    <Compile Include="Actors\SendITableEntityToTableStorage.cs" />
-    <Compile Include="Actors\SendStreamToAppendBlobStorage.cs" />
-    <Compile Include="Actors\SendStreamToPageBlobStorage.cs" />
-    <Compile Include="Actors\SendStringToAppendBlobStorage.cs" />
-    <Compile Include="Actors\SendStringToPageBlobStorage.cs" />
-    <Compile Include="AzureWrappers\BytesTableEntity.cs" />
-    <Compile Include="AzureWrappers\SendToBlobBase.cs" />
-    <Compile Include="AzureWrappers\StringTableEntity.cs" />
-    <Compile Include="Exceptions\CannotDeleteBlobsInContainerContainerNameIsNotAString.cs" />
-    <Compile Include="Exceptions\CannotDeleteNonITableEntityMessagesFromTableStorage.cs" />
-    <Compile Include="Exceptions\CannotRetriveNonITableEntityMessagesFromTableStorage.cs" />
-    <Compile Include="Exceptions\CannotSendNonStreamMessagesToBlobStorage.cs" />
-    <Compile Include="Actors\SendBytesToEventHub.cs" />
-    <Compile Include="Actors\SendBytesToServiceBusQueue.cs" />
-    <Compile Include="Actors\SendBytesToServiceBusTopic.cs" />
-    <Compile Include="Actors\SendBytesToStorageQueue.cs" />
-    <Compile Include="Actors\SendBytesToBlobStorage.cs" />
-    <Compile Include="Actors\SendFileToBlobStorage.cs" />
-    <Compile Include="Actors\SendMessageToEventHub.cs" />
-    <Compile Include="Actors\SendMessageToServiceBusQueue.cs" />
-    <Compile Include="Actors\SendMessageToServiceBusTopic.cs" />
-    <Compile Include="Actors\SendMessageToStorageQueue.cs" />
-    <Compile Include="Actors\SendStreamToBlobStorage.cs" />
-    <Compile Include="Actors\SendStringToBlobStorage.cs" />
-    <Compile Include="Actors\SendStringToEventHub.cs" />
-    <Compile Include="Actors\SendStringToServiceBusQueue.cs" />
-    <Compile Include="Actors\SendStringToServiceBusTopic.cs" />
-    <Compile Include="Actors\SendStringToStorageQueue.cs" />
-    <Compile Include="AzureWrappers\EventHubDataDeliverer.cs" />
-    <Compile Include="AzureWrappers\EventHubDataReciever.cs" />
-    <Compile Include="AzureWrappers\ServiceBusDeadLetterQueue.cs" />
-    <Compile Include="Exceptions\CannotSendNonByteArrayMessagesToBlobStorage.cs" />
-    <Compile Include="Exceptions\CannotSendNonStringMessagesToBlobStorage.cs" />
-    <Compile Include="Exceptions\CannotSentNonITableEntityMessagesToTableStorage.cs" />
-    <Compile Include="Exceptions\CantSendFileDataWhenFileDoesNotExist.cs" />
-    <Compile Include="Exceptions\MessageTypeWasNotAFileNameCannotDeleteBlobData.cs" />
-    <Compile Include="Exceptions\MessageTypeWasNotAFileNameCannotDownloadBlobToLocalFileStore.cs" />
-    <Compile Include="Exceptions\NotConfiguredToSerializeThisTypeOfMessageException.cs" />
-    <Compile Include="Exceptions\SendBytesActorCanOnlySendValueTypeByteArrayMessages.cs" />
-    <Compile Include="Exceptions\SendStringActorCanOnlySendStringMessages.cs" />
-    <Compile Include="Messages\DeleteFromTableStorageMessage.cs" />
-    <Compile Include="Messages\EventHubMessage.cs" />
-    <Compile Include="Messages\InsertBytesIntoTableStorageMessage.cs" />
-    <Compile Include="Messages\InsertIntoTableStorageMessage.cs" />
-    <Compile Include="Messages\InsertStringIntoTableStorageMessage.cs" />
-    <Compile Include="Messages\IServiceBusMessagePropertiesProvider.cs" />
-    <Compile Include="Messages\RetrieveFromTableStorageMessage.cs" />
-    <Compile Include="Messages\ServiceBusMessage.cs" />
-    <Compile Include="Operators\EventHubActorMessageDeliveryOperator.cs" />
-    <Compile Include="Operators\EventHubActorMessageReceptionOperator.cs" />
-    <Compile Include="Operators\EventHubBaseOperator.cs" />
-    <Compile Include="Operators\EventHubByteArrayDeliveryOperator.cs" />
-    <Compile Include="Operators\EventHubByteArrayReceptionOperator.cs" />
-    <Compile Include="Operators\EventHubStringDeliveryOperator.cs" />
-    <Compile Include="Operators\EventHubStringReceptionOperator.cs" />
-    <Compile Include="Operators\ServiceBusQueueByteArrayDeliveryOperator.cs" />
-    <Compile Include="Operators\ServiceBusQueueByteArrayReceptionOperator.cs" />
-    <Compile Include="Operators\ServiceBusQueueDeadLetterActorMessageDeliveryOperator.cs" />
-    <Compile Include="Operators\ServiceBusQueueDeadLetterActorMessageReceptionOperator.cs" />
-    <Compile Include="Operators\ServiceBusQueueDeadLetterByteArrayDeliveryOperator.cs" />
-    <Compile Include="Operators\ServiceBusQueueDeadLetterByteArrayReceptionOperator.cs" />
-    <Compile Include="Operators\ServiceBusQueueDeadLetterStringDeliveryOperator.cs" />
-    <Compile Include="Operators\ServiceBusQueueDeadLetterStringReceptionOperator.cs" />
-    <Compile Include="Operators\ServiceBusQueueStringDeliveryOperator.cs" />
-    <Compile Include="Operators\ServiceBusQueueStringReceptionOperator.cs" />
-    <Compile Include="Operators\ServiceBusTopicActorMessageDeliveryOperator.cs" />
-    <Compile Include="Operators\ServiceBusTopicBaseOperator.cs" />
-    <Compile Include="AzureWrappers\ServiceBusQueue.cs" />
-    <Compile Include="Operators\ServiceBusQueueActorMessageDeliveryOperator.cs" />
-    <Compile Include="Operators\ServiceBusQueueActorMessageReceptionOperator.cs" />
-    <Compile Include="Operators\ServiceBusQueueBaseOperator.cs" />
-    <Compile Include="Operators\ServiceBusTopicActorMessageReceptionOperator.cs" />
-    <Compile Include="Operators\ServiceBusTopicByteArrayDeliveryOperator.cs" />
-    <Compile Include="Operators\ServiceBusTopicByteArrayReceptionOperator.cs" />
-    <Compile Include="AzureWrappers\ServiceBusTopicDeadLetterDeliverer.cs" />
-    <Compile Include="AzureWrappers\ServiceBusTopicDeadLetterReciever.cs" />
-    <Compile Include="AzureWrappers\ServiceBusTopicReciever.cs" />
-    <Compile Include="AzureWrappers\ServiceBusTopicDeliverer.cs" />
-    <Compile Include="Operators\ServiceBusTopicDeadLetterActorMessageDeliveryOperator.cs" />
-    <Compile Include="Operators\ServiceBusTopicDeadLetterActorMessageReceptionOperator.cs" />
-    <Compile Include="Operators\ServiceBusTopicDeadLetterByteArrayDeliveryOperator.cs" />
-    <Compile Include="Operators\ServiceBusTopicDeadLetterByteArrayReceptionOperator.cs" />
-    <Compile Include="Operators\ServiceBusTopicDeadLetterStringDeliveryOperator.cs" />
-    <Compile Include="Operators\ServiceBusTopicDeadLetterStringReceptionOperator.cs" />
-    <Compile Include="Operators\ServiceBusTopicStringDeliveryOperator.cs" />
-    <Compile Include="Operators\ServiceBusTopicStringReceptionOperator.cs" />
-    <Compile Include="Operators\StorageQueueBaseOperator.cs" />
-    <Compile Include="Exceptions\CannotRegisterActionWithOperatorSinceWeAreSendingToAzureQueueOnly.cs" />
-    <Compile Include="Exceptions\OperatorCannotRecieveMessages.cs" />
-    <Compile Include="Exceptions\OperatorCannotSendMessages.cs" />
-    <Compile Include="Exceptions\SwitchBoardNeededWhenRecievingMessages.cs" />
-    <Compile Include="Messages\IStorageQueuePropertiesProvider.cs" />
-    <Compile Include="Messages\QueuedCloudMessage.cs" />
-    <Compile Include="Operators\StorageQueueByteArrayDeliveryOperator.cs" />
-    <Compile Include="Operators\StorageQueueByteArrayReceptionOperator.cs" />
-    <Compile Include="Operators\StorageQueueDeadLetterActorMessageDeliveryOperator.cs" />
-    <Compile Include="Operators\StorageQueueDeadLetterActorMessageReceptionOperator.cs" />
-    <Compile Include="Operators\StorageQueueDeadLetterByteArrayDeliveryOperator.cs" />
-    <Compile Include="Operators\StorageQueueDeadLetterByteArrayReceptionOperator.cs" />
-    <Compile Include="Operators\StorageQueueDeadLetterStringDeliveryOperator.cs" />
-    <Compile Include="Operators\StorageQueueDeadLetterStringReceptionOperator.cs" />
-    <Compile Include="Operators\StorageQueueStringDeliveryOperator.cs" />
-    <Compile Include="Operators\StorageQueueStringReceptionOperator.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Operators\StorageQueueActorMessageReceptionOperator.cs" />
-    <Compile Include="Operators\StorageQueueActorMessageDeliveryOperator.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Telegraph.net\Telegraphy.Net.csproj">
-      <Project>{0d5eda21-0e26-4e10-b109-bfa71559163e}</Project>
-      <Name>Telegraphy.Net</Name>
-    </ProjectReference>
+	<Reference Include="System" />
+    <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ExtentionMethods\" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

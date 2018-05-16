@@ -12,7 +12,7 @@ namespace StartHere
     {
         static string queueAccountConnectionString = @"";
         static string serviceBusConnectionString = @"";
-        static string eventHubConnectionString =
+        static string eventHubConnectionString = @"";
 
         static void Main(string[] args)
         {

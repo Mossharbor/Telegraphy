@@ -1,17 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0D5EDA21-0E26-4E10-B109-BFA71559163E}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Telegraphy.Net</RootNamespace>
+    <TargetFrameworks>netstandard2.0;net45;net46;net461;net462</TargetFrameworks>
+    <Configurations>Debug;Release</Configurations>
     <AssemblyName>TelegraphyNet</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,82 +31,25 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <ItemGroup>
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0D5EDA21-0E26-4E10-B109-BFA71559163E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Telegraphy.Net</RootNamespace>
+    <AssemblyName>TelegraphyNet</AssemblyName>
+    <!-- <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion> -->
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemGroup />
+  <ItemGroup Condition="'$(TargetFramework)'=='net40' OR '$(TargetFramework)'=='net45' OR '$(TargetFramework)'=='net46' OR '$(TargetFramework)'=='net461' OR '$(TargetFramework)'=='net462'">
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Actors\ActorMessageInvocation.cs" />
-    <Compile Include="Actors\MessageDeserializationActor.cs" />
-    <Compile Include="Actors\MessageSerializationActor.cs" />
-    <Compile Include="Exceptions\CannotSerializeArrayValueTypeWhenNonArraySpecified.cs" />
-    <Compile Include="Exceptions\CannotSerializeNonArrayValueTypeWhenArraySpecified.cs" />
-    <Compile Include="Exceptions\CantDeserlializeAnythingButADeSerializeMessage.cs" />
-    <Compile Include="Exceptions\CantDeserlializeMessageBytesSmallerThanMinSize.cs" />
-    <Compile Include="Exceptions\CantDeserlializeUnknownVersion.cs" />
-    <Compile Include="Exceptions\DispatchMethodCanOnlyBeSetBeforeOperatorsAreRegistered.cs" />
-    <Compile Include="Exceptions\DontKnowHowToSerializeType.cs" />
-    <Compile Include="Exceptions\FailedMessageEnque.cs" />
-    <Compile Include="Exceptions\FailedToRegisterOperatorForAction.cs" />
-    <Compile Include="Exceptions\FailedToRegisterOperatorForType.cs" />
-    <Compile Include="Exceptions\FailedRegistration.cs" />
-    <Compile Include="Exceptions\FailedToRegisterActionForType.cs" />
-    <Compile Include="Exceptions\FailedToRegisterActorForType.cs" />
-    <Compile Include="Exceptions\FailedToRegisterActorInvocationForAction.cs" />
-    <Compile Include="Exceptions\FailedToRegisterActorInvocationForType.cs" />
-    <Compile Include="Exceptions\FailedToRegisterExpressionForType.cs" />
-    <Compile Include="Exceptions\FailedToRegisterOperator.cs" />
-    <Compile Include="Exceptions\FunctionNotSupportedWhenMultipleOperatorsAreRegistered.cs" />
-    <Compile Include="Exceptions\NoOperatorFoundForID.cs" />
-    <Compile Include="Exceptions\NoOperatorRegisteredToSupportType.cs" />
-    <Compile Include="Exceptions\UnsupportedDispatchImplementation.cs" />
-    <Compile Include="ExtentionMethods\DotNetValueTypeExtentions.cs" />
-    <Compile Include="ExtentionMethods\IOperatorExtentionMethods.cs" />
-    <Compile Include="ExtentionMethods\ISwitchBoardExtentionMethods.cs" />
-    <Compile Include="Interfaces\IActorInvocation.cs" />
-    <Compile Include="Actors\MailBoxActor.cs" />
-    <Compile Include="Exceptions\NoActorForMessageType.cs" />
-    <Compile Include="ExtentionMethods\IActorExtentionMethods.cs" />
-    <Compile Include="Actors\ActorInvocation.cs" />
-    <Compile Include="Actors\AnonActor.cs" />
-    <Compile Include="Actors\DefaultActor.cs" />
-    <Compile Include="Enums.cs" />
-    <Compile Include="Interfaces\IActor.cs" />
-    <Compile Include="Interfaces\IActorMessage.cs" />
-    <Compile Include="Interfaces\IActorMessageIdentifier.cs" />
-    <Compile Include="Interfaces\IAnonActor.cs" />
-    <Compile Include="Interfaces\IHasMailbox.cs" />
-    <Compile Include="Interfaces\ILocalSwitchboard.cs" />
-    <Compile Include="Interfaces\IOperator.cs" />
-    <Compile Include="Interfaces\IWrappedActor.cs" />
-    <Compile Include="Interfaces\IWrappedMessage.cs" />
-    <Compile Include="Messages\ActorMessageInvocation.cs" />
-    <Compile Include="Messages\AnonAskMessage.cs" />
-    <Compile Include="Messages\ControlMessages.cs" />
-    <Compile Include="Messages\DeSerializeMessage.cs" />
-    <Compile Include="Messages\ValueTypeMessage.cs" />
-    <Compile Include="Messages\SerializeMessage.cs" />
-    <Compile Include="Messages\SimpleMessage.cs" />
-    <Compile Include="Operators\LocalOperator.cs" />
-    <Compile Include="Operators\SingleThreadPerMessageTypeOperator.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Switchboards\LocalSwitchboard.cs" />
-    <Compile Include="TPLExtentions\AsyncSemaphore.cs" />
-    <Compile Include="TPLExtentions\Pipeline.cs" />
-    <Compile Include="TPLExtentions\TaskCompletionSourceExtensionMethods.cs" />
-    <Compile Include="TPLExtentions\TaskExtentionMethods.cs" />
-    <Compile Include="Telegraph.cs" />
-    <Compile Include="TPLExtentions\ThreadPerTaskScheduler.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="TODO.txt" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

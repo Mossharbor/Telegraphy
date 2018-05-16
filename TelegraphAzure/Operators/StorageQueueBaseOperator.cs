@@ -8,7 +8,6 @@ using Microsoft.WindowsAzure.Storage.Queue;
 using Microsoft.WindowsAzure.Storage;
 using Telegraphy.Azure.Exceptions;
 using System.Collections.Concurrent;
-using System.ServiceModel;
 
 namespace Telegraphy.Azure
 {
@@ -208,7 +207,9 @@ namespace Telegraphy.Azure
             }
 
             // Add the message to the azure queue
-            CloudQueueMessage cloudMessage = new CloudQueueMessage(msgBytes);
+            CloudQueueMessage cloudMessage = new CloudQueueMessage((string)null);
+            cloudMessage.SetMessageContent(msgBytes);
+
             AddMessageProperties(queue, cloudMessage, (msg is IStorageQueuePropertiesProvider) ? (msg as IStorageQueuePropertiesProvider): null);
 
             if (null != msg.Status)
@@ -329,6 +330,6 @@ namespace Telegraphy.Azure
         {
             this.Switchboard.Register(exceptionType, handler);
         }
-        #endregion
+#endregion
     }
 }
