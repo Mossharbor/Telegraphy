@@ -56,7 +56,7 @@
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.2.1" />
     <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.11" />
     <PackageReference Include="Microsoft.Rest.ClientRuntime.Azure" Version="3.3.12" />
-    <PackageReference Include="Mossharbor.AzureWorkArounds.ServiceBus" Version="1.0.2" />
+    <PackageReference Include="Mossharbor.AzureWorkArounds.ServiceBus" Version="1.0.7" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="4.4.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.2.1" />
