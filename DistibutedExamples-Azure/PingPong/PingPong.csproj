@@ -43,10 +43,12 @@
   <PropertyGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\Telegraph.net\Telegraphy.Net.csproj" />
-    <ProjectReference Include="..\..\TelegraphAzure\Telegraphy.Azure.csproj" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
     <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Telegraphy.Azure.ServiceBus\Telegraphy.Azure.ServiceBus.csproj" />
   </ItemGroup>
 </Project>

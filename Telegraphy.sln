@@ -3,35 +3,33 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2037
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Telegraphy.Net", "Telegraph.net\Telegraphy.Net.csproj", "{0D5EDA21-0E26-4E10-B109-BFA71559163E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Telegraphy.Net", "Telegraph.net\Telegraphy.Net.csproj", "{0D5EDA21-0E26-4E10-B109-BFA71559163E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{23235468-C03B-4B86-823C-0DBD91B3A025}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests.csproj", "{23235468-C03B-4B86-823C-0DBD91B3A025}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ConcurrencyExamples", "ConcurrencyExamples", "{8CDDE909-CDB0-4C8F-89FB-F05E32F4AA8D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicStartHere", "BasicStartHere\BasicStartHere.csproj", "{D6B521C2-7AF3-47E7-A7D8-8A5965B500D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicStartHere", "BasicStartHere\BasicStartHere.csproj", "{D6B521C2-7AF3-47E7-A7D8-8A5965B500D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicToleranceToFailure", "ConcurrencyExamples\BasicToleranceToExceptions\BasicToleranceToFailure.csproj", "{4ED32EE8-B62C-4126-ACE9-2FAD7F176D14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicToleranceToFailure", "ConcurrencyExamples\BasicToleranceToExceptions\BasicToleranceToFailure.csproj", "{4ED32EE8-B62C-4126-ACE9-2FAD7F176D14}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiningPhilosophers", "ConcurrencyExamples\DiningPhilosophers\DiningPhilosophers.csproj", "{C35BC8EA-890A-4567-96DD-0752F56A9E92}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiningPhilosophers", "ConcurrencyExamples\DiningPhilosophers\DiningPhilosophers.csproj", "{C35BC8EA-890A-4567-96DD-0752F56A9E92}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RolePlayingGame", "ConcurrencyExamples\RolePlayingGame\RolePlayingGame.csproj", "{8B2F6D3F-ACA1-4599-AC71-2BB2E64D6E70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RolePlayingGame", "ConcurrencyExamples\RolePlayingGame\RolePlayingGame.csproj", "{8B2F6D3F-ACA1-4599-AC71-2BB2E64D6E70}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Usenet", "ConcurrencyExamples\Usenet\Usenet.csproj", "{64D65762-2752-4438-BDA5-767BF3D7ED41}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Telegraphy.Azure", "TelegraphAzure\Telegraphy.Azure.csproj", "{E4EA221A-70E9-44AE-ABFD-6F6DCBE609DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Usenet", "ConcurrencyExamples\Usenet\Usenet.csproj", "{64D65762-2752-4438-BDA5-767BF3D7ED41}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DistibutedExamples-Azure", "DistibutedExamples-Azure", "{40414E30-AEBA-4EE8-B937-BA18A0807A4B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ping-AzureQueue", "DistibutedExamples-Azure\Ping-AzureQueue\Ping-AzureQueue.csproj", "{3F764DDE-0BF4-463A-859E-0A3AF8571176}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PingPong", "DistibutedExamples-Azure\PingPong\PingPong.csproj", "{813934FE-69E0-4DF3-A0F0-38EF4B44925C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pong-AzureQueue", "DistibutedExamples-Azure\Pong-AzureQueue\Pong-AzureQueue.csproj", "{96E9E075-99BE-4A6A-97B5-922A4C42EE93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StartHere", "DistibutedExamples-Azure\StartHere\StartHere.csproj", "{048EFC32-EA38-4ECA-A049-A5902878B8C9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AzureQueue", "AzureQueue", "{9E4E1323-1BB0-4033-A444-A4D5A226DCC5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Telegraphy.Azure.Storage", "Telegraphy.Azure.Storage\Telegraphy.Azure.Storage.csproj", "{DD226079-C9A8-4ADE-9DF5-0A137D3CE3EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PingPong", "DistibutedExamples-Azure\PingPong\PingPong.csproj", "{813934FE-69E0-4DF3-A0F0-38EF4B44925C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Telegraphy.Azure.EventHub", "Telegraphy.Azure.EventHub\Telegraphy.Azure.EventHub.csproj", "{FC75508F-F071-4955-9929-FF9F34C1955F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StartHere", "DistibutedExamples-Azure\StartHere\StartHere.csproj", "{048EFC32-EA38-4ECA-A049-A5902878B8C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Telegraphy.Azure.ServiceBus", "Telegraphy.Azure.ServiceBus\Telegraphy.Azure.ServiceBus.csproj", "{8F95AB80-4375-4A04-B4C0-AB3AB8D298B5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,18 +65,6 @@ Global
 		{64D65762-2752-4438-BDA5-767BF3D7ED41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64D65762-2752-4438-BDA5-767BF3D7ED41}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64D65762-2752-4438-BDA5-767BF3D7ED41}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E4EA221A-70E9-44AE-ABFD-6F6DCBE609DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E4EA221A-70E9-44AE-ABFD-6F6DCBE609DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E4EA221A-70E9-44AE-ABFD-6F6DCBE609DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E4EA221A-70E9-44AE-ABFD-6F6DCBE609DE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3F764DDE-0BF4-463A-859E-0A3AF8571176}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3F764DDE-0BF4-463A-859E-0A3AF8571176}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3F764DDE-0BF4-463A-859E-0A3AF8571176}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3F764DDE-0BF4-463A-859E-0A3AF8571176}.Release|Any CPU.Build.0 = Release|Any CPU
-		{96E9E075-99BE-4A6A-97B5-922A4C42EE93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{96E9E075-99BE-4A6A-97B5-922A4C42EE93}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{96E9E075-99BE-4A6A-97B5-922A4C42EE93}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{96E9E075-99BE-4A6A-97B5-922A4C42EE93}.Release|Any CPU.Build.0 = Release|Any CPU
 		{813934FE-69E0-4DF3-A0F0-38EF4B44925C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{813934FE-69E0-4DF3-A0F0-38EF4B44925C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{813934FE-69E0-4DF3-A0F0-38EF4B44925C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -87,18 +73,28 @@ Global
 		{048EFC32-EA38-4ECA-A049-A5902878B8C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{048EFC32-EA38-4ECA-A049-A5902878B8C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{048EFC32-EA38-4ECA-A049-A5902878B8C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD226079-C9A8-4ADE-9DF5-0A137D3CE3EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD226079-C9A8-4ADE-9DF5-0A137D3CE3EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD226079-C9A8-4ADE-9DF5-0A137D3CE3EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD226079-C9A8-4ADE-9DF5-0A137D3CE3EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC75508F-F071-4955-9929-FF9F34C1955F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC75508F-F071-4955-9929-FF9F34C1955F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC75508F-F071-4955-9929-FF9F34C1955F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC75508F-F071-4955-9929-FF9F34C1955F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F95AB80-4375-4A04-B4C0-AB3AB8D298B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F95AB80-4375-4A04-B4C0-AB3AB8D298B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F95AB80-4375-4A04-B4C0-AB3AB8D298B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F95AB80-4375-4A04-B4C0-AB3AB8D298B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{D6B521C2-7AF3-47E7-A7D8-8A5965B500D3} = {8CDDE909-CDB0-4C8F-89FB-F05E32F4AA8D}
 		{4ED32EE8-B62C-4126-ACE9-2FAD7F176D14} = {8CDDE909-CDB0-4C8F-89FB-F05E32F4AA8D}
 		{C35BC8EA-890A-4567-96DD-0752F56A9E92} = {8CDDE909-CDB0-4C8F-89FB-F05E32F4AA8D}
 		{8B2F6D3F-ACA1-4599-AC71-2BB2E64D6E70} = {8CDDE909-CDB0-4C8F-89FB-F05E32F4AA8D}
 		{64D65762-2752-4438-BDA5-767BF3D7ED41} = {8CDDE909-CDB0-4C8F-89FB-F05E32F4AA8D}
-		{3F764DDE-0BF4-463A-859E-0A3AF8571176} = {9E4E1323-1BB0-4033-A444-A4D5A226DCC5}
-		{96E9E075-99BE-4A6A-97B5-922A4C42EE93} = {9E4E1323-1BB0-4033-A444-A4D5A226DCC5}
-		{9E4E1323-1BB0-4033-A444-A4D5A226DCC5} = {40414E30-AEBA-4EE8-B937-BA18A0807A4B}
 		{813934FE-69E0-4DF3-A0F0-38EF4B44925C} = {40414E30-AEBA-4EE8-B937-BA18A0807A4B}
 		{048EFC32-EA38-4ECA-A049-A5902878B8C9} = {40414E30-AEBA-4EE8-B937-BA18A0807A4B}
 	EndGlobalSection

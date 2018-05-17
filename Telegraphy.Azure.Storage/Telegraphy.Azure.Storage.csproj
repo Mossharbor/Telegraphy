@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Telegraphy.Azure</RootNamespace>
+    <AssemblyName>Telegraphy.Azure.Storage</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Actors\" />
+    <Folder Include="AzureWrappers\" />
+    <Folder Include="Messages\" />
+    <Folder Include="Operators\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WindowsAzure.Storage" Version="9.1.1" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)'=='net40' OR '$(TargetFramework)'=='net45' OR '$(TargetFramework)'=='net46' OR '$(TargetFramework)'=='net461' OR '$(TargetFramework)'=='net462'">
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Telegraph.net\Telegraphy.Net.csproj" />
+  </ItemGroup>
+
+</Project>
