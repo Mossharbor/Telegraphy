@@ -72,7 +72,7 @@ namespace StartHere
             string message = @"Hello World Again";
 
             // Setup send to queue where the operator will handle the send up.
-            Telegraph.Instance.Register<string>(new StorageQueueStringDeliveryOperator(connectionString, queueName, true));
+            Telegraph.Instance.Register<string>(new StorageQueueDeliveryOperator<string>(connectionString, queueName, true));
             
             // Send message to queue
             Telegraph.Instance.Ask(message).Wait();
@@ -106,7 +106,7 @@ namespace StartHere
 
         static void SendToAzureQueue(string connectionstring, string queueName)
         {
-            long azureOperatorId = Telegraph.Instance.Register(new StorageQueueActorMessageDeliveryOperator(connectionstring, queueName, true));
+            long azureOperatorId = Telegraph.Instance.Register(new StorageQueueDeliveryOperator<IActorMessage>(connectionstring, queueName, true));
             Telegraph.Instance.Register<PingPong.Ping>(azureOperatorId);
 
             MessageSerializationActor serializer = new MessageSerializationActor();
@@ -123,7 +123,7 @@ namespace StartHere
         static void RecieveFromAzureQueue(string connectionstring, string queueName)
         {
             long localOperatorID = Telegraph.Instance.Register(new LocalOperator());
-            long azureOperatorID = Telegraph.Instance.Register(new StorageQueueActorMessageReceptionOperator(LocalConcurrencyType.DedicatedThreadCount, connectionstring, queueName, false, 2));
+            long azureOperatorID = Telegraph.Instance.Register(new StorageQueueReceptionOperator<IActorMessage>(LocalConcurrencyType.DedicatedThreadCount, connectionstring, queueName, false, 2));
 
             MessageDeserializationActor deserializer = new MessageDeserializationActor();
             Telegraph.Instance.Register<DeSerializeMessage, MessageDeserializationActor>(localOperatorID, () => deserializer);
@@ -143,8 +143,8 @@ namespace StartHere
         {
             Telegraph.Instance.UnRegisterAll();
 
-            long operator1ID = Telegraph.Instance.Register(new StorageQueueActorMessageDeliveryOperator(queueAccountConnectionString, queue1Name, true));
-            long operator2ID = Telegraph.Instance.Register(new StorageQueueActorMessageDeliveryOperator(queueAccountConnectionString, queue2Name, true));
+            long operator1ID = Telegraph.Instance.Register(new StorageQueueDeliveryOperator<IActorMessage>(queueAccountConnectionString, queue1Name, true));
+            long operator2ID = Telegraph.Instance.Register(new StorageQueueDeliveryOperator<IActorMessage>(queueAccountConnectionString, queue2Name, true));
             Telegraph.Instance.Register<PingPong.Ping>(operator1ID);
             Telegraph.Instance.Register<PingPong.Pong>(operator2ID);
 
@@ -164,8 +164,8 @@ namespace StartHere
         static void RecieveFromSpecificQueues(string queueAccountConnectionString, string queue1Name, string queue2Name)
         {
             long serializationOperator = Telegraph.Instance.Register(new LocalOperator());
-            long operator1ID = Telegraph.Instance.Register(new StorageQueueActorMessageReceptionOperator(LocalConcurrencyType.ActorsOnThreadPool, queueAccountConnectionString, queue1Name));
-            long operator2ID = Telegraph.Instance.Register(new StorageQueueActorMessageReceptionOperator(LocalConcurrencyType.DedicatedThreadCount, queueAccountConnectionString, queue2Name, false, 3));
+            long operator1ID = Telegraph.Instance.Register(new StorageQueueReceptionOperator<IActorMessage>(LocalConcurrencyType.ActorsOnThreadPool, queueAccountConnectionString, queue1Name));
+            long operator2ID = Telegraph.Instance.Register(new StorageQueueReceptionOperator<IActorMessage>(LocalConcurrencyType.DedicatedThreadCount, queueAccountConnectionString, queue2Name, false, 3));
 
             MessageDeserializationActor deserializer = new MessageDeserializationActor();
             Telegraph.Instance.Register<DeSerializeMessage, MessageDeserializationActor>(serializationOperator, () => deserializer);

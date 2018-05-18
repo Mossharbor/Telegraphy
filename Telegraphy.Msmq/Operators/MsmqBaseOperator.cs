@@ -46,7 +46,7 @@ namespace Telegraphy.Msmq
 
         public ILocalSwitchboard Switchboard { get; set; }
         
-        public MsmqBaseOperator(ILocalSwitchboard switchboard, string machineName, string queueName) :
+        internal MsmqBaseOperator(ILocalSwitchboard switchboard, string machineName, string queueName) :
             this(machineName, queueName, QueueAccessMode.Receive)
         {
             this.Switchboard = switchboard;
@@ -55,7 +55,7 @@ namespace Telegraphy.Msmq
             queue.Formatter = new XmlMessageFormatter(new Type[] { typeof(MsgType) });
         }
 
-        public MsmqBaseOperator(string machineName, string queueName) :
+        internal MsmqBaseOperator(string machineName, string queueName) :
             this(machineName, queueName, QueueAccessMode.Send)
         {
         }
