@@ -47,12 +47,12 @@
   </PropertyGroup>
   <PropertyGroup />
   <ItemGroup>
-    <ProjectReference Include="..\Telegraph.net\Telegraphy.Net.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="System.Data.DataSetExtensions" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Telegraphy.Net\Telegraphy.Net.csproj" />
   </ItemGroup>
 </Project>

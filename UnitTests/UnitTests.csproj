@@ -53,7 +53,6 @@
   <ItemGroup>
     <ProjectReference Include="..\BasicStartHere\BasicStartHere.csproj" />
     <ProjectReference Include="..\DistibutedExamples-Azure\PingPong\PingPongLib.csproj" />
-    <ProjectReference Include="..\Telegraph.net\Telegraphy.Net.csproj" />
     <ProjectReference Include="..\Telegraphy.Azure.EventHub\Telegraphy.Azure.EventHub.csproj" />
     <ProjectReference Include="..\Telegraphy.Azure.ServiceBus\Telegraphy.Azure.ServiceBus.csproj" />
     <ProjectReference Include="..\Telegraphy.Azure.Storage\Telegraphy.Azure.Storage.csproj" />

@@ -41,9 +41,6 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup />
-  <ItemGroup>
-    <ProjectReference Include="..\..\Telegraph.net\Telegraphy.Net.csproj" />
-  </ItemGroup>
   <ItemGroup />
   <ItemGroup>
     <None Include="app.config" />

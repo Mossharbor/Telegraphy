@@ -22,6 +22,6 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Telegraph.net\Telegraphy.Net.csproj" />
+    <ProjectReference Include="..\Telegraphy.Net\Telegraphy.Net.csproj" />
   </ItemGroup>
 </Project>

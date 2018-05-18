@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2037
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Telegraphy.Net", "Telegraph.net\Telegraphy.Net.csproj", "{0D5EDA21-0E26-4E10-B109-BFA71559163E}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests.csproj", "{23235468-C03B-4B86-823C-0DBD91B3A025}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ConcurrencyExamples", "ConcurrencyExamples", "{8CDDE909-CDB0-4C8F-89FB-F05E32F4AA8D}"
@@ -31,16 +29,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Telegraphy.Azure.EventHub",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Telegraphy.Azure.ServiceBus", "Telegraphy.Azure.ServiceBus\Telegraphy.Azure.ServiceBus.csproj", "{8F95AB80-4375-4A04-B4C0-AB3AB8D298B5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Telegraphy.Net", "Telegraphy.Net\Telegraphy.Net.csproj", "{0D5EDA21-0E26-4E10-B109-BFA71559163E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0D5EDA21-0E26-4E10-B109-BFA71559163E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0D5EDA21-0E26-4E10-B109-BFA71559163E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0D5EDA21-0E26-4E10-B109-BFA71559163E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0D5EDA21-0E26-4E10-B109-BFA71559163E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{23235468-C03B-4B86-823C-0DBD91B3A025}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{23235468-C03B-4B86-823C-0DBD91B3A025}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23235468-C03B-4B86-823C-0DBD91B3A025}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -85,6 +81,10 @@ Global
 		{8F95AB80-4375-4A04-B4C0-AB3AB8D298B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F95AB80-4375-4A04-B4C0-AB3AB8D298B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F95AB80-4375-4A04-B4C0-AB3AB8D298B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D5EDA21-0E26-4E10-B109-BFA71559163E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D5EDA21-0E26-4E10-B109-BFA71559163E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D5EDA21-0E26-4E10-B109-BFA71559163E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D5EDA21-0E26-4E10-B109-BFA71559163E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

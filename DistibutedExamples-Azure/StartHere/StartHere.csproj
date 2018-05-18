@@ -45,10 +45,10 @@
   </PropertyGroup>
   <PropertyGroup />
   <ItemGroup>
-    <ProjectReference Include="..\..\Telegraph.net\Telegraphy.Net.csproj" />
     <ProjectReference Include="..\..\Telegraphy.Azure.EventHub\Telegraphy.Azure.EventHub.csproj" />
     <ProjectReference Include="..\..\Telegraphy.Azure.ServiceBus\Telegraphy.Azure.ServiceBus.csproj" />
     <ProjectReference Include="..\..\Telegraphy.Azure.Storage\Telegraphy.Azure.Storage.csproj" />
+    <ProjectReference Include="..\..\Telegraphy.Net\Telegraphy.Net.csproj" />
     <ProjectReference Include="..\PingPong\PingPongLib.csproj" />
   </ItemGroup>
   <ItemGroup>

@@ -17,13 +17,13 @@
     <PackageReference Include="Mossharbor.AzureWorkArounds.ServiceBus" Version="1.0.11" />
   </ItemGroup>
   
-  <ItemGroup>
-    <ProjectReference Include="..\Telegraph.net\Telegraphy.Net.csproj" />
-  </ItemGroup>
-  
   <ItemGroup Condition="'$(TargetFramework)'=='net40' OR '$(TargetFramework)'=='net45' OR '$(TargetFramework)'=='net46' OR '$(TargetFramework)'=='net461' OR '$(TargetFramework)'=='net462'">
     <Reference Include="System" />
     <Reference Include="System.Core" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Telegraphy.Net\Telegraphy.Net.csproj" />
   </ItemGroup>
 
 </Project>
