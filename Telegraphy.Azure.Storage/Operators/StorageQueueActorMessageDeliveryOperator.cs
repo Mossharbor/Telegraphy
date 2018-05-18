@@ -11,8 +11,6 @@ namespace Telegraphy.Azure
 {
     public class StorageQueueActorMessageDeliveryOperator : StorageQueueBaseOperator
     { 
-        const int DefaultDequeueMaxCount = StorageQueueBaseOperator.DefaultDequeueMaxCount;
-
         public StorageQueueActorMessageDeliveryOperator(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true) 
             : base (null, storageConnectionString, queueName, createQueueIfItDoesNotExist, false, MessageSource.EntireIActor, DefaultDequeueMaxCount, null, null,null)
         {
