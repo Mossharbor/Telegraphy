@@ -10,7 +10,6 @@
     <Folder Include="Actors\" />
     <Folder Include="AzureWrappers\" />
     <Folder Include="Messages\" />
-    <Folder Include="Operators\" />
   </ItemGroup>
 
   <ItemGroup>

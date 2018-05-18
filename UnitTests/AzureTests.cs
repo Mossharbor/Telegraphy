@@ -509,7 +509,7 @@ namespace UnitTests
                 queue.AddMessage(new CloudQueueMessage(msgBytes));
 
                 long azureOperatorID = Telegraph.Instance.Register(
-                    new StorageQueueActorMessageReceptionOperator(LocalConcurrencyType.DedicatedThreadCount, StorageConnectionString, queueName, false, 2),
+                    new StorageQueueReceptionOperator<IActorMessage>(LocalConcurrencyType.DedicatedThreadCount, StorageConnectionString, queueName, false, 2),
                     (PingPong.Ping foo) => { Assert.IsTrue(message.Equals((string)foo.Message, StringComparison.InvariantCulture)); });
             }
             finally
@@ -552,7 +552,7 @@ namespace UnitTests
                 queue.AddMessage(new CloudQueueMessage(message));
 
                 long azureOperatorID = Telegraph.Instance.Register(
-                    new StorageQueueStringReceptionOperator(LocalConcurrencyType.DedicatedThreadCount, StorageConnectionString, queueName, false, 2),
+                    new StorageQueueReceptionOperator<string>(LocalConcurrencyType.DedicatedThreadCount, StorageConnectionString, queueName, false, 2),
                     (string foo) => { Assert.IsTrue(message.Equals(foo, StringComparison.InvariantCulture)); });
             }
             finally
@@ -597,7 +597,7 @@ namespace UnitTests
                 queue.AddMessage(new CloudQueueMessage(message));
 
                 long azureOperatorID = Telegraph.Instance.Register(
-                    new StorageQueueByteArrayReceptionOperator(LocalConcurrencyType.DedicatedThreadCount, StorageConnectionString, queueName, false, 2),
+                    new StorageQueueReceptionOperator<byte[]>(LocalConcurrencyType.DedicatedThreadCount, StorageConnectionString, queueName, false, 2),
                     (ValueTypeMessage<byte> foo) => { Assert.IsTrue(message.Equals(Encoding.UTF8.GetString((byte[])foo.Message), StringComparison.InvariantCulture)); });
             }
             finally

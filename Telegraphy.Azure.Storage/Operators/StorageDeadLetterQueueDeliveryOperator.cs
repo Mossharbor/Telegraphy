@@ -1,21 +1,19 @@
 ﻿using Microsoft.WindowsAzure.Storage.Queue;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Telegraphy.Azure
 {
-    public class StorageQueueStringDeliveryOperator: StorageQueueBaseOperator<string>
+    public class StorageDeadLetterQueueDeliveryOperator<T> : StorageQueueBaseOperator<T> where T : class
     {
-        public StorageQueueStringDeliveryOperator(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true)
+        public StorageDeadLetterQueueDeliveryOperator(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true)
             : base(null, storageConnectionString, queueName, createQueueIfItDoesNotExist, false, DefaultDequeueMaxCount, null, null, null)
         {
         }
 
-        public StorageQueueStringDeliveryOperator(CloudQueue queue, CloudQueue deadletterQueue)
-            : base(null, queue, deadletterQueue, false, DefaultDequeueMaxCount, null, null, null)
+        public StorageDeadLetterQueueDeliveryOperator(CloudQueue queue, CloudQueue deadLetterQueue)
+            : base(null, queue, deadLetterQueue, false, DefaultDequeueMaxCount, null, null, null)
         {
         }
 
