@@ -8,28 +8,25 @@ using Telegraphy.Net;
 
 namespace Telegraphy.Azure
 {
-    public class StorageQueueDeadLetterStringReceptionOperator : StorageQueueBaseOperator
+    public class StorageQueueDeadLetterStringReceptionOperator : StorageQueueBaseOperator<string>
     {
-        const int DefaultDequeueMaxCount = StorageQueueBaseOperator.DefaultDequeueMaxCount;
-        const int DefaultConcurrency = StorageQueueBaseOperator.DefaultConcurrency;
-
         public StorageQueueDeadLetterStringReceptionOperator(string storageConnectionString, string queueName, int maxDequeueCount = DefaultDequeueMaxCount)
-                 : this(new LocalSwitchboard(LocalConcurrencyType.OneThreadAllActors), StorageQueueBaseOperator.GetDeadLetterQueueFrom(storageConnectionString, queueName), maxDequeueCount)
+                 : this(new LocalSwitchboard(LocalConcurrencyType.OneThreadAllActors), StorageQueueBaseOperator<string>.GetDeadLetterQueueFrom(storageConnectionString, queueName), maxDequeueCount)
         {
         }
 
         public StorageQueueDeadLetterStringReceptionOperator(LocalConcurrencyType concurrencyType, string storageConnectionString, string queueName, int maxDequeueCount = DefaultDequeueMaxCount, uint concurrency = DefaultConcurrency)
-                 : this(new LocalSwitchboard(concurrencyType, concurrency), StorageQueueBaseOperator.GetDeadLetterQueueFrom(storageConnectionString, queueName), maxDequeueCount)
+                 : this(new LocalSwitchboard(concurrencyType, concurrency), StorageQueueBaseOperator<string>.GetDeadLetterQueueFrom(storageConnectionString, queueName), maxDequeueCount)
         {
         }
 
         public StorageQueueDeadLetterStringReceptionOperator(ILocalSwitchboard switchBoard, string storageConnectionString, string queueName, int maxDequeueCount = DefaultDequeueMaxCount)
-               : this(switchBoard, StorageQueueBaseOperator.GetDeadLetterQueueFrom(storageConnectionString, queueName), maxDequeueCount)
+               : this(switchBoard, StorageQueueBaseOperator<string>.GetDeadLetterQueueFrom(storageConnectionString, queueName), maxDequeueCount)
         {
         }
 
         public StorageQueueDeadLetterStringReceptionOperator(ILocalSwitchboard switchBoard, CloudQueue deadletterQueue, int maxDequeueCount = DefaultDequeueMaxCount, TimeSpan? retrieveVisibilityTimeout = null, QueueRequestOptions retrievalRequestOptions = null, Microsoft.WindowsAzure.Storage.OperationContext retrievalOperationContext = null)
-            : base(switchBoard, deadletterQueue, null, true, MessageSource.StringMessage, maxDequeueCount, retrieveVisibilityTimeout, retrievalRequestOptions, retrievalOperationContext)
+            : base(switchBoard, deadletterQueue, null, true, maxDequeueCount, retrieveVisibilityTimeout, retrievalRequestOptions, retrievalOperationContext)
         {
         }
     }

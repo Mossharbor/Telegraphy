@@ -17,7 +17,7 @@ namespace Telegraphy.Azure
 
         public SendStringToStorageQueue(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true)
         {
-            queue = StorageQueueBaseOperator.GetQueueFrom(storageConnectionString, queueName, createQueueIfItDoesNotExist);
+            queue = StorageQueueBaseOperator<object>.GetQueueFrom(storageConnectionString, queueName, createQueueIfItDoesNotExist);
         }
 
         bool IActor.OnMessageRecieved<T>(T msg)
@@ -25,7 +25,7 @@ namespace Telegraphy.Azure
             if (!(msg as IActorMessage).Message.GetType().Name.Equals("String"))
                 throw new SendStringActorCanOnlySendStringMessagesException();
 
-            StorageQueueBaseOperator.SerializeAndSend(msg, queue, (string)msg.Message);
+            StorageQueueBaseOperator<object>.SerializeAndSend(msg, queue, (string)msg.Message);
             return true;
         }
     }

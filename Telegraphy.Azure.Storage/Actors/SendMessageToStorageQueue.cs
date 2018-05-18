@@ -14,12 +14,12 @@ namespace Telegraphy.Azure
 
         public SendMessageToStorageQueue(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true)
         {
-            queue = StorageQueueBaseOperator.GetQueueFrom(storageConnectionString, queueName, createQueueIfItDoesNotExist);
+            queue = StorageQueueBaseOperator<object>.GetQueueFrom(storageConnectionString, queueName, createQueueIfItDoesNotExist);
         }
 
         bool IActor.OnMessageRecieved<T>(T msg)
         {
-            StorageQueueBaseOperator.SerializeAndSend(msg, queue);
+            StorageQueueBaseOperator<object>.SerializeAndSend(msg, queue);
             return true;
         }
     }

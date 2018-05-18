@@ -9,15 +9,15 @@ using Telegraphy.Net;
 
 namespace Telegraphy.Azure
 {
-    public class StorageQueueActorMessageDeliveryOperator : StorageQueueBaseOperator
+    public class StorageQueueActorMessageDeliveryOperator : StorageQueueBaseOperator<IActorMessage>
     { 
         public StorageQueueActorMessageDeliveryOperator(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true) 
-            : base (null, storageConnectionString, queueName, createQueueIfItDoesNotExist, false, MessageSource.EntireIActor, DefaultDequeueMaxCount, null, null,null)
+            : base (null, storageConnectionString, queueName, createQueueIfItDoesNotExist, false, DefaultDequeueMaxCount, null, null,null)
         {
         }
 
         public StorageQueueActorMessageDeliveryOperator(CloudQueue queue, CloudQueue deadLetterQueue) 
-            : base(null, queue, deadLetterQueue, false, MessageSource.EntireIActor, DefaultDequeueMaxCount, null, null, null)
+            : base(null, queue, deadLetterQueue, false, DefaultDequeueMaxCount, null, null, null)
         {
         }
 

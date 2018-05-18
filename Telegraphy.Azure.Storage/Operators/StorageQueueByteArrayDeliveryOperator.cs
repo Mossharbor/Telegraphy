@@ -7,17 +7,15 @@ using System.Threading.Tasks;
 
 namespace Telegraphy.Azure
 {
-    public class StorageQueueByteArrayDeliveryOperator : StorageQueueBaseOperator
+    public class StorageQueueByteArrayDeliveryOperator : StorageQueueBaseOperator<byte[]>
     {
-        const int DefaultDequeueMaxCount = StorageQueueBaseOperator.DefaultDequeueMaxCount;
-
         public StorageQueueByteArrayDeliveryOperator(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true)
-            : base(null, storageConnectionString, queueName, createQueueIfItDoesNotExist, false, Telegraphy.Net.MessageSource.ByteArrayMessage, DefaultDequeueMaxCount, null, null, null)
+            : base(null, storageConnectionString, queueName, createQueueIfItDoesNotExist, false, DefaultDequeueMaxCount, null, null, null)
         {
         }
 
         public StorageQueueByteArrayDeliveryOperator(CloudQueue queue, CloudQueue deadLetterQueue)
-            : base(null, queue, deadLetterQueue, false, Telegraphy.Net.MessageSource.ByteArrayMessage, DefaultDequeueMaxCount, null, null, null)
+            : base(null, queue, deadLetterQueue, false, DefaultDequeueMaxCount, null, null, null)
         {
         }
 

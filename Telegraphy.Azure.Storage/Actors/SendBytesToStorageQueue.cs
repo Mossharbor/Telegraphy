@@ -16,7 +16,7 @@ namespace Telegraphy.Azure
 
         public SendBytesToStorageQueue(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true)
         {
-            queue = StorageQueueBaseOperator.GetQueueFrom(storageConnectionString, queueName, createQueueIfItDoesNotExist);
+            queue = StorageQueueBaseOperator<string>.GetQueueFrom(storageConnectionString, queueName, createQueueIfItDoesNotExist);
         }
 
         bool IActor.OnMessageRecieved<T>(T msg)
@@ -24,7 +24,7 @@ namespace Telegraphy.Azure
             if (!(msg as IActorMessage).Message.GetType().Name.Equals("Byte[]"))
                 throw new SendBytesStorageActorCanOnlySendValueTypeByteArrayMessagesException("ValueTypeMessage<byte>");
 
-            StorageQueueBaseOperator.SerializeAndSend(msg, queue,(byte[])msg.Message);
+            StorageQueueBaseOperator<T>.SerializeAndSend(msg, queue,(byte[])msg.Message);
             return true;
         }
     }

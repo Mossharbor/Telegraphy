@@ -4,20 +4,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Telegraphy.Net;
 
 namespace Telegraphy.Azure
 {
-    public class StorageQueueDeadLetterActorMessageDeliveryOperator : StorageQueueBaseOperator
+    public class StorageQueueDeadLetterActorMessageDeliveryOperator : StorageQueueBaseOperator<IActorMessage>
     {
-        const int DefaultDequeueMaxCount = StorageQueueBaseOperator.DefaultDequeueMaxCount;
-
         public StorageQueueDeadLetterActorMessageDeliveryOperator(string storageConnectionString, string queueName)
-            : this(StorageQueueBaseOperator.GetDeadLetterQueueFrom(storageConnectionString, queueName))
+            : this(StorageQueueBaseOperator<IActorMessage>.GetDeadLetterQueueFrom(storageConnectionString, queueName))
         {
         }
 
         public StorageQueueDeadLetterActorMessageDeliveryOperator(CloudQueue deadLetterQueue)
-            : base(null, deadLetterQueue, null, false, Telegraphy.Net.MessageSource.EntireIActor, DefaultDequeueMaxCount, null, null, null)
+            : base(null, deadLetterQueue, null, false, DefaultDequeueMaxCount, null, null, null)
         {
         }
 

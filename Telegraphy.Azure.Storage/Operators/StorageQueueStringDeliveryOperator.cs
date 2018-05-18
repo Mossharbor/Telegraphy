@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace Telegraphy.Azure
 {
-    public class StorageQueueStringDeliveryOperator : StorageQueueBaseOperator
+    public class StorageQueueStringDeliveryOperator: StorageQueueBaseOperator<string>
     {
         public StorageQueueStringDeliveryOperator(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true)
-            : base(null, storageConnectionString, queueName, createQueueIfItDoesNotExist, false, Telegraphy.Net.MessageSource.StringMessage, DefaultDequeueMaxCount, null, null, null)
+            : base(null, storageConnectionString, queueName, createQueueIfItDoesNotExist, false, DefaultDequeueMaxCount, null, null, null)
         {
         }
 
         public StorageQueueStringDeliveryOperator(CloudQueue queue, CloudQueue deadletterQueue)
-            : base(null, queue, deadletterQueue, false, Telegraphy.Net.MessageSource.StringMessage, DefaultDequeueMaxCount, null, null, null)
+            : base(null, queue, deadletterQueue, false, DefaultDequeueMaxCount, null, null, null)
         {
         }
 

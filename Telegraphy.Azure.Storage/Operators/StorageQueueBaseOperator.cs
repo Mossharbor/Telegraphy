@@ -14,7 +14,7 @@ using Telegraphy.Azure.Exceptions;
 namespace Telegraphy.Azure
 {
 
-    public abstract class StorageQueueBaseOperator : IOperator
+    public abstract class StorageQueueBaseOperator<MsgType> : IOperator where MsgType:class
     {
         internal const int DefaultDequeueMaxCount = 1;
         internal const int DefaultConcurrency = 3;
@@ -27,7 +27,6 @@ namespace Telegraphy.Azure
         Microsoft.WindowsAzure.Storage.OperationContext retrievalOperationContext = null;
         bool recieveMessagesOnly = false;
         ControlMessages.HangUp hangUp = null;
-        MessageSource messageSource = MessageSource.EntireIActor;
         private int maxDequeueCount = 1;
 
         protected StorageQueueBaseOperator(
@@ -36,8 +35,7 @@ namespace Telegraphy.Azure
             string queueName, 
             bool createQueueIfItDoesNotExist,
             bool recieve, 
-            MessageSource messageSource = MessageSource.EntireIActor,
-            int maxDequeueCount = StorageQueueBaseOperator.DefaultDequeueMaxCount,
+            int maxDequeueCount = DefaultDequeueMaxCount,
             TimeSpan? retrieveVisibilityTimeout = null, 
             QueueRequestOptions retrievalRequestOptions = null,
             Microsoft.WindowsAzure.Storage.OperationContext retrievalOperationContext = null)
@@ -45,7 +43,6 @@ namespace Telegraphy.Azure
                   GetQueueFrom(storageConnectionString, queueName, createQueueIfItDoesNotExist),
                   GetDeadLetterQueueFrom(storageConnectionString, queueName),
                   recieve, 
-                  messageSource,
                   maxDequeueCount,
                   retrieveVisibilityTimeout,
                   retrievalRequestOptions,
@@ -58,8 +55,7 @@ namespace Telegraphy.Azure
             CloudQueue queue,
             CloudQueue deadLetterQueue,
             bool recieve,
-            MessageSource messageSource = MessageSource.EntireIActor,
-            int maxDequeueCount = StorageQueueBaseOperator.DefaultDequeueMaxCount,
+            int maxDequeueCount = DefaultDequeueMaxCount,
             TimeSpan? retrieveVisibilityTimeout = null,
             QueueRequestOptions retrievalRequestOptions = null,
             Microsoft.WindowsAzure.Storage.OperationContext retrievalOperationContext = null)
@@ -72,7 +68,6 @@ namespace Telegraphy.Azure
             this.retrieveVisibilityTimeout = retrieveVisibilityTimeout;
             this.retrievalRequestOptions = retrievalRequestOptions;
             this.retrievalOperationContext = retrievalOperationContext;
-            this.messageSource = messageSource;
             if (null != switchBoard)
                 switchBoard.Operator = this;
 
@@ -162,26 +157,13 @@ namespace Telegraphy.Azure
             // Serialize the message first
             try
             {
-                switch(messageSource)
-                {
-                    case MessageSource.StringMessage:
-                        if ((msg as IActorMessage).Message.GetType().Name.Equals("String"))
-                            SerializeAndSend(msg, queue, (string)(msg as IActorMessage).Message);
-                        else
-                            throw new NotConfiguredToSerializeThisTypeOfMessageException("String");
-                        break;
-                    case MessageSource.ByteArrayMessage:
-                        if ((msg as IActorMessage).Message.GetType().Name.Equals("Byte[]"))
-                            SerializeAndSend(msg, queue, (byte[])(msg as IActorMessage).Message);
-                        else
-                            throw new NotConfiguredToSerializeThisTypeOfMessageException("Byte[]");
-                        break;
-                    case MessageSource.EntireIActor:
-                        SerializeAndSend(msg, queue);
-                        break;
-                    default:
-                        throw new NotConfiguredToSerializeThisTypeOfMessageException(messageSource.ToString());
-                }
+
+                if (typeof(MsgType) == typeof(byte[]))
+                    SerializeAndSend(msg, queue, (byte[])(msg as IActorMessage).Message);
+                else if (typeof(MsgType) == typeof(string))
+                    SerializeAndSend(msg, queue, (string)(msg as IActorMessage).Message);
+                else 
+                    SerializeAndSend(msg, queue);
             }
             catch(Exception ex)
             {
@@ -256,23 +238,16 @@ namespace Telegraphy.Azure
                     return null;
                 }
 
-
                 IActorMessage msg = null;
-                switch (messageSource)
+                if (typeof(MsgType) == typeof(string))
+                    msg = next.AsString.ToActorMessage();
+                else if (typeof(MsgType) == typeof(byte[]))
+                     msg = next.AsBytes.ToActorMessage();
+                else
                 {
-                    case MessageSource.EntireIActor:
-                        {
-                            byte[] msgBytes = next.AsBytes;
-                            var t = Telegraph.Instance.Ask(new DeSerializeMessage(msgBytes));
-                            msg = t.Result as IActorMessage;
-                        }
-                        break;
-                    case MessageSource.StringMessage:
-                        msg = next.AsString.ToActorMessage();
-                        break;
-                    case MessageSource.ByteArrayMessage:
-                        msg = next.AsBytes.ToActorMessage();
-                        break;
+                    byte[] msgBytes = next.AsBytes;
+                    var t = Telegraph.Instance.Ask(new DeSerializeMessage(msgBytes));
+                    msg = t.Result as IActorMessage;
                 }
 
                 if (null == msg.Status)
