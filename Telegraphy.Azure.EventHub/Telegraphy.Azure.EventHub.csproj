@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net461;net462</TargetFrameworks>
     <RootNamespace>Telegraphy.Azure</RootNamespace>
   </PropertyGroup>
 
@@ -14,14 +14,16 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.EventHubs" Version="2.0.0" />
-    <PackageReference Include="Mossharbor.AzureWorkArounds.ServiceBus" Version="1.0.10" />
+    <PackageReference Include="Mossharbor.AzureWorkArounds.ServiceBus" Version="1.0.11" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Telegraph.net\Telegraphy.Net.csproj" />
+  </ItemGroup>
+  
   <ItemGroup Condition="'$(TargetFramework)'=='net40' OR '$(TargetFramework)'=='net45' OR '$(TargetFramework)'=='net46' OR '$(TargetFramework)'=='net461' OR '$(TargetFramework)'=='net462'">
     <Reference Include="System" />
     <Reference Include="System.Core" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Telegraph.net\Telegraphy.Net.csproj" />
   </ItemGroup>
 
 </Project>

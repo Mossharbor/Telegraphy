@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Usenet", "ConcurrencyExampl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DistibutedExamples-Azure", "DistibutedExamples-Azure", "{40414E30-AEBA-4EE8-B937-BA18A0807A4B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PingPong", "DistibutedExamples-Azure\PingPong\PingPong.csproj", "{813934FE-69E0-4DF3-A0F0-38EF4B44925C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PingPongLib", "DistibutedExamples-Azure\PingPong\PingPongLib.csproj", "{813934FE-69E0-4DF3-A0F0-38EF4B44925C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StartHere", "DistibutedExamples-Azure\StartHere\StartHere.csproj", "{048EFC32-EA38-4ECA-A049-A5902878B8C9}"
 EndProject

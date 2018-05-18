@@ -1,4 +1,5 @@
 ﻿using Microsoft.Azure.ServiceBus;
+using Microsoft.Azure.ServiceBus.Core;
 using Mossharbor.AzureWorkArounds.ServiceBus;
 using System;
 using System.Collections.Generic;
@@ -8,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace Telegraphy.Azure
 {
-    class ServiceBusTopicDeliverer : Microsoft.Azure.ServiceBus.Core.MessageSender
+    class ServiceBusTopicDeliverer : MessageSender
     {
         string connectionString;
         protected string[] subscriptions = null;
         protected string topic = null;
-        public ServiceBusTopicDeliverer(string connectionString, string topicName, bool createTopicIfItDoesNotExist, Microsoft.Azure.ServiceBus.RetryPolicy retryPolicy = null)
+        public ServiceBusTopicDeliverer(string connectionString, string topicName, bool createTopicIfItDoesNotExist, RetryPolicy retryPolicy = null)
             :base(connectionString, topicName, retryPolicy)
         {
             this.connectionString = connectionString;

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Azure.ServiceBus;
+using Microsoft.Azure.ServiceBus.Core;
 using Mossharbor.AzureWorkArounds.ServiceBus;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Telegraphy.Azure
 {
-    class ServiceBusTopicReciever : Microsoft.Azure.ServiceBus.Core.MessageReceiver
+    class ServiceBusTopicReciever : MessageReceiver
     {
         string connectionString;
         protected string subscription = null;
@@ -35,14 +36,12 @@ namespace Telegraphy.Azure
         public void CreateIfNotExists()
         {
             NamespaceManager ns = NamespaceManager.CreateFromConnectionString(connectionString);
-            TopicDescription qd;
-            if (!ns.TopicExists(this.topic, out qd))
+            if (!ns.TopicExists(this.topic))
                 ns.CreateTopic(this.topic);
 
             if (!String.IsNullOrEmpty(this.subscription))
             {
-                SubscriptionDescription sd;
-                if (!ns.SubscriptionExists(this.topic, this.subscription, out sd))
+                if (!ns.SubscriptionExists(this.topic, this.subscription))
                     ns.CreateSubscription(this.topic, this.subscription);
             }
         }
@@ -55,8 +54,7 @@ namespace Telegraphy.Azure
 
                 if (!String.IsNullOrEmpty(this.subscription))
                 {
-                    SubscriptionDescription sd;
-                    ns.SubscriptionExists(this.topic, this.subscription, out sd);
+                    var sd = ns.GetSubscription(this.topic, this.subscription);
                     return (uint)sd.MessageCount;
                 }
                 return 0;

@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 
 namespace Telegraphy.Azure
 {
-    using Microsoft.Azure.ServiceBus;
-
     public class ServiceBusQueueActorMessageDeliveryOperator : ServiceBusQueueBaseOperator
     {
         public ServiceBusQueueActorMessageDeliveryOperator(string connectionString,string queueName, bool createQueueIfItDoesNotExist)

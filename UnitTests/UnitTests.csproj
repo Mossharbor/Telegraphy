@@ -52,7 +52,7 @@
   <PropertyGroup />
   <ItemGroup>
     <ProjectReference Include="..\BasicStartHere\BasicStartHere.csproj" />
-    <ProjectReference Include="..\DistibutedExamples-Azure\PingPong\PingPong.csproj" />
+    <ProjectReference Include="..\DistibutedExamples-Azure\PingPong\PingPongLib.csproj" />
     <ProjectReference Include="..\Telegraph.net\Telegraphy.Net.csproj" />
     <ProjectReference Include="..\Telegraphy.Azure.EventHub\Telegraphy.Azure.EventHub.csproj" />
     <ProjectReference Include="..\Telegraphy.Azure.ServiceBus\Telegraphy.Azure.ServiceBus.csproj" />
@@ -67,7 +67,7 @@
     <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="3.19.1" />
     <PackageReference Include="Microsoft.IdentityModel.Logging" Version="5.2.1" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.2.1" />
-    <PackageReference Include="Mossharbor.AzureWorkArounds.ServiceBus" Version="1.0.10" />
+    <PackageReference Include="Mossharbor.AzureWorkArounds.ServiceBus" Version="1.0.11" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="4.4.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.2.1" />
