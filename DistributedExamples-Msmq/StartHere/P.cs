@@ -24,19 +24,21 @@ namespace StartHere
             string queueName = "testQueue";
 
             // Setup send to queue with an actor that uses lazy instatiation
-            Telegraph.Instance.Register<string, SendStringToMsMessageQueue>(() => new SendStringToMsMessageQueue(queueName));
+            Telegraph.Instance.Register<byte[], MsmqDeliveryOperator<byte[]>>(() => new MsmqDeliveryOperator<byte[]>(queueName));
 
             // Send message to queue
             for (int i = 0; i < 100; ++i)
             {
-                Telegraph.Instance.Ask(message).Wait();
+                byte[] msgBytes = Encoding.UTF8.GetBytes(message);
+                Telegraph.Instance.Ask(msgBytes).Wait();
             }
 
             Telegraph.Instance.UnRegisterAll();
 
-            long azureOperatorID = Telegraph.Instance.Register(new MsmqStringMessageReceptionOperator(queueName));
-            Telegraph.Instance.Register<string>(azureOperatorID, stringmsg =>
+            long azureOperatorID = Telegraph.Instance.Register(new MsmqReceptionOperator<byte[]>(queueName));
+            Telegraph.Instance.Register<byte[]>(azureOperatorID, bytemsg =>
             {
+                string stringmsg = Encoding.UTF8.GetString(bytemsg);
                 System.Threading.Thread.Sleep(100);
                 Console.WriteLine(stringmsg);
             });

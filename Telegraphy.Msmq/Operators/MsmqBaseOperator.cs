@@ -16,16 +16,15 @@ namespace Telegraphy.Msmq
     using Telegraphy.Msmq.Exceptions;
     using Telegraphy.Net.Exceptions;
 
-    public class MsmqBaseOperator : IOperator
+    public class MsmqBaseOperator<MsgType> : IOperator where MsgType : class
     {
-        protected const int DefaultConncurrency = 3;
+        protected const uint DefaultConncurrency = 3;
         protected const LocalConcurrencyType DefaultType = LocalConcurrencyType.DedicatedThreadCount;
         MessageQueue queue = null;
         ConcurrentDictionary<Type, Action<Exception>> _exceptionTypeToHandler = new ConcurrentDictionary<Type, Action<Exception>>();
         bool recieveMessagesOnly = false;
         ControlMessages.HangUp hangUp = null;
         PerformanceCounter queueCounter = null;
-        MessageSource messageSource = MessageSource.EntireIActor;
 
         public long ID { get; set; }
         public ulong Count
@@ -47,23 +46,22 @@ namespace Telegraphy.Msmq
 
         public ILocalSwitchboard Switchboard { get; set; }
         
-        public MsmqBaseOperator(ILocalSwitchboard switchboard, string machineName, string queueName, Type[] targetTypes, MessageSource messageSource) :
-            this(machineName, queueName, QueueAccessMode.Receive, messageSource)
+        public MsmqBaseOperator(ILocalSwitchboard switchboard, string machineName, string queueName) :
+            this(machineName, queueName, QueueAccessMode.Receive)
         {
             this.Switchboard = switchboard;
             this.Switchboard.Operator = this;
             this.recieveMessagesOnly = true;
-            queue.Formatter = new XmlMessageFormatter(targetTypes);
+            queue.Formatter = new XmlMessageFormatter(new Type[] { typeof(MsgType) });
         }
 
-        public MsmqBaseOperator(string machineName, string queueName, MessageSource messageSource) :
-            this(machineName, queueName, QueueAccessMode.Send, messageSource)
+        public MsmqBaseOperator(string machineName, string queueName) :
+            this(machineName, queueName, QueueAccessMode.Send)
         {
         }
 
-        private MsmqBaseOperator(string machineName, string queueName, QueueAccessMode accessMode, MessageSource messageSource)
+        private MsmqBaseOperator(string machineName, string queueName, QueueAccessMode accessMode)
         {
-            this.messageSource = messageSource;
             string msmqName = MsmqHelper.CreateMsmqQueueName("", queueName, "", machineName);
             EnsureQueueExists(msmqName);
             var queueCounter = new PerformanceCounter(
@@ -83,34 +81,8 @@ namespace Telegraphy.Msmq
                 MessageQueue.Create(path);
             }
         }
-
-        private void SerializeAndSend(IActorMessage msg, MessageQueue msmqQueue)
-        {
-            var msmqMessage = new System.Messaging.Message((msg as IActorMessage).Message);
-            if (Transaction.Current == null)
-            {
-                msmqQueue.Send(msmqMessage, MessageQueueTransactionType.Single);
-            }
-            else
-            {
-                msmqQueue.Send(msmqMessage, MessageQueueTransactionType.Automatic);
-            }
-        }
-
-        private void SerializeAndSend(IActorMessage msg, MessageQueue msmqQueue, byte[] message)
-        {
-            var msmqMessage = new System.Messaging.Message(message);
-            if (Transaction.Current == null)
-            {
-                msmqQueue.Send(msmqMessage, MessageQueueTransactionType.Single);
-            }
-            else
-            {
-                msmqQueue.Send(msmqMessage, MessageQueueTransactionType.Automatic);
-            }
-        }
-
-        private void SerializeAndSend(IActorMessage msg, MessageQueue msmqQueue, string message)
+        
+        private void SerializeAndSend(IActorMessage msg, MessageQueue msmqQueue, MsgType message)
         {
             var msmqMessage = new System.Messaging.Message(message);
             if (Transaction.Current == null)
@@ -146,26 +118,7 @@ namespace Telegraphy.Msmq
             // Serialize the message first
             try
             {
-                switch (messageSource)
-                {
-                    case MessageSource.StringMessage:
-                        if ((msg as IActorMessage).Message.GetType().Name.Equals("String"))
-                            SerializeAndSend(msg, queue, (string)(msg as IActorMessage).Message);
-                        else
-                            throw new NotConfiguredToSerializeThisTypeOfMessageException("String");
-                        break;
-                    case MessageSource.ByteArrayMessage:
-                        if ((msg as IActorMessage).Message.GetType().Name.Equals("Byte[]"))
-                            SerializeAndSend(msg, queue, (byte[])(msg as IActorMessage).Message);
-                        else
-                            throw new NotConfiguredToSerializeThisTypeOfMessageException("Byte[]");
-                        break;
-                    case MessageSource.EntireIActor:
-                        SerializeAndSend(msg, queue);
-                        break;
-                    default:
-                        throw new NotConfiguredToSerializeThisTypeOfMessageException(messageSource.ToString());
-                }
+                SerializeAndSend(msg, queue, (MsgType)(msg as IActorMessage).Message);
             }
             catch (Exception ex)
             {
@@ -184,17 +137,9 @@ namespace Telegraphy.Msmq
                 System.Messaging.Message systemMessage = this.queue.Receive(new TimeSpan(0, 0, 1), MessageQueueTransactionType.Single);
                 systemMessage.Formatter = queue.Formatter;
                 object msg = systemMessage.Body;
-                switch(messageSource)
-                {
-                    case MessageSource.ByteArrayMessage:
-                        return (msg as byte[]).ToActorMessage();
-                    case MessageSource.EntireIActor:
-                        return (msg as IActorMessage);
-                    case MessageSource.StringMessage:
-                        return (msg as string).ToActorMessage();
-                }
-
-                throw new NotImplementedException(messageSource.ToString() + " is not implementd");
+                if (!(msg is IActorMessage))
+                    return new SimpleMessage<MsgType>(msg as MsgType);
+                return (msg as IActorMessage);
             }
             catch (System.Messaging.MessageQueueException)
             {

@@ -7,15 +7,15 @@ using Telegraphy.Net;
 
 namespace Telegraphy.Msmq
 {
-    public class MsmqActorMessageDeliveryOperator : MsmqBaseOperator
+    public class MsmqDeliveryOperator<T> : MsmqBaseOperator<T> where T:class
     {
-        public MsmqActorMessageDeliveryOperator(string queueName)
+        public MsmqDeliveryOperator(string queueName)
                : this(".", queueName)
         {
         }
 
-        public MsmqActorMessageDeliveryOperator(string machineName, string queueName)
-            : base(machineName, queueName, MessageSource.EntireIActor)
+        public MsmqDeliveryOperator(string machineName, string queueName)
+            : base(machineName, queueName)
         {
         }
 
