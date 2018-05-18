@@ -9,14 +9,20 @@ namespace Telegraphy.Msmq
 {
     public class MsmqActorMessageReceptionOperator : MsmqBaseOperator
     {
-        public MsmqActorMessageReceptionOperator(string queueName) :
-            this(".", queueName)
+        public MsmqActorMessageReceptionOperator(string queueName, Type[] targetTypes, LocalConcurrencyType type = DefaultType, uint concurrencyCount = DefaultConncurrency) :
+            this(new LocalSwitchboard(type, concurrencyCount), ".", queueName, targetTypes)
         {
 
         }
-        public MsmqActorMessageReceptionOperator(string machineName, string queueName)
-            : base(machineName, queueName, MessageSource.EntireIActor)
+        public MsmqActorMessageReceptionOperator(string machineName, string queueName, Type[] targetTypes, LocalConcurrencyType type = DefaultType, uint concurrencyCount = DefaultConncurrency)
+            : this(new LocalSwitchboard(type, concurrencyCount), machineName, queueName, targetTypes)
         {
+        }
+
+        public MsmqActorMessageReceptionOperator(ILocalSwitchboard switchBoard, string machineName, string queueName, Type[] targetTypes)
+            : base(switchBoard, machineName, queueName, targetTypes, MessageSource.StringMessage)
+        {
+
         }
     }
 }

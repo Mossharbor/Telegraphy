@@ -16,7 +16,7 @@ namespace Telegraphy.Msmq
 
         public SendStringToMsMessageQueue(string queueName)
         {
-            msmqQueue = MsmqHelper.GetMsmqQueue(MsmqHelper.CreateMsmqQueueName("", queueName, "SEND"));
+            msmqQueue = MsmqHelper.GetMsmqQueue(MsmqHelper.CreateMsmqQueueName("", queueName, ""));
         }
 
         bool IActor.OnMessageRecieved<T>(T msg)

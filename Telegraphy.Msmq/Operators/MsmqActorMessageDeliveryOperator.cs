@@ -9,13 +9,13 @@ namespace Telegraphy.Msmq
 {
     public class MsmqActorMessageDeliveryOperator : MsmqBaseOperator
     {
-        public MsmqActorMessageDeliveryOperator(string queueName, string[] targetTypeNames)
-               : this(".", queueName, targetTypeNames)
+        public MsmqActorMessageDeliveryOperator(string queueName)
+               : this(".", queueName)
         {
         }
 
-        public MsmqActorMessageDeliveryOperator(string machineName, string queueName, string[] targetTypeNames) 
-            : base(machineName, queueName, targetTypeNames, MessageSource.EntireIActor)
+        public MsmqActorMessageDeliveryOperator(string machineName, string queueName)
+            : base(machineName, queueName, MessageSource.EntireIActor)
         {
         }
 

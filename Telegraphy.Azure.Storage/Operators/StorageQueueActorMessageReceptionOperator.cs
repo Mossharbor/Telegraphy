@@ -11,9 +11,6 @@ namespace Telegraphy.Azure
 {
     public class StorageQueueActorMessageReceptionOperator : StorageQueueBaseOperator
     {
-        const int DefaultConcurrency = StorageQueueBaseOperator.DefaultConcurrency;
-        const int DefaultDequeueMaxCount = StorageQueueBaseOperator.DefaultDequeueMaxCount;
-
         public StorageQueueActorMessageReceptionOperator(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true, int maxDequeueCount = DefaultDequeueMaxCount)
                  : base(new LocalSwitchboard(LocalConcurrencyType.OneThreadAllActors), storageConnectionString, queueName, createQueueIfItDoesNotExist, true, MessageSource.EntireIActor, maxDequeueCount, null, null, null)
         {

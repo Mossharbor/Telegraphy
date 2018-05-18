@@ -26,7 +26,14 @@ namespace Telegraphy.Msmq
         // Create an MSMQ queue.
         public static string CreateMsmqQueueName(string prefix, string queueName, string suffix, string machineName=".")
         {
-            return (machineName+"\\private$\\" + prefix.Replace(".", "_") + queueName.Replace("/", "_") + "_" + suffix);
+            if (!String.IsNullOrEmpty(prefix) && !String.IsNullOrEmpty(suffix))
+                return (machineName+"\\private$\\" + prefix.Replace(".", "_") + queueName.Replace("/", "_") + "_" + suffix);
+            else if (String.IsNullOrEmpty(prefix) && !String.IsNullOrEmpty(suffix))
+                return (machineName + "\\private$\\" + queueName.Replace("/", "_") + "_" + suffix);
+            else if (!String.IsNullOrEmpty(prefix) && String.IsNullOrEmpty(suffix))
+                return (machineName + "\\private$\\" + prefix.Replace(".", "_") + queueName.Replace("/", "_"));
+            else
+                return (machineName + "\\private$\\" + queueName.Replace("/", "_"));
         }
     }
 }

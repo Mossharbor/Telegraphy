@@ -18,6 +18,8 @@ namespace Telegraphy.Msmq
 
     public class MsmqBaseOperator : IOperator
     {
+        protected const int DefaultConncurrency = 3;
+        protected const LocalConcurrencyType DefaultType = LocalConcurrencyType.DedicatedThreadCount;
         MessageQueue queue = null;
         ConcurrentDictionary<Type, Action<Exception>> _exceptionTypeToHandler = new ConcurrentDictionary<Type, Action<Exception>>();
         bool recieveMessagesOnly = false;
@@ -45,11 +47,13 @@ namespace Telegraphy.Msmq
 
         public ILocalSwitchboard Switchboard { get; set; }
         
-        public MsmqBaseOperator(string machineName, string queueName, string[] targetTypeNames, MessageSource messageSource) :
+        public MsmqBaseOperator(ILocalSwitchboard switchboard, string machineName, string queueName, Type[] targetTypes, MessageSource messageSource) :
             this(machineName, queueName, QueueAccessMode.Receive, messageSource)
         {
+            this.Switchboard = switchboard;
+            this.Switchboard.Operator = this;
             this.recieveMessagesOnly = true;
-            ((XmlMessageFormatter)queue.Formatter).TargetTypeNames = targetTypeNames;
+            queue.Formatter = new XmlMessageFormatter(targetTypes);
         }
 
         public MsmqBaseOperator(string machineName, string queueName, MessageSource messageSource) :
@@ -178,8 +182,19 @@ namespace Telegraphy.Msmq
             try
             {
                 System.Messaging.Message systemMessage = this.queue.Receive(new TimeSpan(0, 0, 1), MessageQueueTransactionType.Single);
+                systemMessage.Formatter = queue.Formatter;
                 object msg = systemMessage.Body;
-                return (IActorMessage)msg;
+                switch(messageSource)
+                {
+                    case MessageSource.ByteArrayMessage:
+                        return (msg as byte[]).ToActorMessage();
+                    case MessageSource.EntireIActor:
+                        return (msg as IActorMessage);
+                    case MessageSource.StringMessage:
+                        return (msg as string).ToActorMessage();
+                }
+
+                throw new NotImplementedException(messageSource.ToString() + " is not implementd");
             }
             catch (System.Messaging.MessageQueueException)
             {
