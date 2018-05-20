@@ -14,3 +14,7 @@ pushd .
 cd Telegraphy.Azure.Storage
 call build.bat
 popd
+pushd .
+cd Telegraphy.Msmq
+call build.bat
+popd
