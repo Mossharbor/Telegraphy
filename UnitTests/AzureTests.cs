@@ -876,7 +876,7 @@ namespace UnitTests.Azure
                 PingPong.Ping aMsg = new PingPong.Ping(message);
 
                 long localOperatorID = Telegraph.Instance.Register(new LocalOperator(LocalConcurrencyType.DedicatedThreadCount, 2));
-                long azureOperatorId = Telegraph.Instance.Register(new ServiceBusTopicActorMessageDeliveryOperator(ServiceBusConnectionString, TopicName, true));
+                long azureOperatorId = Telegraph.Instance.Register(new ServiceBusTopicDeliveryOperator<IActorMessage>(ServiceBusConnectionString, TopicName, true));
                 Telegraph.Instance.Register<PingPong.Ping>(azureOperatorId);
                 MessageSerializationActor serializer = new MessageSerializationActor();
                 Telegraph.Instance.Register<SerializeMessage, MessageSerializationActor>(localOperatorID, () => serializer);
@@ -919,7 +919,7 @@ namespace UnitTests.Azure
                 Topic.SendAsync(new Message(msgBytes));
 
                 long azureOperatorID = Telegraph.Instance.Register(
-                    new ServiceBusTopicActorMessageReceptionOperator(LocalConcurrencyType.DedicatedThreadCount, ServiceBusConnectionString, TopicName, subscription, false, 2),
+                    new ServiceBusTopicReceptionOperator<IActorMessage>(LocalConcurrencyType.DedicatedThreadCount, ServiceBusConnectionString, TopicName, subscription, false, 2),
                     (PingPong.Ping foo) => { Assert.IsTrue(message.Equals((string)foo.Message, StringComparison.InvariantCulture)); });
             }
             finally
@@ -970,7 +970,7 @@ namespace UnitTests.Azure
                 string message = "HelloWorld";
 
                 long localOperatorID = Telegraph.Instance.Register(new LocalOperator(LocalConcurrencyType.DedicatedThreadCount, 2));
-                long azureOperatorId = Telegraph.Instance.Register(new ServiceBusTopicStringDeliveryOperator(ServiceBusConnectionString, TopicName, true));
+                long azureOperatorId = Telegraph.Instance.Register(new ServiceBusTopicDeliveryOperator<string>(ServiceBusConnectionString, TopicName, true));
                 Telegraph.Instance.Register<string>(azureOperatorId);
                 MessageSerializationActor serializer = new MessageSerializationActor();
                 Telegraph.Instance.Register<SerializeMessage, MessageSerializationActor>(localOperatorID, () => serializer);
@@ -1004,7 +1004,7 @@ namespace UnitTests.Azure
                 Topic.SendAsync(new Message(msgBytes));
 
                 long azureOperatorID = Telegraph.Instance.Register(
-                    new ServiceBusTopicStringReceptionOperator(LocalConcurrencyType.DedicatedThreadCount, ServiceBusConnectionString, TopicName, subscription, false, 2),
+                    new ServiceBusTopicReceptionOperator<string>(LocalConcurrencyType.DedicatedThreadCount, ServiceBusConnectionString, TopicName, subscription, false, 2),
                     (string foo) => { Assert.IsTrue(message.Equals(foo, StringComparison.InvariantCulture)); });
             }
             finally
@@ -1054,7 +1054,7 @@ namespace UnitTests.Azure
                 Topic.SendAsync(new Message(msgBytes));
 
                 long azureOperatorID = Telegraph.Instance.Register(
-                    new ServiceBusTopicByteArrayReceptionOperator(LocalConcurrencyType.DedicatedThreadCount, ServiceBusConnectionString, TopicName, subscription, false, 2),
+                    new ServiceBusTopicReceptionOperator<byte[]>(LocalConcurrencyType.DedicatedThreadCount, ServiceBusConnectionString, TopicName, subscription, false, 2),
                     (ValueTypeMessage<byte> foo) => { Assert.IsTrue(message.Equals(Encoding.UTF8.GetString((byte[])foo.Message), StringComparison.InvariantCulture)); });
             }
             finally

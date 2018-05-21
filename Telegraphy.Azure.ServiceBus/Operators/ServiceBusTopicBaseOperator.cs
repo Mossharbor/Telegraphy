@@ -15,7 +15,7 @@ namespace Telegraphy.Azure
     using Telegraphy.Net;
     using Telegraphy.Net.Exceptions;
 
-    public class ServiceBusTopicBaseOperator : IOperator
+    public class ServiceBusTopicBaseOperator<MsgType> : IOperator where MsgType : class
     {
         private ConcurrentDictionary<Type, Action<Exception>> _exceptionTypeToHandler = new ConcurrentDictionary<Type, Action<Exception>>();
         private int maxDequeueCount = 1;
@@ -23,18 +23,15 @@ namespace Telegraphy.Azure
         private ServiceBusTopicReciever ServiceBusMsgReciever = null;
         ControlMessages.HangUp hangUp = null;
         ConcurrentQueue<IActorMessage> msgQueue = new ConcurrentQueue<IActorMessage>();
-        MessageSource messageSource = Telegraphy.Net.MessageSource.EntireIActor;
 
         internal ServiceBusTopicBaseOperator(ServiceBusTopicDeliverer serviceBusMsgSender, MessageSource messageSource = Telegraphy.Net.MessageSource.EntireIActor)
         {
-            this.messageSource = messageSource;
             this.ServiceBusMsgSender = serviceBusMsgSender;
             this.ID = 0;
         }
 
         internal ServiceBusTopicBaseOperator(ILocalSwitchboard switchboard, ServiceBusTopicReciever serviceBusMsgReciever, int maxDequeueCount, MessageSource messageSource = Telegraphy.Net.MessageSource.EntireIActor)
         {
-            this.messageSource = messageSource;
             this.maxDequeueCount = maxDequeueCount;
             this.Switchboard = switchboard;
             this.ServiceBusMsgReciever = serviceBusMsgReciever;
@@ -60,20 +57,19 @@ namespace Telegraphy.Azure
             }
 
             IActorMessage msg = null;
-            switch (this.messageSource)
+            if (typeof(MsgType) == typeof(string))
             {
-                case Telegraphy.Net.MessageSource.EntireIActor:
-                    {
-                        byte[] msgBytes = sbMessage.Body;
-                        var t = Telegraph.Instance.Ask(new DeSerializeMessage(msgBytes));
-                        msg = t.Result as IActorMessage;
-                    }
-                    break;
-
-                case Telegraphy.Net.MessageSource.ByteArrayMessage:
-                    msg = sbMessage.Body.ToActorMessage(); break;
-                case Telegraphy.Net.MessageSource.StringMessage:
-                    msg = Encoding.UTF8.GetString(sbMessage.Body).ToActorMessage(); break;
+                msg = Encoding.UTF8.GetString(sbMessage.Body).ToActorMessage();
+            }
+            else if (typeof(MsgType) == typeof(byte[]))
+            {
+                msg = sbMessage.Body.ToActorMessage();
+            }
+            else
+            {
+                byte[] msgBytes = sbMessage.Body;
+                var t = Telegraph.Instance.Ask(new DeSerializeMessage(msgBytes));
+                msg = t.Result as IActorMessage;
             }
 
             msgQueue.Enqueue(msg);
@@ -137,29 +133,16 @@ namespace Telegraphy.Azure
             }
 
             System.Diagnostics.Debug.Assert(null != ServiceBusMsgSender);
-            Message message = SerializeAndSend(msg, this.ServiceBusMsgSender, this.messageSource);
+            Message message = SerializeAndSend(msg, this.ServiceBusMsgSender);
 
             if (null != msg.Status)
                 msg.Status?.SetResult(new ServiceBusMessage(message));
         }
 
-        internal static Message SerializeAndSend<T>(T msg, ServiceBusTopicDeliverer queue, MessageSource messageSource) where T : class, IActorMessage
+        internal static Message SerializeAndSend(IActorMessage msg, ServiceBusTopicDeliverer queue)
         {
             Message message = null;
-
-            switch(messageSource)
-            {
-                case MessageSource.ByteArrayMessage:
-                    ServiceBusQueueBaseOperator<byte[]>.BuildMessage(msg);
-                    break;
-                case MessageSource.StringMessage:
-                    ServiceBusQueueBaseOperator<string>.BuildMessage(msg);
-                    break;
-                case MessageSource.EntireIActor:
-                    ServiceBusQueueBaseOperator<IActorMessage>.BuildMessage(msg);
-                    break;
-            }
-
+            ServiceBusQueueBaseOperator<MsgType>.BuildMessage(msg);
             queue.SendAsync(message).Wait();
             return message;
         }

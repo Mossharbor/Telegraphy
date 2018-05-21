@@ -13,12 +13,12 @@ namespace Telegraphy.Azure
 
         public SendMessageToServiceBusTopic(string storageConnectionString, string topicName, bool createQueueIfItDoesNotExist = true)
         {
-            queue = ServiceBusTopicActorMessageDeliveryOperator.GetSender(storageConnectionString, topicName, createQueueIfItDoesNotExist);
+            queue = ServiceBusTopicDeliveryOperator<IActorMessage>.GetSender(storageConnectionString, topicName, createQueueIfItDoesNotExist);
         }
 
         bool IActor.OnMessageRecieved<T>(T msg)
         {
-            ServiceBusTopicBaseOperator.SerializeAndSend(msg, queue, Telegraphy.Net.MessageSource.EntireIActor);
+            ServiceBusTopicBaseOperator<IActorMessage>.SerializeAndSend(msg, queue);
             return true;
         }
     }

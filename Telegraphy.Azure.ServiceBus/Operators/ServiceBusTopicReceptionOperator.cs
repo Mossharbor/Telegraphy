@@ -5,7 +5,7 @@ using Telegraphy.Net;
 
 namespace Telegraphy.Azure
 {
-    public class ServiceBusTopicReceptionOperator : ServiceBusTopicBaseOperator
+    public class ServiceBusTopicReceptionOperator<T> : ServiceBusTopicBaseOperator<T> where T:class
     {
         internal const int DefaultDequeueMaxCount = 3;
         internal const int DefaultPrefetchCount = 0;
@@ -17,13 +17,18 @@ namespace Telegraphy.Azure
         }
 
         public ServiceBusTopicReceptionOperator(LocalConcurrencyType concurrencyType, string connectionString, string topicName, string subscriptionName, bool createTopicAndSubscriptionIfTheyDoNotExist, int maxDequeueCount = DefaultDequeueMaxCount, int prefetchCount = DefaultPrefetchCount, uint concurrency = DefaultConcurrency, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
-               : base(new LocalSwitchboard(concurrencyType, concurrency), ServiceBusTopicActorMessageReceptionOperator.GetSender(connectionString, topicName, subscriptionName, createTopicAndSubscriptionIfTheyDoNotExist, prefetchCount, policy), maxDequeueCount, Telegraphy.Net.MessageSource.StringMessage)
+               : base(new LocalSwitchboard(concurrencyType, concurrency), GetSender(connectionString, topicName, subscriptionName, createTopicAndSubscriptionIfTheyDoNotExist, prefetchCount, policy), maxDequeueCount, Telegraphy.Net.MessageSource.StringMessage)
         {
         }
 
         public ServiceBusTopicReceptionOperator(ILocalSwitchboard switchBoard, string connectionString, string topicName, string subscriptionName, bool createTopicAndSubscriptionIfTheyDoNotExist, int maxDequeueCount = DefaultDequeueMaxCount, int prefetchCount = DefaultPrefetchCount, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
-               : base(switchBoard, ServiceBusTopicActorMessageReceptionOperator.GetSender(connectionString, topicName, subscriptionName, createTopicAndSubscriptionIfTheyDoNotExist, prefetchCount, policy), maxDequeueCount, Telegraphy.Net.MessageSource.StringMessage)
+               : base(switchBoard, GetSender(connectionString, topicName, subscriptionName, createTopicAndSubscriptionIfTheyDoNotExist, prefetchCount, policy), maxDequeueCount, Telegraphy.Net.MessageSource.StringMessage)
         {
+        }
+
+        internal static ServiceBusTopicReciever GetSender(string connectionString, string topicName, string subscriptionName, bool createTopicAndSubscriptionIfTheyDoNotExist, int prefetchCount = DefaultPrefetchCount, Microsoft.Azure.ServiceBus.RetryPolicy retryPolicy = null, Microsoft.Azure.ServiceBus.ReceiveMode receiveMode = Microsoft.Azure.ServiceBus.ReceiveMode.PeekLock)
+        {
+            return new ServiceBusTopicReciever(connectionString, topicName, subscriptionName, createTopicAndSubscriptionIfTheyDoNotExist, receiveMode, retryPolicy, prefetchCount);
         }
     }
 }
