@@ -13,7 +13,7 @@ namespace Telegraphy.Azure
 
         public SendMessageToServiceBusQueue(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true)
         {
-            queue = ServiceBusQueueActorMessageDeliveryOperator.GetQueue(storageConnectionString, queueName, createQueueIfItDoesNotExist);
+            queue = ServiceBusQueueDeliveryOperator<IActorMessage>.GetQueue(storageConnectionString, queueName, createQueueIfItDoesNotExist);
         }
 
         bool IActor.OnMessageRecieved<T>(T msg)
