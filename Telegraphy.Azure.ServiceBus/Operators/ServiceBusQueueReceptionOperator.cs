@@ -29,7 +29,7 @@ namespace Telegraphy.Azure
         }
 
         private ServiceBusQueueReceptionOperator(ILocalSwitchboard switchBoard, ServiceBusQueue queue, int maxDequeueCount)
-            : base(switchBoard, queue, maxDequeueCount, Telegraphy.Net.MessageSource.StringMessage)
+            : base(switchBoard, queue, maxDequeueCount)
         {
         }
     }

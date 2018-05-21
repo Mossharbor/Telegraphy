@@ -23,8 +23,8 @@ namespace Telegraphy.Azure
         private int maxDequeueCount;
         private int maxConcurrentCalls = 1;
 
-        internal ServiceBusQueueBaseOperator(ILocalSwitchboard switchBoard, ServiceBusQueue queue, int maxDequeueCount, MessageSource messageSource = Telegraphy.Net.MessageSource.EntireIActor)
-            : this(queue, true, messageSource)
+        internal ServiceBusQueueBaseOperator(ILocalSwitchboard switchBoard, ServiceBusQueue queue, int maxDequeueCount)
+            : this(queue, true)
         {
             this.Switchboard = switchBoard;
             this.Switchboard.Operator = this;
@@ -32,12 +32,12 @@ namespace Telegraphy.Azure
         }
 
         internal ServiceBusQueueBaseOperator(ServiceBusQueue queue, MessageSource messageSource = Telegraphy.Net.MessageSource.EntireIActor) 
-            :this(queue, false, messageSource)
+            :this(queue, false)
         {
 
         }
 
-        private ServiceBusQueueBaseOperator(ServiceBusQueue queue, bool recievingOnly, MessageSource messageSource = Telegraphy.Net.MessageSource.EntireIActor)
+        private ServiceBusQueueBaseOperator(ServiceBusQueue queue, bool recievingOnly)
         {
             this.queue = queue;
             this.recievingOnly = recievingOnly;
