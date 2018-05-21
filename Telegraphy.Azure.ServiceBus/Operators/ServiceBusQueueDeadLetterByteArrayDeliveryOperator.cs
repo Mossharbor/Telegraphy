@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Telegraphy.Azure
 {
-    public class ServiceBusQueueDeadLetterByteArrayDeliveryOperator : ServiceBusQueueBaseOperator
+    public class ServiceBusQueueDeadLetterByteArrayDeliveryOperator : ServiceBusQueueBaseOperator<byte[]>
     {
         public ServiceBusQueueDeadLetterByteArrayDeliveryOperator(string connectionString, string queueName)
             : base(ServiceBusQueueDeadLetterActorMessageDeliveryOperator.GetQueue(connectionString, queueName), Telegraphy.Net.MessageSource.ByteArrayMessage)

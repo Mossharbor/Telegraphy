@@ -145,7 +145,20 @@ namespace Telegraphy.Azure
 
         internal static Message SerializeAndSend<T>(T msg, ServiceBusTopicDeliverer queue, MessageSource messageSource) where T : class, IActorMessage
         {
-            Message message = ServiceBusQueueBaseOperator.BuildMessage(msg, messageSource);
+            Message message = null;
+
+            switch(messageSource)
+            {
+                case MessageSource.ByteArrayMessage:
+                    ServiceBusQueueBaseOperator<byte[]>.BuildMessage(msg);
+                    break;
+                case MessageSource.StringMessage:
+                    ServiceBusQueueBaseOperator<string>.BuildMessage(msg);
+                    break;
+                case MessageSource.EntireIActor:
+                    ServiceBusQueueBaseOperator<IActorMessage>.BuildMessage(msg);
+                    break;
+            }
 
             queue.SendAsync(message).Wait();
             return message;

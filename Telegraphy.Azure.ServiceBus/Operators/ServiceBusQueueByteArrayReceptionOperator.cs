@@ -8,7 +8,7 @@ using Telegraphy.Net;
 
 namespace Telegraphy.Azure
 {
-    public class ServiceBusQueueByteArrayReceptionOperator : ServiceBusQueueBaseOperator
+    public class ServiceBusQueueByteArrayReceptionOperator : ServiceBusQueueBaseOperator<byte[]>
     {
         const int DefaultDequeueMaxCount = ServiceBusTopicActorMessageReceptionOperator.DefaultDequeueMaxCount;
         const int DefaultConcurrency = ServiceBusTopicActorMessageReceptionOperator.DefaultConcurrency;

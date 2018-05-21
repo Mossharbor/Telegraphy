@@ -10,7 +10,7 @@ namespace Telegraphy.Azure
 {
     using Mossharbor.AzureWorkArounds.ServiceBus;
 
-    public class ServiceBusQueueActorMessageReceptionOperator : ServiceBusQueueBaseOperator
+    public class ServiceBusQueueActorMessageReceptionOperator : ServiceBusQueueBaseOperator<IActorMessage>
     {
         const int DefaultDequeueMaxCount = ServiceBusTopicActorMessageReceptionOperator.DefaultDequeueMaxCount;
         const int DefaultConcurrency = ServiceBusTopicActorMessageReceptionOperator.DefaultConcurrency;

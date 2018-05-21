@@ -9,7 +9,7 @@ namespace Telegraphy.Azure
     using Microsoft.Azure.ServiceBus;
     using Telegraphy.Net;
 
-    public class ServiceBusQueueStringReceptionOperator : ServiceBusQueueBaseOperator
+    public class ServiceBusQueueStringReceptionOperator : ServiceBusQueueBaseOperator<string>
     {
         const int DefaultDequeueMaxCount = ServiceBusTopicActorMessageReceptionOperator.DefaultDequeueMaxCount;
         const int DefaultConcurrency = ServiceBusTopicActorMessageReceptionOperator.DefaultConcurrency;

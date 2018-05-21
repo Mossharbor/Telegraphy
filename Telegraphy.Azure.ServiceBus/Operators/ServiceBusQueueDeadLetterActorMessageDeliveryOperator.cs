@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Telegraphy.Net;
 
 namespace Telegraphy.Azure
 {
-    public class ServiceBusQueueDeadLetterActorMessageDeliveryOperator : ServiceBusQueueBaseOperator
+    public class ServiceBusQueueDeadLetterActorMessageDeliveryOperator : ServiceBusQueueBaseOperator<IActorMessage>
     {
         public ServiceBusQueueDeadLetterActorMessageDeliveryOperator(string connectionString, string queueName)
             : base(GetQueue(connectionString, queueName), Telegraphy.Net.MessageSource.EntireIActor)

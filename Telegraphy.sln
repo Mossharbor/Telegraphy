@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StartHere", "DistributedExa
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{541A6CCA-18E5-4FD2-AEE7-B6E33EEB3359}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DurableSender", "DistributedExamples-Msmq\DurableSender\DurableSender.csproj", "{7663E06A-EE80-4D5A-9E2C-030D254A18CF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,6 +103,10 @@ Global
 		{43B5863F-FF6B-4A58-B5CA-4841BFCC4171}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43B5863F-FF6B-4A58-B5CA-4841BFCC4171}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43B5863F-FF6B-4A58-B5CA-4841BFCC4171}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7663E06A-EE80-4D5A-9E2C-030D254A18CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7663E06A-EE80-4D5A-9E2C-030D254A18CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7663E06A-EE80-4D5A-9E2C-030D254A18CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7663E06A-EE80-4D5A-9E2C-030D254A18CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -115,6 +121,7 @@ Global
 		{813934FE-69E0-4DF3-A0F0-38EF4B44925C} = {40414E30-AEBA-4EE8-B937-BA18A0807A4B}
 		{048EFC32-EA38-4ECA-A049-A5902878B8C9} = {40414E30-AEBA-4EE8-B937-BA18A0807A4B}
 		{43B5863F-FF6B-4A58-B5CA-4841BFCC4171} = {C5D8D638-AB43-4A7D-8FF6-336B5798A776}
+		{7663E06A-EE80-4D5A-9E2C-030D254A18CF} = {C5D8D638-AB43-4A7D-8FF6-336B5798A776}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {461AA1B5-3A3C-452A-8F25-18BEDAC3EA0E}
