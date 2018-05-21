@@ -27,22 +27,36 @@ namespace StartHere
             Telegraph.Instance.Register<byte[], MsmqDeliveryOperator<byte[]>>(() => new MsmqDeliveryOperator<byte[]>(queueName));
 
             // Send message to queue
-            for (int i = 0; i < 100; ++i)
+            List<Task> waitTasks = new List<Task>();
+            int i = 0;
+            for (; i < 100; ++i)
             {
                 byte[] msgBytes = Encoding.UTF8.GetBytes(message);
-                Telegraph.Instance.Ask(msgBytes).Wait();
+                waitTasks.Add(Telegraph.Instance.Ask(msgBytes));
             }
 
+            Console.WriteLine("Messages sent");
+            Task.WaitAll(waitTasks.ToArray());
             Telegraph.Instance.UnRegisterAll();
 
-            long azureOperatorID = Telegraph.Instance.Register(new MsmqReceptionOperator<byte[]>(queueName));
-            Telegraph.Instance.Register<byte[]>(azureOperatorID, bytemsg =>
+            int count = 0;
+            long msmqOperatorID = Telegraph.Instance.Register(new MsmqReceptionOperator<byte[]>(queueName));
+            Telegraph.Instance.Register<byte[]>(msmqOperatorID, bytemsg =>
             {
                 string stringmsg = Encoding.UTF8.GetString(bytemsg);
                 System.Threading.Thread.Sleep(100);
+                System.Threading.Interlocked.Increment(ref count); 
                 Console.WriteLine(stringmsg);
             });
 
+            int attempts = 20;
+            while (attempts != 0 && count < i)
+            {
+                System.Threading.Thread.Sleep(1000);
+                --attempts;
+            }
+
+            Console.WriteLine("Recieved:" + count + " Sent:" + MsmqReceptionOperator<byte[]>.TotalSendsCalled);
             Console.ReadLine();
         }
     }

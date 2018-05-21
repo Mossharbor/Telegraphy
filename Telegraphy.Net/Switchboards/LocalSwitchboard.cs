@@ -18,7 +18,7 @@ namespace Telegraphy.Net
         private ConcurrentDictionary<Type, IActor> _messageTypeToActor = new ConcurrentDictionary<Type, IActor>();
         private List<Thread> _concurrentThreadList = new List<Thread>();
         private Semaphore _concurrentThreadLock = null;
-        protected Semaphore _actorRegistered = new Semaphore(0, int.MaxValue);
+        protected AutoResetEvent _actorRegistered = new AutoResetEvent(false);
         protected long tellingCount = 0;
         protected long threadExitFlag = 0;
         protected long exitedFlag = 0;
@@ -71,7 +71,7 @@ namespace Telegraphy.Net
                 throw new FailedToRegisterActionForTypeException(handlesType.ToString());
 
             uint iterationCount = (isManyThreads) ? this.Concurrency : 1;
-            try { _actorRegistered.Release((int)iterationCount); }
+            try { _actorRegistered.Set(); }
             catch (SemaphoreFullException) { }
         }
 
@@ -109,7 +109,7 @@ namespace Telegraphy.Net
             if (!_messageTypeToActor.TryAdd(handlesType, actor))
                 throw new FailedToRegisterActorForTypeException(handlesType.ToString());
 
-            try { _actorRegistered.Release(); }
+            try { _actorRegistered.Set(); }
             catch (SemaphoreFullException) { }
         }
         #endregion
@@ -134,7 +134,7 @@ namespace Telegraphy.Net
             {
                 if (0 == Interlocked.Read(ref tellingCount))
                 {
-                    this.Disable();
+                    //this.Disable();
                     myOperator = value;
 
                     SpawnThreads();
@@ -160,7 +160,7 @@ namespace Telegraphy.Net
             {
                 try
                 {
-                    _actorRegistered.Release((int)this.Concurrency);
+                    _actorRegistered.Set();
                 }
                 catch (SemaphoreFullException) { }
 
@@ -262,8 +262,9 @@ namespace Telegraphy.Net
             IActorMessage msg = null;
 
             _actorRegistered.WaitOne();
+            _actorRegistered.Set();
 
-            for(;;)
+            for (;;)
             {
                 msg = GetNextMessage();
 

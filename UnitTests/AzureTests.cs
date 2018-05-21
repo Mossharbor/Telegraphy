@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UnitTests
+namespace UnitTests.Azure
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Telegraphy.Net;
@@ -349,8 +349,7 @@ namespace UnitTests
                 DeleteEventHub(eventHubName);
             }
         }
-
-
+        
         [TestMethod]
         public void SendBytesToEventHub()
         {

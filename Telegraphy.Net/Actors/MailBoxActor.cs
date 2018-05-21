@@ -18,7 +18,7 @@ namespace Telegraphy.Net
             this.wrappedActor = actorToWrap;
             this.MessageQueue = new ConcurrentQueue<IActorMessage>();
             SpawnThreads();
-            _actorRegistered.Release();
+            _actorRegistered.Set();
         }
 
         public IActor OriginalActor { get { return wrappedActor; } }

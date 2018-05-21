@@ -56,6 +56,7 @@
     <ProjectReference Include="..\Telegraphy.Azure.EventHub\Telegraphy.Azure.EventHub.csproj" />
     <ProjectReference Include="..\Telegraphy.Azure.ServiceBus\Telegraphy.Azure.ServiceBus.csproj" />
     <ProjectReference Include="..\Telegraphy.Azure.Storage\Telegraphy.Azure.Storage.csproj" />
+    <ProjectReference Include="..\Telegraphy.Msmq\Telegraphy.Msmq.csproj" />
     <ProjectReference Include="..\Telegraphy.Net\Telegraphy.Net.csproj" />
   </ItemGroup>
   <ItemGroup>
@@ -86,8 +87,10 @@
     <PackageReference Include="MSTest.TestAdapter" Version="1.1.11" />
     <PackageReference Include="MSTest.TestFramework" Version="1.1.11" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Messaging" />
   </ItemGroup>
 </Project>

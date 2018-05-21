@@ -18,6 +18,7 @@ namespace Telegraphy.Msmq
 
     public class MsmqBaseOperator<MsgType> : IOperator where MsgType : class
     {
+        public static ulong TotalSendsCalled = 0;
         protected const uint DefaultConncurrency = 3;
         protected const LocalConcurrencyType DefaultType = LocalConcurrencyType.DedicatedThreadCount;
         MessageQueue queue = null;
@@ -45,14 +46,14 @@ namespace Telegraphy.Msmq
         }
 
         public ILocalSwitchboard Switchboard { get; set; }
-        
+        public MessageQueue Queue { get { return queue; }  set { queue = value; } }
+
         internal MsmqBaseOperator(ILocalSwitchboard switchboard, string machineName, string queueName) :
             this(machineName, queueName, QueueAccessMode.Receive)
         {
             this.Switchboard = switchboard;
             this.Switchboard.Operator = this;
             this.recieveMessagesOnly = true;
-            queue.Formatter = new XmlMessageFormatter(new Type[] { typeof(MsgType) });
         }
 
         internal MsmqBaseOperator(string machineName, string queueName) :
@@ -69,7 +70,10 @@ namespace Telegraphy.Msmq
                "Messages in Queue",
                msmqName,
                machineName);
-            this.queue = new MessageQueue(msmqName, accessMode);
+            this.Queue = new MessageQueue(msmqName, accessMode);
+            Queue.Formatter = new XmlMessageFormatter(new Type[] { typeof(MsgType) });
+            if (!MessageQueue.Exists(this.Queue.Path))
+                MessageQueue.Create(this.Queue.Path);
 
         }
         
@@ -84,15 +88,16 @@ namespace Telegraphy.Msmq
         
         private void SerializeAndSend(IActorMessage msg, MessageQueue msmqQueue, MsgType message)
         {
+            ++TotalSendsCalled;
             var msmqMessage = new System.Messaging.Message(message);
-            if (Transaction.Current == null)
-            {
-                msmqQueue.Send(msmqMessage, MessageQueueTransactionType.Single);
-            }
-            else
-            {
+            //if (Transaction.Current == null)
+            //{
+            //    msmqQueue.Send(msmqMessage, MessageQueueTransactionType.Single);
+            //}
+            //else
+            //{
                 msmqQueue.Send(msmqMessage, MessageQueueTransactionType.Automatic);
-            }
+            //}
         }
 
         #region IOperator
@@ -118,10 +123,11 @@ namespace Telegraphy.Msmq
             // Serialize the message first
             try
             {
-                SerializeAndSend(msg, queue, (MsgType)(msg as IActorMessage).Message);
+                SerializeAndSend(msg, Queue, (MsgType)(msg as IActorMessage).Message);
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine(ex.GetType()+":"+ex.Message + ex.StackTrace);
                 Exception foundEx = null;
                 var handler = this.FindExceptionHandler(_exceptionTypeToHandler, ex, out foundEx);
 
@@ -134,8 +140,8 @@ namespace Telegraphy.Msmq
         {
             try
             {
-                System.Messaging.Message systemMessage = this.queue.Receive(new TimeSpan(0, 0, 1), MessageQueueTransactionType.Single);
-                systemMessage.Formatter = queue.Formatter;
+                System.Messaging.Message systemMessage = this.Queue.Receive(new TimeSpan(0, 0, 1), MessageQueueTransactionType.Single);
+                systemMessage.Formatter = Queue.Formatter;
                 object msg = systemMessage.Body;
                 if (!(msg is IActorMessage))
                     return new SimpleMessage<MsgType>(msg as MsgType);
@@ -150,7 +156,7 @@ namespace Telegraphy.Msmq
         public bool IsAlive()
         {
             // check and see if the azure queue exists.
-            if (!MessageQueue.Exists(queue.Path))
+            if (!MessageQueue.Exists(Queue.Path))
                 return false;
             return this.Switchboard.IsDisabled();
         }
