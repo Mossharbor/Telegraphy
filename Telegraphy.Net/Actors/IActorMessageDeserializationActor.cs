@@ -11,7 +11,7 @@ namespace Telegraphy.Net
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;
 
-    public class MessageDeserializationActor : IActor
+    public class IActorMessageDeserializationActor : IActor
     {
         ConcurrentDictionary<Type, ActorMessageInvocationBase> _msgTypeToInstatiation = new ConcurrentDictionary<Type, ActorMessageInvocationBase>();
 
@@ -30,7 +30,7 @@ namespace Telegraphy.Net
             if (null == msg.Message)
                 throw new NullReferenceException("Could not deserialize " + msg.GetType() + " because the message was null.");
 
-            if (msg.GetType() != typeof(DeSerializeMessage))
+            if (msg.GetType() != typeof(DeSerializeIActorMessage))
                 throw new CantDeserlializeAnythingButADeSerializeMessageException();
 
             if (!(msg.Message is byte[]))
@@ -41,7 +41,7 @@ namespace Telegraphy.Net
 
             //TODO: check the version with enum
 
-            uint minSize = MessageSerializationActor.MinSizeOfSerializedMessage;
+            uint minSize = IActorMessageSerializationActor.MinSizeOfSerializedMessage;
 
             if (toDeSerialize.Length < minSize)
                 throw new CantDeserlializeMessageBytesSmallerThanMinSizeException();
@@ -96,14 +96,14 @@ namespace Telegraphy.Net
             Type messageType = ParseOutHeader(msg, messageIDBytes, formatter, out msgByteArray, out resultByteArray, out sizeOfMessage, out sizeOfResult);
 
             IActorMessage resultMsg = null;
-            if (msg is AnonAskMessage<DeSerializeMessage>)
+            if (msg is AnonAskMessage<DeSerializeIActorMessage>)
             {
-                (msg as AnonAskMessage<DeSerializeMessage>).OriginalMessage.Type = messageType;
-                resultMsg = (msg as AnonAskMessage<DeSerializeMessage>).OriginalMessage;
+                (msg as AnonAskMessage<DeSerializeIActorMessage>).OriginalMessage.Type = messageType;
+                resultMsg = (msg as AnonAskMessage<DeSerializeIActorMessage>).OriginalMessage;
             }
             else
             {
-                (msg as DeSerializeMessage).Type = messageType;
+                (msg as DeSerializeIActorMessage).Type = messageType;
                 resultMsg = msg;
             }
 

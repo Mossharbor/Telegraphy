@@ -45,7 +45,7 @@ namespace Telegraphy.Azure
             }
             else
             {
-                var serializeTask = Telegraph.Instance.Ask(new SerializeMessage(msg));
+                var serializeTask = Telegraph.Instance.Ask(new SerializeIActorMessage(msg));
                 msgBytes = (serializeTask.Result.ProcessingResult as byte[]);
             }
 

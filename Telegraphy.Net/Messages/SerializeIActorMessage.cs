@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace Telegraphy.Net
 {
-    public class SerializeMessage : IActorMessage, IActorMessageIdentifier
+    public class SerializeIActorMessage : IActorMessage, IActorMessageIdentifier
     {
         Type thisType = null;
         IActorMessage wrappedMsg;
-        public SerializeMessage(IActorMessage wrappedMsg) :this(wrappedMsg,null)
+        public SerializeIActorMessage(IActorMessage wrappedMsg) :this(wrappedMsg,null)
         {
         }
 
-        internal SerializeMessage(IActorMessage wrappedMsg, object result)
+        internal SerializeIActorMessage(IActorMessage wrappedMsg, object result)
         {
             this.wrappedMsg = wrappedMsg;
             //this.thisType = wrappedMsg.GetType();

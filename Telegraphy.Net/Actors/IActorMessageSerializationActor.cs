@@ -10,7 +10,7 @@ namespace Telegraphy.Net
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;
 
-    public class MessageSerializationActor : IActor
+    public class IActorMessageSerializationActor : IActor
     {
         internal static readonly uint MinSizeOfSerializedMessage = 2+16+4+4+4+4;//minimum size without message or result
 
@@ -20,17 +20,17 @@ namespace Telegraphy.Net
                 throw new NullReferenceException("Could not serialize " + msg.GetType() + " because the message was null.");
 
             IActorMessage toSerialize = null;
-            if (msg is AnonAskMessage<SerializeMessage>)
+            if (msg is AnonAskMessage<SerializeIActorMessage>)
             {
-                toSerialize = (msg as AnonAskMessage<SerializeMessage>).OriginalMessage.MessageToSerialize;
+                toSerialize = (msg as AnonAskMessage<SerializeIActorMessage>).OriginalMessage.MessageToSerialize;
             }
-            else if (msg is SerializeMessage)
+            else if (msg is SerializeIActorMessage)
             {
-                toSerialize = (msg as SerializeMessage).MessageToSerialize;
+                toSerialize = (msg as SerializeIActorMessage).MessageToSerialize;
             }
             else
             {
-                toSerialize = new SerializeMessage(msg).MessageToSerialize;
+                toSerialize = new SerializeIActorMessage(msg).MessageToSerialize;
             }
 
 
@@ -91,7 +91,7 @@ namespace Telegraphy.Net
             // <bytes.of.result-bytearray>
             // <status.flags-uint>
 
-            uint serializedByteCount = MessageSerializationActor.MinSizeOfSerializedMessage; 
+            uint serializedByteCount = IActorMessageSerializationActor.MinSizeOfSerializedMessage; 
 
             var messageID = Guid.NewGuid().ToByteArray();
 
@@ -110,9 +110,9 @@ namespace Telegraphy.Net
 
             if (null != msg.Status)
             {
-                if (!(msg.GetType() == typeof(SerializeMessage)))
+                if (!(msg.GetType() == typeof(SerializeIActorMessage)))
                 {
-                    msg.Status.SetResult(new SerializeMessage(toSerialize, serializedMsg));
+                    msg.Status.SetResult(new SerializeIActorMessage(toSerialize, serializedMsg));
                 }
                 else
                 {
@@ -137,7 +137,7 @@ namespace Telegraphy.Net
             var sizeOfResult= resultInBytes.Length;
             var sizeOfMessage = messageInBytes.Length;
             var sizeOfType = typeBytes.Length;
-            uint serializedByteCount = MessageSerializationActor.MinSizeOfSerializedMessage;
+            uint serializedByteCount = IActorMessageSerializationActor.MinSizeOfSerializedMessage;
             serializedByteCount += (uint)(sizeOfResult + sizeOfMessage + sizeOfType);
 
             byte[] serializedMsg = new byte[serializedByteCount];

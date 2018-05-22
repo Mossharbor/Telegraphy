@@ -79,7 +79,7 @@ namespace Telegraphy.Azure
             else
             {
                 byte[] msgBytes = sbMessage.Body;
-                var t = Telegraph.Instance.Ask(new DeSerializeMessage(msgBytes));
+                var t = Telegraph.Instance.Ask(new DeSerializeIActorMessage(msgBytes));
                 msg = t.Result as IActorMessage;
             }
             
@@ -175,7 +175,7 @@ namespace Telegraphy.Azure
             }
             else if (msg is IActorMessage)
             {
-                var serializeTask = Telegraph.Instance.Ask(new SerializeMessage(msg as IActorMessage));
+                var serializeTask = Telegraph.Instance.Ask(new SerializeIActorMessage(msg as IActorMessage));
                 msgBytes = (serializeTask.Result.ProcessingResult as byte[]);
 
             }

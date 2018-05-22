@@ -190,7 +190,7 @@ namespace Telegraphy.Azure
         {
             if (null == msgBytes)
             {
-                var serializeTask = Telegraph.Instance.Ask(new SerializeMessage(msg)); //TODO timeout the wait here!!
+                var serializeTask = Telegraph.Instance.Ask(new SerializeIActorMessage(msg)); //TODO timeout the wait here!!
                 msgBytes = (serializeTask.Result.ProcessingResult as byte[]);
             }
 
@@ -248,7 +248,7 @@ namespace Telegraphy.Azure
                 else
                 {
                     byte[] msgBytes = next.AsBytes;
-                    var t = Telegraph.Instance.Ask(new DeSerializeMessage(msgBytes));
+                    var t = Telegraph.Instance.Ask(new DeSerializeIActorMessage(msgBytes));
                     msg = t.Result as IActorMessage;
                 }
 

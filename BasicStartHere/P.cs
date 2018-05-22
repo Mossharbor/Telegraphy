@@ -448,13 +448,13 @@ namespace BasicStartHere
             Telegraph.Instance.MainOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool)); // performs a reset.
 
             Telegraph.Instance.Register<string>(message => Console.WriteLine("BasicMessageSerializationDeserialization: "+message));
-            Telegraph.Instance.Register<SerializeMessage, MessageSerializationActor>(() => new MessageSerializationActor());
-            Telegraph.Instance.Register<DeSerializeMessage, MessageDeserializationActor>(() => new MessageDeserializationActor());
+            Telegraph.Instance.Register<SerializeIActorMessage, IActorMessageSerializationActor>(() => new IActorMessageSerializationActor());
+            Telegraph.Instance.Register<DeSerializeIActorMessage, IActorMessageDeserializationActor>(() => new IActorMessageDeserializationActor());
 
             var processingTask = Telegraph.Instance.Ask("foo");
             processingTask.Wait();
 
-            SerializeMessage serializeRqst = new SerializeMessage(processingTask.Result);
+            SerializeIActorMessage serializeRqst = new SerializeIActorMessage(processingTask.Result);
 
             var serializeTask = Telegraph.Instance.Ask(serializeRqst);
             serializeTask.Wait();
@@ -465,7 +465,7 @@ namespace BasicStartHere
 
             byte[] serializedBytes = (serializeTask.Result.ProcessingResult as byte[]);
 
-            DeSerializeMessage msgToSerialize2 = new DeSerializeMessage(serializedBytes);
+            DeSerializeIActorMessage msgToSerialize2 = new DeSerializeIActorMessage(serializedBytes);
             var task = Telegraph.Instance.Ask(msgToSerialize2);
 
             task.Wait();
@@ -481,13 +481,13 @@ namespace BasicStartHere
         {
             Telegraph.Instance.MainOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool)); // performs a reset.
 
-            MessageDeserializationActor deserialization = new MessageDeserializationActor();
-            Telegraph.Instance.Register<SerializeMessage, MessageSerializationActor>(() => new MessageSerializationActor());
-            Telegraph.Instance.Register<DeSerializeMessage, MessageDeserializationActor>(() => deserialization);
+            IActorMessageDeserializationActor deserialization = new IActorMessageDeserializationActor();
+            Telegraph.Instance.Register<SerializeIActorMessage, IActorMessageSerializationActor>(() => new IActorMessageSerializationActor());
+            Telegraph.Instance.Register<DeSerializeIActorMessage, IActorMessageDeserializationActor>(() => deserialization);
             deserialization.Register<CustomSerializableMessage>((object msg) => (CustomSerializableMessage)msg);
 
             CustomSerializableMessage originalMsg = new CustomSerializableMessage(100,"Foo");
-            SerializeMessage serializeRqst = new SerializeMessage(originalMsg);
+            SerializeIActorMessage serializeRqst = new SerializeIActorMessage(originalMsg);
 
             var serializeTask = Telegraph.Instance.Ask(serializeRqst);
             serializeTask.Wait();
@@ -498,7 +498,7 @@ namespace BasicStartHere
 
             byte[] serializedBytes = (serializeTask.Result.ProcessingResult as byte[]);
 
-            DeSerializeMessage msgToDeSerialize = new DeSerializeMessage(serializedBytes);
+            DeSerializeIActorMessage msgToDeSerialize = new DeSerializeIActorMessage(serializedBytes);
             var task = Telegraph.Instance.Ask(msgToDeSerialize);
 
             task.Wait();

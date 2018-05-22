@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace Telegraphy.Net
 {
-    public class DeSerializeMessage : IActorMessage, IActorMessageIdentifier
+    public class DeSerializeIActorMessage : IActorMessage, IActorMessageIdentifier
     {
         Type thisType = null;
         byte[] msgBytes;
 
-        public DeSerializeMessage(byte[] msgBytes)
+        public DeSerializeIActorMessage(byte[] msgBytes)
         {
             this.Message = msgBytes;
-            this.thisType = typeof(DeSerializeMessage);
+            this.thisType = typeof(DeSerializeIActorMessage);
         }
         #region IActorMessageIdentifier
         private string id = null;
