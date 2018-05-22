@@ -30,7 +30,7 @@ namespace Telegraphy.Net
             if (null == msg.Message)
                 throw new NullReferenceException("Could not deserialize " + msg.GetType() + " because the message was null.");
 
-            if (msg.GetType() != typeof(DeSerializeIActorMessage))
+            if (msg.GetType() != typeof(DeserializeIActorMessage))
                 throw new CantDeserlializeAnythingButADeSerializeMessageException();
 
             if (!(msg.Message is byte[]))
@@ -96,14 +96,14 @@ namespace Telegraphy.Net
             Type messageType = ParseOutHeader(msg, messageIDBytes, formatter, out msgByteArray, out resultByteArray, out sizeOfMessage, out sizeOfResult);
 
             IActorMessage resultMsg = null;
-            if (msg is AnonAskMessage<DeSerializeIActorMessage>)
+            if (msg is AnonAskMessage<DeserializeIActorMessage>)
             {
-                (msg as AnonAskMessage<DeSerializeIActorMessage>).OriginalMessage.Type = messageType;
-                resultMsg = (msg as AnonAskMessage<DeSerializeIActorMessage>).OriginalMessage;
+                (msg as AnonAskMessage<DeserializeIActorMessage>).OriginalMessage.Type = messageType;
+                resultMsg = (msg as AnonAskMessage<DeserializeIActorMessage>).OriginalMessage;
             }
             else
             {
-                (msg as DeSerializeIActorMessage).Type = messageType;
+                (msg as DeserializeIActorMessage).Type = messageType;
                 resultMsg = msg;
             }
 

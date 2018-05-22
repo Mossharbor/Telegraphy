@@ -196,7 +196,7 @@ namespace UnitTests.Azure
                 deserializer.Register<PingPong.Ping>((object msg) => (PingPong.Ping)msg);
                 EventData ehMessage = null;
                 WaitForQueue(ehMsgQueue, out ehMessage);
-                DeSerializeIActorMessage dMsg = new DeSerializeIActorMessage(ehMessage.Body.Array);
+                DeserializeIActorMessage dMsg = new DeserializeIActorMessage(ehMessage.Body.Array);
                 deserializer.Ask(dMsg);
                 var retMsgs = (PingPong.Ping)dMsg.ProcessingResult;
                 Assert.IsTrue(((string)retMsgs.Message).Equals(message));
@@ -234,7 +234,7 @@ namespace UnitTests.Azure
                 EventData ehMessage = null;
                 WaitForQueue(ehMsgQueue, out ehMessage);
 
-                DeSerializeIActorMessage dMsg = new DeSerializeIActorMessage(ehMessage.Body.Array);
+                DeserializeIActorMessage dMsg = new DeserializeIActorMessage(ehMessage.Body.Array);
                 deserializer.Ask(dMsg);
                 var retMsgs = (PingPong.Ping)dMsg.ProcessingResult;
                 Assert.IsTrue(((string)retMsgs.Message).Equals(message));
@@ -478,7 +478,7 @@ namespace UnitTests.Azure
 
                 IActorMessageDeserializationActor deserializer = new IActorMessageDeserializationActor();
                 deserializer.Register<PingPong.Ping>((object msg) => (PingPong.Ping)msg);
-                DeSerializeIActorMessage dMsg = new DeSerializeIActorMessage(queue.GetMessage().AsBytes);
+                DeserializeIActorMessage dMsg = new DeserializeIActorMessage(queue.GetMessage().AsBytes);
                 deserializer.Ask(dMsg);
                 var retMsgs = (PingPong.Ping)dMsg.ProcessingResult;
                 Assert.IsTrue(((string)retMsgs.Message).Equals(message));
@@ -629,7 +629,7 @@ namespace UnitTests.Azure
                 deserializer.Register<PingPong.Ping>((object msg) => (PingPong.Ping)msg);
                 Message sbMessage = null;
                 WaitForQueue(sbMsgQueue, out sbMessage);
-                DeSerializeIActorMessage dMsg = new DeSerializeIActorMessage(sbMessage.Body);
+                DeserializeIActorMessage dMsg = new DeserializeIActorMessage(sbMessage.Body);
                 deserializer.Ask(dMsg);
                 var retMsgs = (PingPong.Ping)dMsg.ProcessingResult;
                 Assert.IsTrue(((string)retMsgs.Message).Equals(message));
@@ -665,7 +665,7 @@ namespace UnitTests.Azure
                 deserializer.Register<PingPong.Ping>((object msg) => (PingPong.Ping)msg);
                 Message sbMessage = null;
                 WaitForQueue(sbMsgQueue, out sbMessage);
-                DeSerializeIActorMessage dMsg = new DeSerializeIActorMessage(sbMessage.Body);
+                DeserializeIActorMessage dMsg = new DeserializeIActorMessage(sbMessage.Body);
                 deserializer.Ask(dMsg);
                 var retMsgs = (PingPong.Ping)dMsg.ProcessingResult;
                 Assert.IsTrue(((string)retMsgs.Message).Equals(message));
@@ -851,7 +851,7 @@ namespace UnitTests.Azure
                     Assert.Fail("Waited too long to send a message");
                 Message sbMessage = null;
                 WaitForQueue(sbMsgQueue, out sbMessage);
-                DeSerializeIActorMessage dMsg = new DeSerializeIActorMessage(sbMessage.Body);
+                DeserializeIActorMessage dMsg = new DeserializeIActorMessage(sbMessage.Body);
                 deserializer.Ask(dMsg);
                 var retMsgs = (PingPong.Ping)dMsg.ProcessingResult;
                 Assert.IsTrue(((string)retMsgs.Message).Equals(message));
@@ -888,7 +888,7 @@ namespace UnitTests.Azure
                 deserializer.Register<PingPong.Ping>((object msg) => (PingPong.Ping)msg);
                 Message sbMessage = null;
                 WaitForQueue(sbMsgQueue, out sbMessage);
-                DeSerializeIActorMessage dMsg = new DeSerializeIActorMessage(sbMessage.Body);
+                DeserializeIActorMessage dMsg = new DeserializeIActorMessage(sbMessage.Body);
                 deserializer.Ask(dMsg);
                 var retMsgs = (PingPong.Ping)dMsg.ProcessingResult;
                 Assert.IsTrue(((string)retMsgs.Message).Equals(message));

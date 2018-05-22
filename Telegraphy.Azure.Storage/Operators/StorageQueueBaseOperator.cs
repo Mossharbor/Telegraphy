@@ -248,7 +248,7 @@ namespace Telegraphy.Azure
                 else
                 {
                     byte[] msgBytes = next.AsBytes;
-                    var t = Telegraph.Instance.Ask(new DeSerializeIActorMessage(msgBytes));
+                    var t = Telegraph.Instance.Ask(new DeserializeIActorMessage(msgBytes));
                     msg = t.Result as IActorMessage;
                 }
 
