@@ -91,6 +91,9 @@ namespace Telegraphy.Msmq
         {
             ++TotalSendsCalled;
             var msmqMessage = new System.Messaging.Message(message);
+            if (msg is IActorMessageIdentifier)
+                msmqMessage.CorrelationId = (msg as IActorMessageIdentifier).Id;
+
             //if (Transaction.Current == null)
             //{
             //    msmqQueue.Send(msmqMessage, MessageQueueTransactionType.Single);
