@@ -48,5 +48,15 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Telegraphy.Msmq\Telegraphy.Msmq.csproj">
+      <Project>{0a0f295d-d14d-4c86-b558-a08b8db107d9}</Project>
+      <Name>Telegraphy.Msmq</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Telegraphy.Net\Telegraphy.Net.csproj">
+      <Project>{0d5eda21-0e26-4e10-b109-bfa71559163e}</Project>
+      <Name>Telegraphy.Net</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

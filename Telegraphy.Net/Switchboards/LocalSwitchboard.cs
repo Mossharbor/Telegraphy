@@ -303,7 +303,7 @@ namespace Telegraphy.Net
                     }
                     catch (Exception ex)
                     {
-                        CheckForHandler(ex, actor, msg);
+                        CheckForAndRunExceptionHandler(ex, actor, msg);
                     }
                 }
             }
@@ -333,7 +333,7 @@ namespace Telegraphy.Net
                 }
                 catch (Exception ex)
                 {
-                    CheckForHandler(ex, actor, msg);
+                    CheckForAndRunExceptionHandler(ex, actor, msg);
                 }
             }
             finally
@@ -388,34 +388,59 @@ namespace Telegraphy.Net
             threadExitFlag = 0;
         }
 
-        private void CheckForHandler(Exception ex, IActor actor, IActorMessage msg)
+        private void CheckForAndRunExceptionHandler(Exception ex, IActor actor, IActorMessage msg)
         {
+            List<Exception> exceptions = new List<Exception>();
+            if (null != ex)
+                exceptions.Add(ex);
+
             try
             {
                 Exception foundEx = null;
                 Func<Exception, IActor, IActorMessage, IActorInvocation, IActor> handler;
 
                 handler = this.FindExceptionHandler(_exceptionTypeToHandler, ex, actor, msg, out foundEx);
+                if (null != foundEx && foundEx != ex)
+                    exceptions.Add(foundEx);
+
                 if (null == handler)
                     return;
 
                 IActorInvocation invoker = null;
                 IActor newActor = handler.Invoke(foundEx, actor, msg, invoker);
 
-                if (null == newActor)
+                if (null == newActor || newActor == actor)
                     return;
 
                 _messageTypeToActor.TryUpdate(msg.GetType(), newActor, actor);
             }
-            catch (NotImplementedException)
+            catch (NotImplementedException ne)
             {
+                exceptions.Add(ne);
                 System.Diagnostics.Debug.Assert(false);
                 throw;
             }
-            catch (Exception)
+            catch (Exception exp)
             {
+                exceptions.Add(exp);
                 //TODO fail hard!!!
                 System.Diagnostics.Debug.Assert(false);
+            }
+            finally
+            {
+                if (null != msg.Status && exceptions.Any())
+                {
+                    try
+                    {
+                        msg.Status.SetException(exceptions);
+                    }
+                    catch(System.InvalidOperationException)
+                    {
+                        // The underlying System.Threading.Tasks.Task`1 is already in one of the three final
+                        //     states: System.Threading.Tasks.TaskStatus.RanToCompletion, System.Threading.Tasks.TaskStatus.Faulted,
+                        //     or System.Threading.Tasks.TaskStatus.Canceled.
+                    }
+                }
             }
         }
     }

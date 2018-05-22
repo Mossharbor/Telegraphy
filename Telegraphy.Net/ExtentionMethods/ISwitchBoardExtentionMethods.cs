@@ -29,9 +29,6 @@ namespace Telegraphy.Net
             //Try the default exception handler
             if (!found && !_exceptionTypeToHandler.TryGetValue(typeof(Exception), out handler))
             {
-                if (null != msg.Status)
-                    msg.Status.SetException(ex);
-
                 return null;
             }
 
