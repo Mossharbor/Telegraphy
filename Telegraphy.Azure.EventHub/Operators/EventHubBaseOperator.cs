@@ -12,7 +12,7 @@ using Microsoft.Azure.EventHubs;
 
 namespace Telegraphy.Azure
 {
-    public class EventHubBaseOperator : IOperator
+    public class EventHubBaseOperator<MsgType> : IOperator where MsgType:class
     {
         internal const int DefaultDequeueMaxCount = 1;
         internal const int DefaultConcurrency = 3;
@@ -23,43 +23,33 @@ namespace Telegraphy.Azure
         private EventHubDataDeliverer EventHubClient;
         private ConcurrentQueue<IActorMessage> msgQueue = new ConcurrentQueue<IActorMessage>();
 
-        internal EventHubBaseOperator(ILocalSwitchboard switchBoard, EventHubDataReciever eventHubMsgReciever, MessageSource messageSource = MessageSource.EntireIActor)
+        internal EventHubBaseOperator(ILocalSwitchboard switchBoard, EventHubDataReciever eventHubMsgReciever)
         {
             this.Switchboard = switchBoard;
             this.Switchboard.Operator = this;
             this.EventHubMsgReciever = eventHubMsgReciever;
-            this.MessageSource = messageSource;
             this.ID = 0;
         }
 
-        internal EventHubBaseOperator(EventHubDataDeliverer eventHubClient, MessageSource messageSource = MessageSource.EntireIActor)
+        internal EventHubBaseOperator(EventHubDataDeliverer eventHubClient)
         {
             this.EventHubClient = eventHubClient;
-            this.MessageSource = messageSource;
             this.ID = 0;
         }
 
-        public MessageSource MessageSource { get; private set; }
-
-        private static IActorMessage ConvertToActorMessage(byte[] msgBytes, MessageSource messageSource)
+        private static IActorMessage ConvertToActorMessage(byte[] msgBytes)
         {
             IActorMessage msg = null;
-            switch (messageSource)
+            if (typeof(MsgType) == typeof(string))
+                msg = Encoding.UTF8.GetString(msgBytes).ToActorMessage();
+            else if(typeof(MsgType) == typeof(byte[]))
+                    msg = msgBytes.ToActorMessage();
+            else
             {
-                case MessageSource.EntireIActor:
-                    {
-                        var t = Telegraph.Instance.Ask(new DeSerializeMessage(msgBytes));
-                        msg = t.Result as IActorMessage;
-                    }
-                    break;
-
-                case MessageSource.ByteArrayMessage:
-                    msg = msgBytes.ToActorMessage(); break;
-                case MessageSource.StringMessage:
-                    msg = Encoding.UTF8.GetString(msgBytes).ToActorMessage(); break;
-                default:
-                    throw new NotImplementedException(messageSource.ToString());
+                var t = Telegraph.Instance.Ask(new DeSerializeMessage(msgBytes));
+                msg = t.Result as IActorMessage;
             }
+            
             return msg;
         }
 
@@ -73,7 +63,7 @@ namespace Telegraphy.Azure
 
         public void AddMessage(IActorMessage msg)
         {
-            EventData eventData = SendBytesToEventHub.BuildMessage(msg, this.MessageSource);
+            EventData eventData = SendBytesToEventHub.BuildMessage<MsgType>(msg);
             EventHubClient.Send(eventData);
             
             if (null == msg.Status)
@@ -92,7 +82,7 @@ namespace Telegraphy.Azure
 
                 byte[] msgBytes = null;
                 msgBytes = recievedSingle.First().Body.Array;
-                return ConvertToActorMessage(msgBytes, this.MessageSource);
+                return ConvertToActorMessage(msgBytes);
             }
 
             while (0 != msgQueue.Count)
@@ -109,11 +99,11 @@ namespace Telegraphy.Azure
             for(int i=1; i < recievedList.Count(); ++i)
             {
                 byte[] msgBytes = recievedList.ElementAt(i).Body.Array;
-                msgQueue.Enqueue(ConvertToActorMessage(msgBytes, this.MessageSource));
+                msgQueue.Enqueue(ConvertToActorMessage(msgBytes));
             }
 
             // save the first one to return
-            return ConvertToActorMessage(recievedList.ElementAt(0).Body.Array, this.MessageSource);
+            return ConvertToActorMessage(recievedList.ElementAt(0).Body.Array);
         }
 
         public bool IsAlive()

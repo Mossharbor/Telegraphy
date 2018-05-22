@@ -14,12 +14,12 @@ namespace Telegraphy.Azure
 
         public SendMessageToEventHub(string eventHubonnectionString, string eventHubName, bool createEventHubIfItDoesNotExist = true)
         {
-            eventHubClient = EventHubActorMessageDeliveryOperator.GetEventHubClient(eventHubonnectionString, eventHubName, createEventHubIfItDoesNotExist);
+            eventHubClient = EventHubDeliveryOperator<IActorMessage>.GetEventHubClient(eventHubonnectionString, eventHubName, createEventHubIfItDoesNotExist);
         }
 
         bool IActor.OnMessageRecieved<T>(T msg)
         {
-            EventData eventData = SendBytesToEventHub.BuildMessage(msg, MessageSource.EntireIActor);
+            EventData eventData = SendBytesToEventHub.BuildMessage<IActorMessage>(msg);
             eventHubClient.Send(eventData);
             return true;
         }

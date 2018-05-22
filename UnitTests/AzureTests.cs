@@ -221,7 +221,7 @@ namespace UnitTests.Azure
                 PingPong.Ping aMsg = new PingPong.Ping(message);
 
                 long localOperatorID = Telegraph.Instance.Register(new LocalOperator(LocalConcurrencyType.DedicatedThreadCount, 2));
-                long azureOperatorId = Telegraph.Instance.Register(new EventHubActorMessageDeliveryOperator(EventHubConnectionString, eventHubName, true));
+                long azureOperatorId = Telegraph.Instance.Register(new EventHubDeliveryOperator<IActorMessage>(EventHubConnectionString, eventHubName, true));
                 Telegraph.Instance.Register<PingPong.Ping>(azureOperatorId);
                 MessageSerializationActor serializer = new MessageSerializationActor();
                 Telegraph.Instance.Register<SerializeMessage, MessageSerializationActor>(localOperatorID, () => serializer);
@@ -265,7 +265,7 @@ namespace UnitTests.Azure
                 queue.SendAsync(new EventData(msgBytes));
 
                 long azureOperatorID = Telegraph.Instance.Register(
-                     new EventHubActorMessageReceptionOperator(EventHubConnectionString, eventHubName, false),
+                     new EventHubReceptionOperator<IActorMessage>(EventHubConnectionString, eventHubName, false),
                     (PingPong.Ping foo) => { Assert.IsTrue(message.Equals((string)foo.Message, StringComparison.InvariantCulture)); });
             }
             finally
@@ -310,7 +310,7 @@ namespace UnitTests.Azure
                 StartEventHubReciever(eventHubName, consumerGroup);
                 string message = "HelloWorld";
 
-                Telegraph.Instance.Register(new EventHubStringDeliveryOperator(EventHubConnectionString, eventHubName, true));
+                Telegraph.Instance.Register(new EventHubDeliveryOperator<string>(EventHubConnectionString, eventHubName, true));
                 if (!Telegraph.Instance.Ask(message).Wait(new TimeSpan(0, 0, 10)))
                     Assert.Fail("Waited too long to send a message");
                 EventData ehMessage = null;
@@ -340,7 +340,7 @@ namespace UnitTests.Azure
                 queue.SendAsync(new EventData(msgBytes));
 
                 long azureOperatorID = Telegraph.Instance.Register(
-                     new EventHubStringReceptionOperator(EventHubConnectionString, eventHubName, false),
+                     new EventHubReceptionOperator<string>(EventHubConnectionString, eventHubName, false),
                     (string foo) => { Assert.IsTrue(message.Equals(foo, StringComparison.InvariantCulture)); });
             }
             finally
@@ -388,7 +388,7 @@ namespace UnitTests.Azure
                 string message = "HelloWorld";
                 byte[] messageBytes = Encoding.UTF8.GetBytes(message);
 
-                Telegraph.Instance.Register(new EventHubByteArrayDeliveryOperator(EventHubConnectionString, eventHubName, true));
+                Telegraph.Instance.Register(new EventHubDeliveryOperator<byte[]>(EventHubConnectionString, eventHubName, true));
 
                 if (!Telegraph.Instance.Ask(messageBytes.ToActorMessage()).Wait(new TimeSpan(0, 0, 10)))
                     Assert.Fail("Waited too long to send a message");
@@ -419,7 +419,7 @@ namespace UnitTests.Azure
                 queue.SendAsync(new EventData(msgBytes));
 
                 long azureOperatorID = Telegraph.Instance.Register(
-                     new EventHubStringReceptionOperator(EventHubConnectionString, eventHubName, false),
+                     new EventHubReceptionOperator<string>(EventHubConnectionString, eventHubName, false),
                     (ValueTypeMessage<byte> foo) => { Assert.IsTrue(message.Equals(Encoding.UTF8.GetString(foo.ToArray()), StringComparison.InvariantCulture)); });
             }
             finally

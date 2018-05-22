@@ -16,43 +16,39 @@ namespace Telegraphy.Azure
 
         public SendBytesToEventHub(string eventHubonnectionString, string eventHubName, bool createEventHubIfItDoesNotExist = true)
         {
-            eventHubClient = EventHubActorMessageDeliveryOperator.GetEventHubClient(eventHubonnectionString, eventHubName, createEventHubIfItDoesNotExist);
+            eventHubClient = EventHubDeliveryOperator<byte[]>.GetEventHubClient(eventHubonnectionString, eventHubName, createEventHubIfItDoesNotExist);
         }
 
         bool IActor.OnMessageRecieved<T>(T msg)
         {
-            EventData eventData = SendBytesToEventHub.BuildMessage(msg, MessageSource.ByteArrayMessage);
+            EventData eventData = SendBytesToEventHub.BuildMessage<byte[]>(msg);
             eventHubClient.Send(eventData);
             return true;
         }
 
-        internal static EventData BuildMessage<T>(T msg, MessageSource messageSource) where T : class, IActorMessage
+        internal static EventData BuildMessage<MsgType>(IActorMessage msg) where MsgType : class
         {
             byte[] msgBytes = null;
-            switch (messageSource)
+            if (typeof(MsgType) == typeof(string))
             {
-                case MessageSource.EntireIActor:
-                    {
-                        var serializeTask = Telegraph.Instance.Ask(new SerializeMessage(msg));
-                        msgBytes = (serializeTask.Result.ProcessingResult as byte[]);
-                    }
-                    break;
-
-                case MessageSource.ByteArrayMessage:
-                    if ((msg as IActorMessage).Message.GetType().Name.Equals("Byte[]"))
-                        msgBytes = (byte[])(msg as IActorMessage).Message;
-                    else
-                        throw new NotConfiguredToSerializeThisTypeOfMessageException("Byte[]");
-                    break;
-                case MessageSource.StringMessage:
-                    if ((msg as IActorMessage).Message.GetType().Name.Equals("String"))
-                        msgBytes = Encoding.UTF8.GetBytes((string)(msg as IActorMessage).Message);
-                    else
-                        throw new NotConfiguredToSerializeThisTypeOfMessageException("String");
-                    break;
-                default:
-                    throw new NotImplementedException(messageSource.ToString());
+                if ((msg as IActorMessage).Message.GetType().Name.Equals("String"))
+                    msgBytes = Encoding.UTF8.GetBytes((string)(msg as IActorMessage).Message);
+                else
+                    throw new NotConfiguredToSerializeThisTypeOfMessageException("String");
             }
+            else if (typeof(MsgType) == typeof(byte[]))
+            {
+                if ((msg as IActorMessage).Message.GetType().Name.Equals("Byte[]"))
+                    msgBytes = (byte[])(msg as IActorMessage).Message;
+                else
+                    throw new NotConfiguredToSerializeThisTypeOfMessageException("Byte[]");
+            }
+            else
+            {
+                var serializeTask = Telegraph.Instance.Ask(new SerializeMessage(msg));
+                msgBytes = (serializeTask.Result.ProcessingResult as byte[]);
+            }
+
             return new EventData(msgBytes);
         }
     }

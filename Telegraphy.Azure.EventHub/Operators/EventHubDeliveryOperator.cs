@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Telegraphy.Azure
 {
-    public class EventHubStringDeliveryOperator : EventHubBaseOperator
+    using Telegraphy.Net;
+
+    public class EventHubDeliveryOperator<T> : EventHubBaseOperator<T> where T: class
     {
-        public EventHubStringDeliveryOperator(string connectionString, string eventHubName, bool createEventHubIfItDoesNotExist = false)
-            : base(GetEventHubClient(connectionString, eventHubName, createEventHubIfItDoesNotExist), Telegraphy.Net.MessageSource.StringMessage)
+        public EventHubDeliveryOperator(string connectionString, string eventHubName, bool createEventHubIfItDoesNotExist = false)
+            : base(GetEventHubClient(connectionString, eventHubName, createEventHubIfItDoesNotExist))
         {
         }
 
