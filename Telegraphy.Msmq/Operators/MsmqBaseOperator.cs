@@ -93,6 +93,8 @@ namespace Telegraphy.Msmq
             var msmqMessage = new System.Messaging.Message(message);
             if (msg is IActorMessageIdentifier)
                 msmqMessage.CorrelationId = (msg as IActorMessageIdentifier).Id;
+            else if (message is IActorMessageIdentifier)
+                msmqMessage.CorrelationId = (message as IActorMessageIdentifier).Id;
 
             //if (Transaction.Current == null)
             //{
@@ -100,7 +102,7 @@ namespace Telegraphy.Msmq
             //}
             //else
             //{
-                msmqQueue.Send(msmqMessage, MessageQueueTransactionType.Automatic);
+            msmqQueue.Send(msmqMessage, MessageQueueTransactionType.Automatic);
             //}
         }
 
