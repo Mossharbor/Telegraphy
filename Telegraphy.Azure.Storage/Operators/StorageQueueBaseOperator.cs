@@ -162,8 +162,10 @@ namespace Telegraphy.Azure
                     SerializeAndSend(msg, queue, (byte[])(msg as IActorMessage).Message);
                 else if (typeof(MsgType) == typeof(string))
                     SerializeAndSend(msg, queue, (string)(msg as IActorMessage).Message);
-                else 
-                    SerializeAndSend(msg, queue);
+                else if (msg.Message is IActorMessage)
+                    SerializeAndSend((IActorMessage)msg.Message, queue);
+                else
+                    SerializeAndSend((IActorMessage)msg, queue);
             }
             catch(Exception ex)
             {

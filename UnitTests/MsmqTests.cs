@@ -107,8 +107,43 @@ namespace UnitTests.Msmq
         public void TestSendingObjectToMsmq()
         {
             // create message
-            string message = @"Hello World";
-            string queueName = "testQueue";
+            string messageString = "Hello World";
+            string queueName = "TestSendingObjectToMsmq";
+
+            MsmqDeliveryOperator<PingPong.Ping> deliveryOp = new MsmqDeliveryOperator<PingPong.Ping>(queueName);
+            Telegraph.Instance.Register<PingPong.Ping, MsmqDeliveryOperator<PingPong.Ping>>(() => deliveryOp);
+
+            // Send message to queue
+            List<Task> waitTasks = new List<Task>();
+            int i = 0;
+            for (i = 0; i < 100; ++i)
+            {
+                PingPong.Ping ping = new PingPong.Ping(messageString);
+                waitTasks.Add(Telegraph.Instance.Ask(ping));
+            }
+
+            Task.WaitAll(waitTasks.ToArray());
+            Telegraph.Instance.UnRegisterAll();
+
+            int count = 0;
+            MsmqReceptionOperator<PingPong.Ping> receptionOp = new MsmqReceptionOperator<PingPong.Ping>(queueName);
+            long azureOperatorID = Telegraph.Instance.Register(receptionOp);
+            Telegraph.Instance.Register<PingPong.Ping>(azureOperatorID, ping =>
+            {
+                PingPong.Ping msg = (PingPong.Ping)ping;
+                System.Threading.Thread.Sleep(100);
+                System.Threading.Interlocked.Increment(ref count);
+            });
+
+            int attempts = 20;
+            while (attempts != 0 && count < i)
+            {
+                System.Threading.Thread.Sleep(1000);
+                --attempts;
+            }
+            System.Diagnostics.Debug.WriteLine("Count:" + count);
+            Assert.IsTrue(count == i);
+            System.Messaging.MessageQueue.Delete(receptionOp.Queue.Path);
 
         }
     }

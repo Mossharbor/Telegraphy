@@ -124,7 +124,10 @@ namespace Telegraphy.Msmq
             // Serialize the message first
             try
             {
-                SerializeAndSend(msg, Queue, (MsgType)(msg as IActorMessage).Message);
+                if ( msg is MsgType)
+                    SerializeAndSend(msg, Queue, (MsgType)msg);
+                else
+                    SerializeAndSend(msg, Queue, (MsgType)(msg as IActorMessage).Message);
             }
             catch (Exception ex)
             {
