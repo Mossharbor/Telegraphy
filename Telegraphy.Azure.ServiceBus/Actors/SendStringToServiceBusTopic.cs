@@ -7,19 +7,11 @@ using Telegraphy.Net;
 
 namespace Telegraphy.Azure
 {
-    public class SendStringToServiceBusTopic : IActor
+    public class SendStringToServiceBusTopic : DeliverToServiceBusTopic<string>
     {
-        ServiceBusTopicDeliverer queue = null;
-
         public SendStringToServiceBusTopic(string storageConnectionString, string topicName, bool createQueueIfItDoesNotExist = true)
+            : base(storageConnectionString, topicName, createQueueIfItDoesNotExist)
         {
-            queue = ServiceBusTopicDeliveryOperator<string>.GetSender(storageConnectionString, topicName, createQueueIfItDoesNotExist);
-        }
-
-        bool IActor.OnMessageRecieved<T>(T msg)
-        {
-            ServiceBusTopicBaseOperator<string>.SerializeAndSend(msg, queue);
-            return true;
         }
     }
 }
