@@ -22,6 +22,12 @@ namespace DurableSender
             // We then send the message to the msmq as a store until we are back online (aka fix the default actor to not throw exceptions)
             // Once we are back online we retrieve the items from the durable queue and finish sending them to the default actor.
 
+            // Turn msmq on on windows 10
+            //     Open Control Panel.
+            //     Click Programs and then, under Programs and Features, click Turn Windows Features on and off.
+            //     Expand Microsoft Message Queue(MSMQ) Server, expand Microsoft Message Queue(MSMQ) Server Core, and then select the check boxes for the following Message Queuing features to install. ...
+            //     Click OK.
+
             // send queued items to the 
             string durableQueueName = "DurableQueueName";
             Telegraph.Instance.MainOperator = new LocalOperator(); 
