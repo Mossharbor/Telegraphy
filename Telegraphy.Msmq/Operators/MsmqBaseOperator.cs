@@ -61,7 +61,7 @@ namespace Telegraphy.Msmq
         {
         }
 
-        private MsmqBaseOperator(string machineName, string queueName, QueueAccessMode accessMode)
+        private MsmqBaseOperator(string machineName, string queueName, QueueAccessMode accessMode, EncryptionRequired encryptionRequired = EncryptionRequired.None)
         {
             string msmqName = MsmqHelper.CreateMsmqQueueName("", queueName, "", machineName);
             EnsureQueueExists(msmqName);
@@ -71,6 +71,7 @@ namespace Telegraphy.Msmq
                msmqName,
                machineName);
             this.Queue = new MessageQueue(msmqName, accessMode);
+            this.Queue.EncryptionRequired = encryptionRequired;
             Queue.Formatter = new XmlMessageFormatter(new Type[] { typeof(MsgType) });
             if (!MessageQueue.Exists(this.Queue.Path))
                 MessageQueue.Create(this.Queue.Path);
