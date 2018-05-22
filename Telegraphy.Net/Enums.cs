@@ -9,6 +9,4 @@ namespace Telegraphy.Net
     public enum LocalConcurrencyType { ActorsOnThreadPool, OneActorPerThread, OneThreadAllActors, OneThreadPerActor, DedicatedThreadCount };
 
     public enum MessageDispatchProcedureType { RoundRobin, BroadcastToAll, LeastBusy, RandomSelection }
-
-    public enum MessageSource { ByteArrayMessage = 0, StringMessage = 1, EntireIActor = 2 }
 }

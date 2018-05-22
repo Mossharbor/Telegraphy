@@ -17,12 +17,12 @@ namespace Telegraphy.Azure
         }
 
         public ServiceBusTopicDeadLetterReceptionOperator(LocalConcurrencyType concurrencyType, string connectionString, string topicName, string subscriptionName, int maxDequeueCount = DefaultDequeueMaxCount, int prefetchCount = DefaultPrefetchCount, uint concurrency = DefaultConcurrency, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
-               : base(new LocalSwitchboard(concurrencyType, concurrency), GetSender(connectionString, topicName, subscriptionName, prefetchCount, policy), maxDequeueCount, Telegraphy.Net.MessageSource.StringMessage)
+               : base(new LocalSwitchboard(concurrencyType, concurrency), GetSender(connectionString, topicName, subscriptionName, prefetchCount, policy), maxDequeueCount)
         {
         }
 
         public ServiceBusTopicDeadLetterReceptionOperator(ILocalSwitchboard switchBoard, string connectionString, string topicName, string subscriptionName, int maxDequeueCount = DefaultDequeueMaxCount, int prefetchCount = DefaultPrefetchCount, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
-               : base(switchBoard, GetSender(connectionString, topicName, subscriptionName, prefetchCount, policy), maxDequeueCount, Telegraphy.Net.MessageSource.StringMessage)
+               : base(switchBoard, GetSender(connectionString, topicName, subscriptionName, prefetchCount, policy), maxDequeueCount)
         {
         }
 

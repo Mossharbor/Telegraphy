@@ -8,11 +8,11 @@ namespace Telegraphy.Azure
     public class ServiceBusQueueDeliveryOperator<T> : ServiceBusQueueBaseOperator<T> where T : class
     {
         public ServiceBusQueueDeliveryOperator(string connectionString, string queueName, bool createQueueIfItDoesNotExist)
-            : base(GetQueue(connectionString, queueName, createQueueIfItDoesNotExist), Telegraphy.Net.MessageSource.EntireIActor)
+            : base(GetQueue(connectionString, queueName, createQueueIfItDoesNotExist))
         { }
 
         public ServiceBusQueueDeliveryOperator(QueueClient queue, string connectionString, bool createQueueIfItDoesNotExist)
-            : base(new ServiceBusQueue(connectionString, queue, createQueueIfItDoesNotExist), Telegraphy.Net.MessageSource.EntireIActor)
+            : base(new ServiceBusQueue(connectionString, queue, createQueueIfItDoesNotExist))
         { }
 
         internal static ServiceBusQueue GetQueue(string connectionString, string queueName, bool createQueueIfItDoesNotExist)

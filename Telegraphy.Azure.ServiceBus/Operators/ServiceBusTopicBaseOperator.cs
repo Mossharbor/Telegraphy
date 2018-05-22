@@ -24,13 +24,13 @@ namespace Telegraphy.Azure
         ControlMessages.HangUp hangUp = null;
         ConcurrentQueue<IActorMessage> msgQueue = new ConcurrentQueue<IActorMessage>();
 
-        internal ServiceBusTopicBaseOperator(ServiceBusTopicDeliverer serviceBusMsgSender, MessageSource messageSource = Telegraphy.Net.MessageSource.EntireIActor)
+        internal ServiceBusTopicBaseOperator(ServiceBusTopicDeliverer serviceBusMsgSender)
         {
             this.ServiceBusMsgSender = serviceBusMsgSender;
             this.ID = 0;
         }
 
-        internal ServiceBusTopicBaseOperator(ILocalSwitchboard switchboard, ServiceBusTopicReciever serviceBusMsgReciever, int maxDequeueCount, MessageSource messageSource = Telegraphy.Net.MessageSource.EntireIActor)
+        internal ServiceBusTopicBaseOperator(ILocalSwitchboard switchboard, ServiceBusTopicReciever serviceBusMsgReciever, int maxDequeueCount)
         {
             this.maxDequeueCount = maxDequeueCount;
             this.Switchboard = switchboard;

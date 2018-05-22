@@ -9,12 +9,12 @@ namespace Telegraphy.Azure
     public class ServiceBusQueueDeadLetterDeliveryOperator<T> : ServiceBusQueueBaseOperator<T> where T : class
     {
         public ServiceBusQueueDeadLetterDeliveryOperator(string connectionString, string queueName)
-            : base(GetQueue(connectionString, queueName), Telegraphy.Net.MessageSource.StringMessage)
+            : base(GetQueue(connectionString, queueName))
         { }
 
 
         public ServiceBusQueueDeadLetterDeliveryOperator(QueueClient queue, string connectionString)
-            : base(new ServiceBusDeadLetterQueue(connectionString, queue.QueueName), Telegraphy.Net.MessageSource.StringMessage)
+            : base(new ServiceBusDeadLetterQueue(connectionString, queue.QueueName))
         { }
 
         internal static ServiceBusDeadLetterQueue GetQueue(string connectionString, string queueName)

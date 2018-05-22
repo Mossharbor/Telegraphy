@@ -12,12 +12,12 @@ namespace Telegraphy.Azure
         }
 
         public ServiceBusTopicDeliveryOperator(string connectionString, string topicName, bool createTopicIfItDoesNotExist, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
-               : base(ServiceBusTopicDeliveryOperator<T>.GetSender(connectionString, topicName, createTopicIfItDoesNotExist, policy), Telegraphy.Net.MessageSource.StringMessage)
+               : base(ServiceBusTopicDeliveryOperator<T>.GetSender(connectionString, topicName, createTopicIfItDoesNotExist, policy))
         {
         }
 
         public ServiceBusTopicDeliveryOperator(string connectionString, string topicName, string[] subscriptionNames, bool createTopicIfItDoesNotExist, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
-               : base(ServiceBusTopicDeliveryOperator<T>.GetSender(connectionString, topicName, subscriptionNames, createTopicIfItDoesNotExist, policy), Telegraphy.Net.MessageSource.StringMessage)
+               : base(ServiceBusTopicDeliveryOperator<T>.GetSender(connectionString, topicName, subscriptionNames, createTopicIfItDoesNotExist, policy))
         {
         }
 

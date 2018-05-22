@@ -31,7 +31,7 @@ namespace Telegraphy.Azure
             this.maxDequeueCount = maxDequeueCount;
         }
 
-        internal ServiceBusQueueBaseOperator(ServiceBusQueue queue, MessageSource messageSource = Telegraphy.Net.MessageSource.EntireIActor) 
+        internal ServiceBusQueueBaseOperator(ServiceBusQueue queue) 
             :this(queue, false)
         {
 
