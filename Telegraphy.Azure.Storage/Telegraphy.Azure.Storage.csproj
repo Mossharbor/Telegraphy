@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Mossharbor.AzureWorkArounds.Storage" Version="1.0.1" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.1.1" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'=='net40' OR '$(TargetFramework)'=='net45' OR '$(TargetFramework)'=='net46' OR '$(TargetFramework)'=='net461' OR '$(TargetFramework)'=='net462'">

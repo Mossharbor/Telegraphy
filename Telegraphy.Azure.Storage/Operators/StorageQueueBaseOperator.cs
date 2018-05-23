@@ -9,7 +9,7 @@ using Microsoft.WindowsAzure.Storage;
 using Telegraphy.Azure.Exceptions;
 using System.Collections.Concurrent;
 using Telegraphy.Net.Exceptions;
-using Telegraphy.Azure.Exceptions;
+using Mossharbor.AzureWorkArounds.Storage;
 
 namespace Telegraphy.Azure
 {

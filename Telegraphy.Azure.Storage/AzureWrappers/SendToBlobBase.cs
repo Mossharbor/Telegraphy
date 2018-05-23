@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegraphy.Azure.Exceptions;
 using Telegraphy.Net.Exceptions;
+using Mossharbor.AzureWorkArounds.Storage;
 
 namespace Telegraphy.Azure
 {
