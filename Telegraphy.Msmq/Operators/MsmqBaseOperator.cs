@@ -92,9 +92,9 @@ namespace Telegraphy.Msmq
             ++TotalSendsCalled;
             var msmqMessage = new System.Messaging.Message(message);
             if (msg is IActorMessageIdentifier)
-                msmqMessage.CorrelationId = (msg as IActorMessageIdentifier).Id;
+                msmqMessage.Label = (msg as IActorMessageIdentifier).Id;
             else if (message is IActorMessageIdentifier)
-                msmqMessage.CorrelationId = (message as IActorMessageIdentifier).Id;
+                msmqMessage.Label = (message as IActorMessageIdentifier).Id;
 
             //if (Transaction.Current == null)
             //{

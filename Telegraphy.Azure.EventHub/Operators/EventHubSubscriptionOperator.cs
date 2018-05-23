@@ -93,38 +93,38 @@ namespace Telegraphy.Azure
         {
         }
 
-        private EventHubReceptionOperator(LocalConcurrencyType type, EventHubDataReciever reciever, uint concurrency)
+        private EventHubReceptionOperator(LocalConcurrencyType type, EventHubDataSubscriber reciever, uint concurrency)
            : this(new LocalSwitchboard(type, concurrency), reciever)
         { }
 
-        private EventHubReceptionOperator(EventHubDataReciever reciever, uint concurrency)
+        private EventHubReceptionOperator(EventHubDataSubscriber reciever, uint concurrency)
             : this(new LocalSwitchboard(LocalConcurrencyType.DedicatedThreadCount, concurrency), reciever)
         { }
 
-        private EventHubReceptionOperator(ILocalSwitchboard switchBoard, EventHubDataReciever reciever)
+        private EventHubReceptionOperator(ILocalSwitchboard switchBoard, EventHubDataSubscriber reciever)
             : base(switchBoard, reciever)
         { }
 
 
-        internal static EventHubDataReciever GetEventHubDataReciever(string connectionstring, string eventHubName, string consumerGroup, string partitionId, EventPosition position, bool createEventHubIfItDoesNotExist)
+        internal static EventHubDataSubscriber GetEventHubDataReciever(string connectionstring, string eventHubName, string consumerGroup, string partitionId, EventPosition position, bool createEventHubIfItDoesNotExist)
         {
-            var t = new EventHubDataReciever(connectionstring, eventHubName, consumerGroup, partitionId, position);
+            var t = new EventHubDataSubscriber(connectionstring, eventHubName, consumerGroup, partitionId, position);
             if (createEventHubIfItDoesNotExist)
                 t.CreateIfNotExists();
             return t;
         }
 
-        internal static EventHubDataReciever GetEventHubDataReciever(string connectionstring, string eventHubName, string consumerGroup, EventPosition position, bool createEventHubIfItDoesNotExist)
+        internal static EventHubDataSubscriber GetEventHubDataReciever(string connectionstring, string eventHubName, string consumerGroup, EventPosition position, bool createEventHubIfItDoesNotExist)
         {
-            var t = new EventHubDataReciever(connectionstring, eventHubName, consumerGroup, position);
+            var t = new EventHubDataSubscriber(connectionstring, eventHubName, consumerGroup, position);
             if (createEventHubIfItDoesNotExist)
                 t.CreateIfNotExists();
             return t;
         }
 
-        internal static EventHubDataReciever GetEventHubDataReciever(string connectionstring, string eventHubName, EventPosition position, bool createEventHubIfItDoesNotExist)
+        internal static EventHubDataSubscriber GetEventHubDataReciever(string connectionstring, string eventHubName, EventPosition position, bool createEventHubIfItDoesNotExist)
         {
-            var t = new EventHubDataReciever(connectionstring, eventHubName, position);
+            var t = new EventHubDataSubscriber(connectionstring, eventHubName, position);
             if (createEventHubIfItDoesNotExist)
                 t.CreateIfNotExists();
             return t;

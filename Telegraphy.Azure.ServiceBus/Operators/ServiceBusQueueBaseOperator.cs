@@ -79,7 +79,7 @@ namespace Telegraphy.Azure
             else
             {
                 byte[] msgBytes = sbMessage.Body;
-                var t = Telegraph.Instance.Ask(new DeserializeIActorMessage(msgBytes));
+                var t = Telegraph.Instance.Ask(new DeserializeMessage<MsgType>(msgBytes));
                 msg = t.Result as IActorMessage;
             }
             
@@ -157,30 +157,7 @@ namespace Telegraphy.Azure
 
         internal static Message BuildMessage(IActorMessage msg)
         {
-            byte[] msgBytes = null;
-            if (typeof(MsgType) == typeof(string))
-            {
-                System.Diagnostics.Debug.WriteLine("Serializing " + (string)(msg as IActorMessage).Message);
-                if ((msg as IActorMessage).Message.GetType().Name.Equals("String"))
-                    msgBytes = Encoding.UTF8.GetBytes((string)(msg as IActorMessage).Message);
-                else
-                    throw new NotConfiguredToSerializeThisTypeOfMessageException("String");
-            }
-            else if (typeof(MsgType) == typeof(byte[]))
-            {
-                if ((msg as IActorMessage).Message.GetType().Name.Equals("Byte[]"))
-                    msgBytes = (byte[])(msg as IActorMessage).Message;
-                else
-                    throw new NotConfiguredToSerializeThisTypeOfMessageException("Byte[]");
-            }
-            else if (msg is IActorMessage)
-            {
-                var serializeTask = Telegraph.Instance.Ask(new SerializeIActorMessage(msg as IActorMessage));
-                msgBytes = (serializeTask.Result.ProcessingResult as byte[]);
-
-            }
-            else
-                throw new NotConfiguredToSerializeThisTypeOfMessageException(typeof(MsgType).ToString());
+            byte[] msgBytes = TempSerialization.GetBytes<MsgType>(msg);
 
             System.Diagnostics.Debug.WriteLine("Serializing Byte Count:" + msgBytes.Count());
             var message = new Message(msgBytes);

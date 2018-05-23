@@ -187,7 +187,7 @@ namespace UnitTests.Azure
                 PingPong.Ping aMsg = new PingPong.Ping(message);
                 IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
                 Telegraph.Instance.Register<PingPong.Ping, SendMessageToEventHub>(() => new SendMessageToEventHub(EventHubConnectionString, eventHubName, true));
-                Telegraph.Instance.Register<SerializeIActorMessage, IActorMessageSerializationActor>(() => serializer);
+                Telegraph.Instance.Register<SerializeMessage<IActorMessage>, IActorMessageSerializationActor>(() => serializer);
 
                 if (!Telegraph.Instance.Ask(aMsg).Wait(new TimeSpan(0, 0, 10)))
                     Assert.Fail("Waited too long to send a message");
@@ -196,7 +196,7 @@ namespace UnitTests.Azure
                 deserializer.Register<PingPong.Ping>((object msg) => (PingPong.Ping)msg);
                 EventData ehMessage = null;
                 WaitForQueue(ehMsgQueue, out ehMessage);
-                DeserializeIActorMessage dMsg = new DeserializeIActorMessage(ehMessage.Body.Array);
+                DeserializeMessage<IActorMessage> dMsg = new DeserializeMessage<IActorMessage>(ehMessage.Body.Array);
                 deserializer.Ask(dMsg);
                 var retMsgs = (PingPong.Ping)dMsg.ProcessingResult;
                 Assert.IsTrue(((string)retMsgs.Message).Equals(message));
@@ -221,10 +221,10 @@ namespace UnitTests.Azure
                 PingPong.Ping aMsg = new PingPong.Ping(message);
 
                 long localOperatorID = Telegraph.Instance.Register(new LocalOperator(LocalConcurrencyType.DedicatedThreadCount, 2));
-                long azureOperatorId = Telegraph.Instance.Register(new EventHubDeliveryOperator<IActorMessage>(EventHubConnectionString, eventHubName, true));
+                long azureOperatorId = Telegraph.Instance.Register(new EventHubPublishOperator<IActorMessage>(EventHubConnectionString, eventHubName, true));
                 Telegraph.Instance.Register<PingPong.Ping>(azureOperatorId);
                 IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
-                Telegraph.Instance.Register<SerializeIActorMessage, IActorMessageSerializationActor>(localOperatorID, () => serializer);
+                Telegraph.Instance.Register<SerializeMessage<IActorMessage>, IActorMessageSerializationActor>(localOperatorID, () => serializer);
 
                 if (!Telegraph.Instance.Ask(aMsg).Wait(new TimeSpan(0, 0, 10)))
                     Assert.Fail("Waited too long to send a message");
@@ -234,7 +234,7 @@ namespace UnitTests.Azure
                 EventData ehMessage = null;
                 WaitForQueue(ehMsgQueue, out ehMessage);
 
-                DeserializeIActorMessage dMsg = new DeserializeIActorMessage(ehMessage.Body.Array);
+                DeserializeMessage<IActorMessage> dMsg = new DeserializeMessage<IActorMessage>(ehMessage.Body.Array);
                 deserializer.Ask(dMsg);
                 var retMsgs = (PingPong.Ping)dMsg.ProcessingResult;
                 Assert.IsTrue(((string)retMsgs.Message).Equals(message));
@@ -258,7 +258,7 @@ namespace UnitTests.Azure
             {
                 string message = "HelloWorld";
                 var actorMessage = new PingPong.Ping(message);
-                SerializeIActorMessage sMsg = new SerializeIActorMessage(actorMessage);
+                SerializeMessage<IActorMessage> sMsg = new SerializeMessage<IActorMessage>(actorMessage);
                 IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
                 serializer.OnMessageRecieved(sMsg);
                 byte[] msgBytes = (byte[])sMsg.ProcessingResult;
@@ -310,7 +310,7 @@ namespace UnitTests.Azure
                 StartEventHubReciever(eventHubName, consumerGroup);
                 string message = "HelloWorld";
 
-                Telegraph.Instance.Register(new EventHubDeliveryOperator<string>(EventHubConnectionString, eventHubName, true));
+                Telegraph.Instance.Register(new EventHubPublishOperator<string>(EventHubConnectionString, eventHubName, true));
                 if (!Telegraph.Instance.Ask(message).Wait(new TimeSpan(0, 0, 10)))
                     Assert.Fail("Waited too long to send a message");
                 EventData ehMessage = null;
@@ -388,7 +388,7 @@ namespace UnitTests.Azure
                 string message = "HelloWorld";
                 byte[] messageBytes = Encoding.UTF8.GetBytes(message);
 
-                Telegraph.Instance.Register(new EventHubDeliveryOperator<byte[]>(EventHubConnectionString, eventHubName, true));
+                Telegraph.Instance.Register(new EventHubPublishOperator<byte[]>(EventHubConnectionString, eventHubName, true));
 
                 if (!Telegraph.Instance.Ask(messageBytes.ToActorMessage()).Wait(new TimeSpan(0, 0, 10)))
                     Assert.Fail("Waited too long to send a message");
@@ -471,14 +471,14 @@ namespace UnitTests.Azure
                 PingPong.Ping aMsg = new PingPong.Ping(message);
                 IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
                 Telegraph.Instance.Register<PingPong.Ping, SendMessageToStorageQueue>(() => new SendMessageToStorageQueue(StorageConnectionString, queueName, true));
-                Telegraph.Instance.Register<SerializeIActorMessage, IActorMessageSerializationActor>(() => serializer);
+                Telegraph.Instance.Register<SerializeMessage<IActorMessage>, IActorMessageSerializationActor>(() => serializer);
 
                 if (!Telegraph.Instance.Ask(aMsg).Wait(new TimeSpan(0, 0, 10)))
                     Assert.Fail("Waited too long to send a message");
 
                 IActorMessageDeserializationActor deserializer = new IActorMessageDeserializationActor();
                 deserializer.Register<PingPong.Ping>((object msg) => (PingPong.Ping)msg);
-                DeserializeIActorMessage dMsg = new DeserializeIActorMessage(queue.GetMessage().AsBytes);
+                DeserializeMessage<IActorMessage> dMsg = new DeserializeMessage<IActorMessage>(queue.GetMessage().AsBytes);
                 deserializer.Ask(dMsg);
                 var retMsgs = (PingPong.Ping)dMsg.ProcessingResult;
                 Assert.IsTrue(((string)retMsgs.Message).Equals(message));
@@ -501,7 +501,7 @@ namespace UnitTests.Azure
             {
                 string message = "HelloWorld";
                 var actorMessage = new PingPong.Ping(message);
-                SerializeIActorMessage sMsg = new SerializeIActorMessage(actorMessage);
+                SerializeMessage<IActorMessage> sMsg = new SerializeMessage<IActorMessage>(actorMessage);
                 IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
                 serializer.OnMessageRecieved(sMsg);
                 byte[] msgBytes = (byte[])sMsg.ProcessingResult;
@@ -621,7 +621,7 @@ namespace UnitTests.Azure
                 PingPong.Ping aMsg = new PingPong.Ping(message);
                 IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
                 Telegraph.Instance.Register<PingPong.Ping, SendMessageToServiceBusQueue>(() => new SendMessageToServiceBusQueue(ServiceBusConnectionString, queueName, true));
-                Telegraph.Instance.Register<SerializeIActorMessage, IActorMessageSerializationActor>(() => serializer);
+                Telegraph.Instance.Register<SerializeMessage<IActorMessage>, IActorMessageSerializationActor>(() => serializer);
 
                 if (!Telegraph.Instance.Ask(aMsg).Wait(new TimeSpan(0, 0, 10)))
                     Assert.Fail("Waited too long to send a message");
@@ -629,7 +629,7 @@ namespace UnitTests.Azure
                 deserializer.Register<PingPong.Ping>((object msg) => (PingPong.Ping)msg);
                 Message sbMessage = null;
                 WaitForQueue(sbMsgQueue, out sbMessage);
-                DeserializeIActorMessage dMsg = new DeserializeIActorMessage(sbMessage.Body);
+                DeserializeMessage<IActorMessage> dMsg = new DeserializeMessage<IActorMessage>(sbMessage.Body);
                 deserializer.Ask(dMsg);
                 var retMsgs = (PingPong.Ping)dMsg.ProcessingResult;
                 Assert.IsTrue(((string)retMsgs.Message).Equals(message));
@@ -656,7 +656,7 @@ namespace UnitTests.Azure
                 long azureOperatorId = Telegraph.Instance.Register(new ServiceBusQueueDeliveryOperator<IActorMessage>(ServiceBusConnectionString, queueName, true));
                 Telegraph.Instance.Register<PingPong.Ping>(azureOperatorId);
                 IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
-                Telegraph.Instance.Register<SerializeIActorMessage, IActorMessageSerializationActor>(localOperatorID, () => serializer);
+                Telegraph.Instance.Register<SerializeMessage<IActorMessage>, IActorMessageSerializationActor>(localOperatorID, () => serializer);
 
                 if (!Telegraph.Instance.Ask(aMsg).Wait(new TimeSpan(0, 0, 10)))
                     Assert.Fail("Waited too long to send a message");
@@ -665,7 +665,7 @@ namespace UnitTests.Azure
                 deserializer.Register<PingPong.Ping>((object msg) => (PingPong.Ping)msg);
                 Message sbMessage = null;
                 WaitForQueue(sbMsgQueue, out sbMessage);
-                DeserializeIActorMessage dMsg = new DeserializeIActorMessage(sbMessage.Body);
+                DeserializeMessage<IActorMessage> dMsg = new DeserializeMessage<IActorMessage>(sbMessage.Body);
                 deserializer.Ask(dMsg);
                 var retMsgs = (PingPong.Ping)dMsg.ProcessingResult;
                 Assert.IsTrue(((string)retMsgs.Message).Equals(message));
@@ -686,7 +686,7 @@ namespace UnitTests.Azure
             {
                 string message = "HelloWorld";
                 var actorMessage = new PingPong.Ping(message);
-                SerializeIActorMessage sMsg = new SerializeIActorMessage(actorMessage);
+                SerializeMessage<IActorMessage> sMsg = new SerializeMessage<IActorMessage>(actorMessage);
                 IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
                 serializer.OnMessageRecieved(sMsg);
                 byte[] msgBytes = (byte[])sMsg.ProcessingResult;
@@ -740,7 +740,7 @@ namespace UnitTests.Azure
                 long azureOperatorId = Telegraph.Instance.Register(new ServiceBusQueueDeliveryOperator<string>(ServiceBusConnectionString, queueName, true));
                 Telegraph.Instance.Register<string>(azureOperatorId);
                 IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
-                Telegraph.Instance.Register<SerializeIActorMessage, IActorMessageSerializationActor>(localOperatorID, () => serializer);
+                Telegraph.Instance.Register<SerializeMessage<IActorMessage>, IActorMessageSerializationActor>(localOperatorID, () => serializer);
 
                 Telegraph.Instance.Ask(message).Wait();
 
@@ -843,7 +843,7 @@ namespace UnitTests.Azure
                 PingPong.Ping aMsg = new PingPong.Ping(message);
                 IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
                 Telegraph.Instance.Register<PingPong.Ping, SendMessageToServiceBusTopic>(() => new SendMessageToServiceBusTopic(ServiceBusConnectionString, TopicName, true));
-                Telegraph.Instance.Register<SerializeIActorMessage, IActorMessageSerializationActor>(() => serializer);
+                Telegraph.Instance.Register<SerializeMessage<IActorMessage>, IActorMessageSerializationActor>(() => serializer);
                 IActorMessageDeserializationActor deserializer = new IActorMessageDeserializationActor();
                 deserializer.Register<PingPong.Ping>((object msg) => (PingPong.Ping)msg);
 
@@ -851,7 +851,7 @@ namespace UnitTests.Azure
                     Assert.Fail("Waited too long to send a message");
                 Message sbMessage = null;
                 WaitForQueue(sbMsgQueue, out sbMessage);
-                DeserializeIActorMessage dMsg = new DeserializeIActorMessage(sbMessage.Body);
+                DeserializeMessage<IActorMessage> dMsg = new DeserializeMessage<IActorMessage>(sbMessage.Body);
                 deserializer.Ask(dMsg);
                 var retMsgs = (PingPong.Ping)dMsg.ProcessingResult;
                 Assert.IsTrue(((string)retMsgs.Message).Equals(message));
@@ -879,7 +879,7 @@ namespace UnitTests.Azure
                 long azureOperatorId = Telegraph.Instance.Register(new ServiceBusTopicDeliveryOperator<IActorMessage>(ServiceBusConnectionString, TopicName, true));
                 Telegraph.Instance.Register<PingPong.Ping>(azureOperatorId);
                 IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
-                Telegraph.Instance.Register<SerializeIActorMessage, IActorMessageSerializationActor>(localOperatorID, () => serializer);
+                Telegraph.Instance.Register<SerializeMessage<IActorMessage>, IActorMessageSerializationActor>(localOperatorID, () => serializer);
 
                 if (!Telegraph.Instance.Ask(aMsg).Wait(new TimeSpan(0, 0, 10)))
                     Assert.Fail("Waited too long to send a message");
@@ -888,7 +888,7 @@ namespace UnitTests.Azure
                 deserializer.Register<PingPong.Ping>((object msg) => (PingPong.Ping)msg);
                 Message sbMessage = null;
                 WaitForQueue(sbMsgQueue, out sbMessage);
-                DeserializeIActorMessage dMsg = new DeserializeIActorMessage(sbMessage.Body);
+                DeserializeMessage<IActorMessage> dMsg = new DeserializeMessage<IActorMessage>(sbMessage.Body);
                 deserializer.Ask(dMsg);
                 var retMsgs = (PingPong.Ping)dMsg.ProcessingResult;
                 Assert.IsTrue(((string)retMsgs.Message).Equals(message));
@@ -912,7 +912,7 @@ namespace UnitTests.Azure
 
                 string message = "HelloWorld";
                 var actorMessage = new PingPong.Ping(message);
-                SerializeIActorMessage sMsg = new SerializeIActorMessage(actorMessage);
+                SerializeMessage<IActorMessage> sMsg = new SerializeMessage<IActorMessage>(actorMessage);
                 IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
                 serializer.OnMessageRecieved(sMsg);
                 byte[] msgBytes = (byte[])sMsg.ProcessingResult;
@@ -973,7 +973,7 @@ namespace UnitTests.Azure
                 long azureOperatorId = Telegraph.Instance.Register(new ServiceBusTopicDeliveryOperator<string>(ServiceBusConnectionString, TopicName, true));
                 Telegraph.Instance.Register<string>(azureOperatorId);
                 IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
-                Telegraph.Instance.Register<SerializeIActorMessage, IActorMessageSerializationActor>(localOperatorID, () => serializer);
+                Telegraph.Instance.Register<SerializeMessage<IActorMessage>, IActorMessageSerializationActor>(localOperatorID, () => serializer);
 
                 Telegraph.Instance.Ask(message).Wait();
 
@@ -1122,8 +1122,7 @@ namespace UnitTests.Azure
             {
                 string stringToSend = "Foobar";
                 byte[] msgBytes = (null == data) ? Encoding.UTF8.GetBytes(stringToSend) : data;
-
-                int index = 0;
+                
                 setupFunction();
 
                 Telegraph.Instance.Ask(msgBytes.ToActorMessage()).Wait();

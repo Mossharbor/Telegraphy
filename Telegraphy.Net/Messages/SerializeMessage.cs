@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace Telegraphy.Net
 {
-    public class SerializeIActorMessage : IActorMessage, IActorMessageIdentifier
+    public class SerializeMessage<MsgType> : IActorMessage, IActorMessageIdentifier
     {
         Type thisType = null;
-        IActorMessage wrappedMsg;
-        public SerializeIActorMessage(IActorMessage wrappedMsg) :this(wrappedMsg,null)
+        MsgType wrappedMsg;
+        public SerializeMessage(MsgType wrappedMsg) :this(wrappedMsg,null)
         {
         }
 
-        internal SerializeIActorMessage(IActorMessage wrappedMsg, object result)
+        internal SerializeMessage(MsgType wrappedMsg, object result)
         {
             this.wrappedMsg = wrappedMsg;
             //this.thisType = wrappedMsg.GetType();
@@ -29,9 +29,17 @@ namespace Telegraphy.Net
         }
         #endregion
 
-        internal IActorMessage MessageToSerialize { get { return wrappedMsg; } }
+        internal MsgType MessageToSerialize { get { return wrappedMsg; } }
 
-        public object Message { get { return this.wrappedMsg.Message; } set { throw new NotImplementedException("Cannot set the Message for the SerializedMessage class."); } }
+        public object Message
+        {
+            get
+            {
+                if (this.wrappedMsg is IActorMessage)
+                    return (this.wrappedMsg as IActorMessage).Message;
+                return this.wrappedMsg;
+            }
+            set { throw new NotImplementedException("Cannot set the Message for the SerializedMessage class."); } }
 
         public object ProcessingResult { get; set; }
 

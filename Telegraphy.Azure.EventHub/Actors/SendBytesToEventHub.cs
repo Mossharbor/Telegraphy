@@ -12,11 +12,11 @@ namespace Telegraphy.Azure
 {
     public class SendBytesToEventHub : IActor
     {
-        EventHubDataDeliverer eventHubClient;
+        EventHubDataPublisher eventHubClient;
 
         public SendBytesToEventHub(string eventHubonnectionString, string eventHubName, bool createEventHubIfItDoesNotExist = true)
         {
-            eventHubClient = EventHubDeliveryOperator<byte[]>.GetEventHubClient(eventHubonnectionString, eventHubName, createEventHubIfItDoesNotExist);
+            eventHubClient = EventHubPublishOperator<byte[]>.GetEventHubClient(eventHubonnectionString, eventHubName, createEventHubIfItDoesNotExist);
         }
 
         bool IActor.OnMessageRecieved<T>(T msg)
@@ -28,27 +28,7 @@ namespace Telegraphy.Azure
 
         internal static EventData BuildMessage<MsgType>(IActorMessage msg) where MsgType : class
         {
-            byte[] msgBytes = null;
-            if (typeof(MsgType) == typeof(string))
-            {
-                if ((msg as IActorMessage).Message.GetType().Name.Equals("String"))
-                    msgBytes = Encoding.UTF8.GetBytes((string)(msg as IActorMessage).Message);
-                else
-                    throw new NotConfiguredToSerializeThisTypeOfMessageException("String");
-            }
-            else if (typeof(MsgType) == typeof(byte[]))
-            {
-                if ((msg as IActorMessage).Message.GetType().Name.Equals("Byte[]"))
-                    msgBytes = (byte[])(msg as IActorMessage).Message;
-                else
-                    throw new NotConfiguredToSerializeThisTypeOfMessageException("Byte[]");
-            }
-            else
-            {
-                var serializeTask = Telegraph.Instance.Ask(new SerializeIActorMessage(msg));
-                msgBytes = (serializeTask.Result.ProcessingResult as byte[]);
-            }
-
+            byte[] msgBytes = TempSerialization.GetBytes<MsgType>(msg);
             return new EventData(msgBytes);
         }
     }

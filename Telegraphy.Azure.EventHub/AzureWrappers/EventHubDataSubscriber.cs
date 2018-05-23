@@ -9,7 +9,7 @@ namespace Telegraphy.Azure
     using Microsoft.Azure.EventHubs;
     using Mossharbor.AzureWorkArounds.ServiceBus;
 
-    internal class EventHubDataReciever 
+    internal class EventHubDataSubscriber 
     {
         EventHubClient client = null;
         PartitionReceiver reciever = null;
@@ -18,27 +18,27 @@ namespace Telegraphy.Azure
         string eventHubName, consumerGroup, partition;
         string[] consumerGroups;
 
-        public EventHubDataReciever(string connectionstring, string eventHubName)
+        public EventHubDataSubscriber(string connectionstring, string eventHubName)
             : this(connectionstring, eventHubName, PartitionReceiver.DefaultConsumerGroupName, "1", EventPosition.FromEnd())
         { }
 
-        public EventHubDataReciever(string connectionstring, string eventHubName, EventPosition position)
+        public EventHubDataSubscriber(string connectionstring, string eventHubName, EventPosition position)
             : this(connectionstring, eventHubName, PartitionReceiver.DefaultConsumerGroupName, "1", position)
         { }
         
-        public EventHubDataReciever(string connectionstring, string eventHubName, string consumerGroup)
+        public EventHubDataSubscriber(string connectionstring, string eventHubName, string consumerGroup)
             : this(connectionstring, eventHubName, consumerGroup, "1", EventPosition.FromEnd())
         { }
 
-        public EventHubDataReciever(string connectionstring, string eventHubName, string consumerGroup, EventPosition position)
+        public EventHubDataSubscriber(string connectionstring, string eventHubName, string consumerGroup, EventPosition position)
             : this(connectionstring, eventHubName, consumerGroup, "1", position)
         { }
 
-        public EventHubDataReciever(string connectionstring, string eventHubName, string consumerGroup, string partitionId)
+        public EventHubDataSubscriber(string connectionstring, string eventHubName, string consumerGroup, string partitionId)
             : this(connectionstring, eventHubName, consumerGroup, partitionId, EventPosition.FromEnd())
         { }
 
-        public EventHubDataReciever(string connectionstring, string eventHubName, string consumerGroup, string partitionId, EventPosition position)
+        public EventHubDataSubscriber(string connectionstring, string eventHubName, string consumerGroup, string partitionId, EventPosition position)
         {
             this.connectionString = connectionstring;
             string connectionStringWithEntityPath = connectionstring;

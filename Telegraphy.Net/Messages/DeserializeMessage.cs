@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace Telegraphy.Net
 {
-    public class DeserializeIActorMessage : IActorMessage, IActorMessageIdentifier
+    public class DeserializeMessage<MsgType> : IActorMessage, IActorMessageIdentifier
     {
         Type thisType = null;
         byte[] msgBytes;
 
-        public DeserializeIActorMessage(byte[] msgBytes)
+        public DeserializeMessage(byte[] msgBytes)
         {
             this.Message = msgBytes;
-            this.thisType = typeof(DeserializeIActorMessage);
+            this.thisType = typeof(DeserializeMessage<MsgType>);
         }
         #region IActorMessageIdentifier
         private string id = null;
@@ -29,6 +29,8 @@ namespace Telegraphy.Net
             get { return thisType; }
             set { thisType = value; }
         }
+
+        public MsgType DeserializedMessage { get; set; }
 
         public object Message { get; set; }
 

@@ -20,17 +20,17 @@ namespace Telegraphy.Net
                 throw new NullReferenceException("Could not serialize " + msg.GetType() + " because the message was null.");
 
             IActorMessage toSerialize = null;
-            if (msg is AnonAskMessage<SerializeIActorMessage>)
+            if (msg is AnonAskMessage<SerializeMessage<IActorMessage>>)
             {
-                toSerialize = (msg as AnonAskMessage<SerializeIActorMessage>).OriginalMessage.MessageToSerialize;
+                toSerialize = (msg as AnonAskMessage<SerializeMessage<IActorMessage>>).OriginalMessage.MessageToSerialize;
             }
-            else if (msg is SerializeIActorMessage)
+            else if (msg is SerializeMessage<IActorMessage>)
             {
-                toSerialize = (msg as SerializeIActorMessage).MessageToSerialize;
+                toSerialize = (msg as SerializeMessage<IActorMessage>).MessageToSerialize;
             }
             else
             {
-                toSerialize = new SerializeIActorMessage(msg).MessageToSerialize;
+                toSerialize = new SerializeMessage<IActorMessage>(msg).MessageToSerialize;
             }
 
 
@@ -110,9 +110,9 @@ namespace Telegraphy.Net
 
             if (null != msg.Status)
             {
-                if (!(msg.GetType() == typeof(SerializeIActorMessage)))
+                if (!(msg.GetType() == typeof(SerializeMessage<IActorMessage>)))
                 {
-                    msg.Status.SetResult(new SerializeIActorMessage(toSerialize, serializedMsg));
+                    msg.Status.SetResult(new SerializeMessage<IActorMessage>(toSerialize, serializedMsg));
                 }
                 else
                 {

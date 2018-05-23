@@ -157,15 +157,7 @@ namespace Telegraphy.Azure
             // Serialize the message first
             try
             {
-
-                if (typeof(MsgType) == typeof(byte[]))
-                    SerializeAndSend(msg, queue, (byte[])(msg as IActorMessage).Message);
-                else if (typeof(MsgType) == typeof(string))
-                    SerializeAndSend(msg, queue, (string)(msg as IActorMessage).Message);
-                else if (msg.Message is IActorMessage)
-                    SerializeAndSend((IActorMessage)msg.Message, queue);
-                else
-                    SerializeAndSend((IActorMessage)msg, queue);
+                SerializeAndSend(msg, queue);
             }
             catch(Exception ex)
             {
@@ -186,17 +178,19 @@ namespace Telegraphy.Azure
                 msg.Status?.SetResult(new QueuedCloudMessage(cloudMessage));
         }
 
-        internal static void SerializeAndSend(IActorMessage msg, CloudQueue queue, byte[] msgBytes = null)
+        internal static CloudQueueMessage BuildMessage(IActorMessage msg)
         {
-            if (null == msgBytes)
-            {
-                var serializeTask = Telegraph.Instance.Ask(new SerializeIActorMessage(msg)); //TODO timeout the wait here!!
-                msgBytes = (serializeTask.Result.ProcessingResult as byte[]);
-            }
-
-            // Add the message to the azure queue
             CloudQueueMessage cloudMessage = new CloudQueueMessage((string)null);
+            
+            byte[] msgBytes = TempSerialization.GetBytes<MsgType>(msg);
             cloudMessage.SetMessageContent(msgBytes);
+            return cloudMessage;
+        }
+
+        internal static void SerializeAndSend(IActorMessage msg, CloudQueue queue)
+        {
+            // Add the message to the azure queue
+            CloudQueueMessage cloudMessage = BuildMessage(msg);
 
             AddMessageProperties(queue, cloudMessage, (msg is IStorageQueuePropertiesProvider) ? (msg as IStorageQueuePropertiesProvider): null);
 
@@ -248,7 +242,7 @@ namespace Telegraphy.Azure
                 else
                 {
                     byte[] msgBytes = next.AsBytes;
-                    var t = Telegraph.Instance.Ask(new DeserializeIActorMessage(msgBytes));
+                    var t = Telegraph.Instance.Ask(new DeserializeMessage<IActorMessage>(msgBytes));
                     msg = t.Result as IActorMessage;
                 }
 

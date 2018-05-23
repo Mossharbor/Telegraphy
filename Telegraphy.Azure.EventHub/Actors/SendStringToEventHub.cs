@@ -10,11 +10,11 @@ namespace Telegraphy.Azure
 {
     public class SendStringToEventHub : IActor
     {
-        EventHubDataDeliverer eventHubClient;
+        EventHubDataPublisher eventHubClient;
 
         public SendStringToEventHub(string eventHubonnectionString, string eventHubName, bool createEventHubIfItDoesNotExist = true)
         {
-            eventHubClient = EventHubDeliveryOperator<string>.GetEventHubClient(eventHubonnectionString, eventHubName, createEventHubIfItDoesNotExist);
+            eventHubClient = EventHubPublishOperator<string>.GetEventHubClient(eventHubonnectionString, eventHubName, createEventHubIfItDoesNotExist);
         }
 
         bool IActor.OnMessageRecieved<T>(T msg)

@@ -76,10 +76,10 @@ namespace UnitTests.Serialization
             SimpleMessage<string> msgToSerialize = new SimpleMessage<string>();
             msgToSerialize.Message = "Foo";
 
-            SerializeIActorMessage serializeMessage = new SerializeIActorMessage(msgToSerialize);
+            SerializeMessage<IActorMessage> serializeMessage = new SerializeMessage<IActorMessage>(msgToSerialize);
             msgToSerialize.ProcessingResult = null;
 
-            Telegraph.Instance.Register<SerializeIActorMessage, IActorMessageSerializationActor>(() => new IActorMessageSerializationActor());
+            Telegraph.Instance.Register<SerializeMessage<IActorMessage>, IActorMessageSerializationActor>(() => new IActorMessageSerializationActor());
 
             var task = Telegraph.Instance.Ask(serializeMessage);
 
@@ -110,7 +110,7 @@ namespace UnitTests.Serialization
 
             byte[] serializedBytes = (msgToSerialize.Status.Task.Result.ProcessingResult as byte[]);
 
-            DeserializeIActorMessage deserializationMessage = new DeserializeIActorMessage(serializedBytes);
+            DeserializeMessage<IActorMessage> deserializationMessage = new DeserializeMessage<IActorMessage>(serializedBytes);
 
             if (!deserializer.OnMessageRecieved(deserializationMessage))
                 Console.Error.WriteLine("De-serialization Failed.");
@@ -119,9 +119,9 @@ namespace UnitTests.Serialization
 
             msgToSerialize.ProcessingResult = null;
 
-            Telegraph.Instance.Register<DeserializeIActorMessage, IActorMessageDeserializationActor>(() => new IActorMessageDeserializationActor());
+            Telegraph.Instance.Register<DeserializeMessage<IActorMessage>, IActorMessageDeserializationActor>(() => new IActorMessageDeserializationActor());
 
-            DeserializeIActorMessage msgToSerialize2 = new DeserializeIActorMessage(serializedBytes);
+            DeserializeMessage<IActorMessage> msgToSerialize2 = new DeserializeMessage<IActorMessage>(serializedBytes);
             var task = Telegraph.Instance.Ask(msgToSerialize2);
 
             task.Wait();
@@ -134,7 +134,7 @@ namespace UnitTests.Serialization
         {
             byte[] serializedBytes = SimpleMessageSerializationReturn();
             IActorMessageDeserializationActor deserializer = new IActorMessageDeserializationActor();
-            DeserializeIActorMessage deserializationMessage = new DeserializeIActorMessage(serializedBytes);
+            DeserializeMessage<IActorMessage> deserializationMessage = new DeserializeMessage<IActorMessage>(serializedBytes);
 
             if (!deserializer.OnMessageRecieved(deserializationMessage))
                 Assert.Fail("De-serialization Failed.");
@@ -147,10 +147,10 @@ namespace UnitTests.Serialization
         {
             byte[] serializedBytes = SimpleMessageSerializationReturn();
             IActorMessageDeserializationActor deserializer = new IActorMessageDeserializationActor();
-            DeserializeIActorMessage deserializationMessage = new DeserializeIActorMessage(serializedBytes);
-            Telegraph.Instance.Register<DeserializeIActorMessage, IActorMessageDeserializationActor>(() => new IActorMessageDeserializationActor());
+            DeserializeMessage<IActorMessage> deserializationMessage = new DeserializeMessage<IActorMessage>(serializedBytes);
+            Telegraph.Instance.Register<DeserializeMessage<IActorMessage>, IActorMessageDeserializationActor>(() => new IActorMessageDeserializationActor());
 
-            DeserializeIActorMessage msgToSerialize2 = new DeserializeIActorMessage(serializedBytes);
+            DeserializeMessage<IActorMessage> msgToSerialize2 = new DeserializeMessage<IActorMessage>(serializedBytes);
 
             var task = Telegraph.Instance.Ask(msgToSerialize2);
 
@@ -233,11 +233,11 @@ namespace UnitTests.Serialization
             var typeVal = (T)intType.Message;
             string id = intType.Id;
 
-            SerializeIActorMessage sMsg = new SerializeIActorMessage(intType);
+            SerializeMessage<IActorMessage> sMsg = new SerializeMessage<IActorMessage>(intType);
             if (!serialization.OnMessageRecieved(sMsg))
                 Assert.Fail(string.Format("Seriaization of {0} Failed", val.GetType().Name));
 
-            DeserializeIActorMessage dMsg = new DeserializeIActorMessage(sMsg.ProcessingResult as byte[]);
+            DeserializeMessage<IActorMessage> dMsg = new DeserializeMessage<IActorMessage>(sMsg.ProcessingResult as byte[]);
             if (!deserialization.OnMessageRecieved(dMsg))
                 Assert.Fail(string.Format("DeSeriaization of {0} Failed", val.GetType().Name));
 
@@ -251,11 +251,11 @@ namespace UnitTests.Serialization
             var typeVal = (T[])intType.Message;
             string id = intType.Id;
 
-            SerializeIActorMessage sMsg = new SerializeIActorMessage(intType);
+            SerializeMessage<IActorMessage> sMsg = new SerializeMessage<IActorMessage>(intType);
             if (!serialization.OnMessageRecieved(sMsg))
                 Assert.Fail(string.Format("Seriaization of array {0} Failed", val.GetType().Name));
 
-            DeserializeIActorMessage dMsg = new DeserializeIActorMessage(sMsg.ProcessingResult as byte[]);
+            DeserializeMessage<IActorMessage> dMsg = new DeserializeMessage<IActorMessage>(sMsg.ProcessingResult as byte[]);
             if (!deserialization.OnMessageRecieved(dMsg))
                 Assert.Fail(string.Format("DeSeriaization of array {0} Failed", val.GetType().Name));
 
