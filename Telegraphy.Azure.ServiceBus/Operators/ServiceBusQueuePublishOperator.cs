@@ -5,13 +5,13 @@ using System.Text;
 
 namespace Telegraphy.Azure
 {
-    public class ServiceBusQueueDeliveryOperator<T> : ServiceBusQueueBaseOperator<T> where T : class
+    public class ServiceBusQueuePublishOperator<T> : ServiceBusQueueBaseOperator<T> where T : class
     {
-        public ServiceBusQueueDeliveryOperator(string connectionString, string queueName, bool createQueueIfItDoesNotExist)
+        public ServiceBusQueuePublishOperator(string connectionString, string queueName, bool createQueueIfItDoesNotExist)
             : base(GetQueue(connectionString, queueName, createQueueIfItDoesNotExist))
         { }
 
-        public ServiceBusQueueDeliveryOperator(QueueClient queue, string connectionString, bool createQueueIfItDoesNotExist)
+        public ServiceBusQueuePublishOperator(QueueClient queue, string connectionString, bool createQueueIfItDoesNotExist)
             : base(new ServiceBusQueue(connectionString, queue, createQueueIfItDoesNotExist))
         { }
 

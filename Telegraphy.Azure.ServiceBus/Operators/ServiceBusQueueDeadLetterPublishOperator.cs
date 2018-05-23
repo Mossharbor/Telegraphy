@@ -6,14 +6,14 @@ using Telegraphy.Net;
 
 namespace Telegraphy.Azure
 {
-    public class ServiceBusQueueDeadLetterDeliveryOperator<T> : ServiceBusQueueBaseOperator<T> where T : class
+    public class ServiceBusQueueDeadLetterPublishOperator<T> : ServiceBusQueueBaseOperator<T> where T : class
     {
-        public ServiceBusQueueDeadLetterDeliveryOperator(string connectionString, string queueName)
+        public ServiceBusQueueDeadLetterPublishOperator(string connectionString, string queueName)
             : base(GetQueue(connectionString, queueName))
         { }
 
 
-        public ServiceBusQueueDeadLetterDeliveryOperator(QueueClient queue, string connectionString)
+        public ServiceBusQueueDeadLetterPublishOperator(QueueClient queue, string connectionString)
             : base(new ServiceBusDeadLetterQueue(connectionString, queue.QueueName))
         { }
 

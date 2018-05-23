@@ -123,7 +123,7 @@ namespace StartHere
         static void RecieveFromAzureQueue(string connectionstring, string queueName)
         {
             long localOperatorID = Telegraph.Instance.Register(new LocalOperator());
-            long azureOperatorID = Telegraph.Instance.Register(new StorageQueueReceptionOperator<IActorMessage>(LocalConcurrencyType.DedicatedThreadCount, connectionstring, queueName, false, 2));
+            long azureOperatorID = Telegraph.Instance.Register(new StorageQueueSubscriptionOperator<IActorMessage>(LocalConcurrencyType.DedicatedThreadCount, connectionstring, queueName, false, 2));
 
             IActorMessageDeserializationActor deserializer = new IActorMessageDeserializationActor();
             Telegraph.Instance.Register<DeserializeMessage, IActorMessageDeserializationActor>(localOperatorID, () => deserializer);
@@ -164,8 +164,8 @@ namespace StartHere
         static void RecieveFromSpecificQueues(string queueAccountConnectionString, string queue1Name, string queue2Name)
         {
             long serializationOperator = Telegraph.Instance.Register(new LocalOperator());
-            long operator1ID = Telegraph.Instance.Register(new StorageQueueReceptionOperator<IActorMessage>(LocalConcurrencyType.ActorsOnThreadPool, queueAccountConnectionString, queue1Name));
-            long operator2ID = Telegraph.Instance.Register(new StorageQueueReceptionOperator<IActorMessage>(LocalConcurrencyType.DedicatedThreadCount, queueAccountConnectionString, queue2Name, false, 3));
+            long operator1ID = Telegraph.Instance.Register(new StorageQueueSubscriptionOperator<IActorMessage>(LocalConcurrencyType.ActorsOnThreadPool, queueAccountConnectionString, queue1Name));
+            long operator2ID = Telegraph.Instance.Register(new StorageQueueSubscriptionOperator<IActorMessage>(LocalConcurrencyType.DedicatedThreadCount, queueAccountConnectionString, queue2Name, false, 3));
 
             IActorMessageDeserializationActor deserializer = new IActorMessageDeserializationActor();
             Telegraph.Instance.Register<DeserializeMessage, IActorMessageDeserializationActor>(serializationOperator, () => deserializer);
@@ -190,7 +190,7 @@ namespace StartHere
         
         static void SendToAzureServiceBusQueue(string connectionString, string queueName)
         {
-            long azureOperatorId = Telegraph.Instance.Register(new ServiceBusQueueReceptionOperator<IActorMessage>(LocalConcurrencyType.DedicatedThreadCount, serviceBusConnectionString, queueName, true));
+            long azureOperatorId = Telegraph.Instance.Register(new ServiceBusQueueSubscriptionOperator<IActorMessage>(LocalConcurrencyType.DedicatedThreadCount, serviceBusConnectionString, queueName, true));
             Telegraph.Instance.Register<PingPong.Ping>(azureOperatorId);
 
             IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
@@ -207,7 +207,7 @@ namespace StartHere
         static void RecieveFromAzureServiceBusQueue(string connectionString, string queueName)
         {
             long localOperatorID = Telegraph.Instance.Register(new LocalOperator());
-            long azureOperatorID = Telegraph.Instance.Register(new ServiceBusQueueReceptionOperator<IActorMessage>(LocalConcurrencyType.DedicatedThreadCount, connectionString, queueName, true, 2));
+            long azureOperatorID = Telegraph.Instance.Register(new ServiceBusQueueSubscriptionOperator<IActorMessage>(LocalConcurrencyType.DedicatedThreadCount, connectionString, queueName, true, 2));
 
             IActorMessageDeserializationActor deserializer = new IActorMessageDeserializationActor();
             Telegraph.Instance.Register<DeserializeMessage, IActorMessageDeserializationActor>(localOperatorID, () => deserializer);
