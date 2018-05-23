@@ -15,7 +15,7 @@ namespace BasicStartHere
         {
             HelloWorld();
 
-            HelloWorld2();
+            HelloWorldWithLazyActorInstantiation();
 
             SimpleSingleThreadSequential();
 

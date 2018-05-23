@@ -265,7 +265,7 @@ namespace UnitTests.Azure
                 queue.SendAsync(new EventData(msgBytes));
 
                 long azureOperatorID = Telegraph.Instance.Register(
-                     new EventHubReceptionOperator<IActorMessage>(EventHubConnectionString, eventHubName, false),
+                     new EventHubSubscriptionOperator<IActorMessage>(EventHubConnectionString, eventHubName, false),
                     (PingPong.Ping foo) => { Assert.IsTrue(message.Equals((string)foo.Message, StringComparison.InvariantCulture)); });
             }
             finally
@@ -340,7 +340,7 @@ namespace UnitTests.Azure
                 queue.SendAsync(new EventData(msgBytes));
 
                 long azureOperatorID = Telegraph.Instance.Register(
-                     new EventHubReceptionOperator<string>(EventHubConnectionString, eventHubName, false),
+                     new EventHubSubscriptionOperator<string>(EventHubConnectionString, eventHubName, false),
                     (string foo) => { Assert.IsTrue(message.Equals(foo, StringComparison.InvariantCulture)); });
             }
             finally
@@ -419,7 +419,7 @@ namespace UnitTests.Azure
                 queue.SendAsync(new EventData(msgBytes));
 
                 long azureOperatorID = Telegraph.Instance.Register(
-                     new EventHubReceptionOperator<string>(EventHubConnectionString, eventHubName, false),
+                     new EventHubSubscriptionOperator<string>(EventHubConnectionString, eventHubName, false),
                     (ValueTypeMessage<byte> foo) => { Assert.IsTrue(message.Equals(Encoding.UTF8.GetString(foo.ToArray()), StringComparison.InvariantCulture)); });
             }
             finally
