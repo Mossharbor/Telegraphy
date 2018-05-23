@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace Telegraphy.Azure
 {
-    public class EventHubDataDeliverer
+    public class EventHubDataPublisher
     {
         EventHubClient client;
         string connectionString;
         string eventHubName;
         string[] consumerGroups = null;
 
-        public EventHubDataDeliverer(string connectionString,string eventHubName)
+        public EventHubDataPublisher(string connectionString,string eventHubName)
         {
             this.eventHubName = eventHubName;
             var connectionStringBuilder = new EventHubsConnectionStringBuilder(connectionString)

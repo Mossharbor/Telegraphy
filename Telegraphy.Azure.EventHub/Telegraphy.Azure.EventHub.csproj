@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <Folder Include="Actors\" />
-    <Folder Include="AzureWrappers\" />
     <Folder Include="Messages\" />
   </ItemGroup>
 

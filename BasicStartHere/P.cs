@@ -13,43 +13,43 @@ namespace BasicStartHere
     {
         public static void Main(string[] args)
         {
-            //HelloWorld();
+            HelloWorld();
 
-            //HelloWorld2();
+            HelloWorld2();
 
-            //SimpleSingleThreadSequential();
+            SimpleSingleThreadSequential();
 
-            //ThreadPool();
+            ThreadPool();
 
-            //LimitedThreadPool();
+            LimitedThreadPool();
 
-            //WorkerThreads();
+            WorkerThreads();
 
-            //LazyInstantiation();
+            LazyInstantiation();
 
-            //LazyInstantiation2();
+            LazyInstantiation2();
 
-            //WaitOnMultipleMessagesToComplete();
+            WaitOnMultipleMessagesToComplete();
 
-            //WaitForCompletion();
+            WaitForCompletion();
 
-            //MessageTimeOut();
+            MessageTimeOut();
 
-            //MessageCancelled();
+            MessageCancelled();
 
-            //GetResultOfProcessing();
+            GetResultOfProcessing();
 
-            //MessageOrdering();
+            MessageOrdering();
 
-            //MessageOrdering2();
+            MessageOrdering2();
 
-            //BasicMessageSerializationDeserialization();
+            BasicMessageSerializationDeserialization();
 
-            //ComplexMessageSerializationDeserialization();
+            ComplexMessageSerializationDeserialization();
 
-            //MultipleOperatorsBasic();
+            MultipleOperatorsBasic();
 
-            //BroadcastToAllOperators();
+            BroadcastToAllOperators();
 
             ThrottlingIncomingMessages();
 

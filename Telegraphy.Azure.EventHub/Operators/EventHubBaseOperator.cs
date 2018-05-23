@@ -19,11 +19,11 @@ namespace Telegraphy.Azure
 
         private ConcurrentDictionary<Type, Action<Exception>> _exceptionTypeToHandler = new ConcurrentDictionary<Type, Action<Exception>>();
         private int maxDequeueCount = 1;
-        private EventHubDataReciever EventHubMsgReciever;
-        private EventHubDataDeliverer EventHubClient;
+        private EventHubDataSubscriber EventHubMsgReciever;
+        private EventHubDataPublisher EventHubClient;
         private ConcurrentQueue<IActorMessage> msgQueue = new ConcurrentQueue<IActorMessage>();
 
-        internal EventHubBaseOperator(ILocalSwitchboard switchBoard, EventHubDataReciever eventHubMsgReciever)
+        internal EventHubBaseOperator(ILocalSwitchboard switchBoard, EventHubDataSubscriber eventHubMsgReciever)
         {
             this.Switchboard = switchBoard;
             this.Switchboard.Operator = this;
@@ -31,7 +31,7 @@ namespace Telegraphy.Azure
             this.ID = 0;
         }
 
-        internal EventHubBaseOperator(EventHubDataDeliverer eventHubClient)
+        internal EventHubBaseOperator(EventHubDataPublisher eventHubClient)
         {
             this.EventHubClient = eventHubClient;
             this.ID = 0;
