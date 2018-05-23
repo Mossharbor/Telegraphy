@@ -8,8 +8,8 @@ namespace Telegraphy.Azure
 {
     public class ServiceBusQueueDeadLetterSubscriptionOperator<T> : ServiceBusQueueBaseOperator<T> where T : class
     {
-        const int DefaultDequeueMaxCount = ServiceBusTopicReceptionOperator<T>.DefaultDequeueMaxCount;
-        const int DefaultConcurrency = ServiceBusTopicReceptionOperator<T>.DefaultConcurrency;
+        const int DefaultDequeueMaxCount = ServiceBusTopicSubscriptionOperator<T>.DefaultDequeueMaxCount;
+        const int DefaultConcurrency = ServiceBusTopicSubscriptionOperator<T>.DefaultConcurrency;
 
         public ServiceBusQueueDeadLetterSubscriptionOperator(LocalConcurrencyType concurrencyType, string connectionString, string queueName, uint concurrency = DefaultConcurrency, int maxDequeueCount = DefaultDequeueMaxCount)
             : this(new LocalSwitchboard(concurrencyType, concurrency), ServiceBusQueueDeadLetterPublishOperator<T>.GetQueue(connectionString, queueName), maxDequeueCount)

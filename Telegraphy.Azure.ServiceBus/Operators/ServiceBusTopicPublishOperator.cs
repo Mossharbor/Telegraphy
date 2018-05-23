@@ -4,20 +4,20 @@ using System.Text;
 
 namespace Telegraphy.Azure
 {
-    public class ServiceBusTopicDeliveryOperator <T>: ServiceBusTopicBaseOperator<T> where T: class
+    public class ServiceBusTopicPublishOperator <T>: ServiceBusTopicBaseOperator<T> where T: class
     {
-        public ServiceBusTopicDeliveryOperator(string connectionString, string topicName, string subscription, bool createTopicIfItDoesNotExist, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
+        public ServiceBusTopicPublishOperator(string connectionString, string topicName, string subscription, bool createTopicIfItDoesNotExist, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
                : this(connectionString, topicName, new string[] { subscription }, createTopicIfItDoesNotExist, policy)
         {
         }
 
-        public ServiceBusTopicDeliveryOperator(string connectionString, string topicName, bool createTopicIfItDoesNotExist, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
-               : base(ServiceBusTopicDeliveryOperator<T>.GetSender(connectionString, topicName, createTopicIfItDoesNotExist, policy))
+        public ServiceBusTopicPublishOperator(string connectionString, string topicName, bool createTopicIfItDoesNotExist, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
+               : base(ServiceBusTopicPublishOperator<T>.GetSender(connectionString, topicName, createTopicIfItDoesNotExist, policy))
         {
         }
 
-        public ServiceBusTopicDeliveryOperator(string connectionString, string topicName, string[] subscriptionNames, bool createTopicIfItDoesNotExist, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
-               : base(ServiceBusTopicDeliveryOperator<T>.GetSender(connectionString, topicName, subscriptionNames, createTopicIfItDoesNotExist, policy))
+        public ServiceBusTopicPublishOperator(string connectionString, string topicName, string[] subscriptionNames, bool createTopicIfItDoesNotExist, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
+               : base(ServiceBusTopicPublishOperator<T>.GetSender(connectionString, topicName, subscriptionNames, createTopicIfItDoesNotExist, policy))
         {
         }
 

@@ -4,14 +4,14 @@ using System.Text;
 
 namespace Telegraphy.Azure
 {
-    public class ServiceBusTopicDeadLetterDeliveryOperator<T> : ServiceBusTopicBaseOperator<T> where T:class
+    public class ServiceBusTopicDeadLetterPublishOperator<T> : ServiceBusTopicBaseOperator<T> where T:class
     {
-        public ServiceBusTopicDeadLetterDeliveryOperator(string connectionString, string topicName, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
+        public ServiceBusTopicDeadLetterPublishOperator(string connectionString, string topicName, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
                : base(GetSender(connectionString, topicName, null, policy))
         {
         }
 
-        public ServiceBusTopicDeadLetterDeliveryOperator(string connectionString, string topicName, string subscriptionName, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
+        public ServiceBusTopicDeadLetterPublishOperator(string connectionString, string topicName, string subscriptionName, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
                : base(GetSender(connectionString, topicName, subscriptionName, policy))
         {
         }
