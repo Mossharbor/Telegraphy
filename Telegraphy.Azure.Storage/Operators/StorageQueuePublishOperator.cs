@@ -5,14 +5,14 @@ using System.Text;
 
 namespace Telegraphy.Azure
 {
-    public class StorageDeadLetterQueueDeliveryOperator<T> : StorageQueueBaseOperator<T> where T : class
+    public class StorageQueuePublishOperator<T> : StorageQueueBaseOperator<T> where T:class
     {
-        public StorageDeadLetterQueueDeliveryOperator(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true)
+        public StorageQueuePublishOperator(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true)
             : base(null, storageConnectionString, queueName, createQueueIfItDoesNotExist, false, DefaultDequeueMaxCount, null, null, null)
         {
         }
 
-        public StorageDeadLetterQueueDeliveryOperator(CloudQueue queue, CloudQueue deadLetterQueue)
+        public StorageQueuePublishOperator(CloudQueue queue, CloudQueue deadLetterQueue)
             : base(null, queue, deadLetterQueue, false, DefaultDequeueMaxCount, null, null, null)
         {
         }

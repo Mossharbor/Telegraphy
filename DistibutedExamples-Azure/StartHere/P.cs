@@ -72,7 +72,7 @@ namespace StartHere
             string message = @"Hello World Again";
 
             // Setup send to queue where the operator will handle the send up.
-            Telegraph.Instance.Register<string>(new StorageQueueDeliveryOperator<string>(connectionString, queueName, true));
+            Telegraph.Instance.Register<string>(new StorageQueuePublishOperator<string>(connectionString, queueName, true));
             
             // Send message to queue
             Telegraph.Instance.Ask(message).Wait();
@@ -106,7 +106,7 @@ namespace StartHere
 
         static void SendToAzureQueue(string connectionstring, string queueName)
         {
-            long azureOperatorId = Telegraph.Instance.Register(new StorageQueueDeliveryOperator<IActorMessage>(connectionstring, queueName, true));
+            long azureOperatorId = Telegraph.Instance.Register(new StorageQueuePublishOperator<IActorMessage>(connectionstring, queueName, true));
             Telegraph.Instance.Register<PingPong.Ping>(azureOperatorId);
 
             IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
@@ -143,8 +143,8 @@ namespace StartHere
         {
             Telegraph.Instance.UnRegisterAll();
 
-            long operator1ID = Telegraph.Instance.Register(new StorageQueueDeliveryOperator<IActorMessage>(queueAccountConnectionString, queue1Name, true));
-            long operator2ID = Telegraph.Instance.Register(new StorageQueueDeliveryOperator<IActorMessage>(queueAccountConnectionString, queue2Name, true));
+            long operator1ID = Telegraph.Instance.Register(new StorageQueuePublishOperator<IActorMessage>(queueAccountConnectionString, queue1Name, true));
+            long operator2ID = Telegraph.Instance.Register(new StorageQueuePublishOperator<IActorMessage>(queueAccountConnectionString, queue2Name, true));
             Telegraph.Instance.Register<PingPong.Ping>(operator1ID);
             Telegraph.Instance.Register<PingPong.Pong>(operator2ID);
 
