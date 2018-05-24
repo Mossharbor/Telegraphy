@@ -44,11 +44,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Actors\RecieveRequestFromResponseToRelay.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Operators\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Telegraphy.Net\Telegraphy.Net.csproj">
+      <Project>{0d5eda21-0e26-4e10-b109-bfa71559163e}</Project>
+      <Name>Telegraphy.Net</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

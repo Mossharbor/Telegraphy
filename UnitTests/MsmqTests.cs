@@ -20,6 +20,7 @@ namespace UnitTests.Msmq
         [TestMethod]
         public void TestSendingStringsToMsmq()
         {
+            Telegraph.Instance.UnRegisterAll();
             // create message
             string message = @"Hello World";
             string queueName = "TestSendingStringsToMsmq"+Guid.NewGuid().ToString().Substring(0,4);
@@ -63,6 +64,7 @@ namespace UnitTests.Msmq
         [TestMethod]
         public void TestSendingByteArrayToMsmq()
         {
+            Telegraph.Instance.UnRegisterAll();
             // create message
             string message = @"Hello World";
             string queueName = "TestSendingByteArrayToMsmq";
@@ -106,6 +108,7 @@ namespace UnitTests.Msmq
         [TestMethod]
         public void TestSendingObjectToMsmq()
         {
+            Telegraph.Instance.UnRegisterAll();
             // create message
             string messageString = "Hello World";
             string queueName = "TestSendingObjectToMsmq";

@@ -151,7 +151,7 @@ namespace Telegraphy.Azure
             }
 
             if (recieveMessagesOnly)
-                throw new Telegraphy.Net.Exceptions.OperatorCannotSendMessagesException();
+                throw new Telegraphy.Net.OperatorCannotSendMessagesException();
 
             // TODO allow the serializers to be passed in as IActors
             // Serialize the message first
@@ -276,34 +276,11 @@ namespace Telegraphy.Azure
 
             return ((DateTime.Now - start) <= timeout);
         }
-
-        public void Register<T>(Action<T> action) where T : class
-        {
-            if (null == this.Switchboard && !recieveMessagesOnly)
-                throw new CannotRegisterActionWithOperatorSinceWeAreSendingToAzureQueueOnlyException();
-
-            this.Switchboard.Register<T>(action);
-        }
-
-        public void Register<T, K>(System.Linq.Expressions.Expression<Func<K>> factory)
-            where T : class
-            where K : IActor
-        {
-            if (null == this.Switchboard && !recieveMessagesOnly)
-                throw new CannotRegisterActionWithOperatorSinceWeAreSendingToAzureQueueOnlyException();
-
-            this.Switchboard.Register<T, K>(factory);
-        }
-
+        
         public void Register(Type exceptionType, Action<Exception> handler)
         {
             while (!_exceptionTypeToHandler.TryAdd(exceptionType, handler))
                 _exceptionTypeToHandler.TryAdd(exceptionType, handler);
-        }
-
-        public void Register(Type exceptionType, Func<Exception, IActor, IActorMessage, IActorInvocation, IActor> handler)
-        {
-            this.Switchboard.Register(exceptionType, handler);
         }
 #endregion
     }

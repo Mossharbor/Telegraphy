@@ -9,6 +9,7 @@ namespace Telegraphy.Net
     using System.Collections.Concurrent;
     using System.Threading;
     using System.Linq.Expressions;
+    using Telegraphy.Net.Exceptions;
 
     public class LocalSwitchboard : IActor, ILocalSwitchboard
     {
@@ -47,13 +48,25 @@ namespace Telegraphy.Net
             this.Operator.AddMessage(msg);
             return true;
         }
+        #endregion
 
-        public virtual void Register<T>(Action<T> action) where T: class
+        #region ISwitchBoard
+        public virtual void Register<T>()
+        {
+            throw new LocalSwitchBoardRequiresARegisteredActorOrActionException();
+        }
+
+        public virtual void Register<T>(string registrationString)
+        {
+            throw new LocalSwitchBoardRequiresARegisteredActorOrActionException();
+        }
+
+        public virtual void Register<T>(Action<T> action) where T : class
         {
             var handlesType = typeof(T);
             bool decorateActorWithMailbox = LocalConcurrencyType.OneThreadPerActor == this.LocalConcurrencyType;
             bool isManyThreads = LocalConcurrencyType.OneActorPerThread == this.LocalConcurrencyType;
-            
+
             IActor anonActor = new AnonActor<T>(action);
             if (decorateActorWithMailbox)
                 anonActor = new MailBoxActor(anonActor);
@@ -96,7 +109,7 @@ namespace Telegraphy.Net
                     actor = invoker.Invoke(decorateActorWithMailbox);
                 }
             }
-            
+
             if (null == invoker)
             {
                 var func = actorCreationFunction.Compile();
@@ -112,9 +125,6 @@ namespace Telegraphy.Net
             try { _actorRegistered.Set(); }
             catch (SemaphoreFullException) { }
         }
-        #endregion
-
-        #region ISwitchBoard
         public virtual void Register(Type exceptionType, Func<Exception, IActor, IActorMessage, IActorInvocation, IActor> handler)
         {
             _exceptionTypeToHandler.AddOrUpdate(exceptionType, handler, (key, oldValue) => handler);

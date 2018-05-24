@@ -104,38 +104,7 @@ namespace Telegraphy.Net
             this.AddMessage(msg);
             return true;;
         }
-
-        public void Register<T>(Action<T> action) where T : class
-        {
-            var handlesType = typeof(T);
-
-            if (!messageQueues.ContainsKey(handlesType))
-            {
-                if (!messageQueues.TryAdd(handlesType, new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneThreadAllActors))))
-                {
-                    throw new FailedToRegisterOperatorForActionException(handlesType.ToString());
-                }
-            }
-
-            messageQueues[handlesType].Register<T>(action);
-        }
-
-        public void Register<T, K>(System.Linq.Expressions.Expression<Func<K>> factory)
-            where T : class
-            where K : IActor
-        {
-            var handlesType = typeof(T);
-
-            if (!messageQueues.ContainsKey(handlesType))
-            {
-                if (!messageQueues.TryAdd(handlesType, new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneThreadAllActors))))
-                {
-                    throw new FailedToRegisterOperatorForTypeException(handlesType.ToString());
-                }
-            }
-           
-            messageQueues[handlesType].Register<T,K>(factory);
-        }
+        
         #endregion
     }
 }

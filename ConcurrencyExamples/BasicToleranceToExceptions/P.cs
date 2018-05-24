@@ -109,7 +109,7 @@ namespace BasicToleranceToFailure
                 throw new ArgumentException("Testing here");
             };
 
-            Telegraph.Instance.MainOperator.Register<string, DefaultActor>(() => da);
+            Telegraph.Instance.MainOperator.Switchboard.Register<string, DefaultActor>(() => da);
 
             Func<Exception, IActor, IActorMessage, IActorInvocation, IActor> errhandler = delegate(Exception ex, IActor actor, IActorMessage msg, IActorInvocation invoker)
             {

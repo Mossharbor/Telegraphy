@@ -42,19 +42,7 @@ namespace Telegraphy.Net
         public ulong Count { get { return (ulong)actorMessages.Count; } }
 
         public long ID { get; set; }
-
-        public void Register<T>(Action<T> action) where T : class
-        {
-            this.Switchboard.Register<T>(action);
-        }
-
-        public void Register<T, K>(System.Linq.Expressions.Expression<Func<K>> factory)
-            where T : class
-            where K : IActor
-        {
-            this.Switchboard.Register<T, K>(factory);
-        }
-
+        
         public bool IsAlive()
         {
             return this.Switchboard.IsDisabled();
@@ -67,8 +55,7 @@ namespace Telegraphy.Net
             
             this.Switchboard.Disable();
         }
-
-
+        
         public virtual void AddMessage(IActorMessage msg)
         {
             this.NextMessage = msg;
@@ -96,7 +83,12 @@ namespace Telegraphy.Net
         private ILocalSwitchboard _switchboard = null;
         public virtual ILocalSwitchboard Switchboard
         {
-            get { return _switchboard; }
+            get
+            {
+                if (null == _switchboard)
+                    throw new OperatorHasNoSwitchBoardException();
+                return _switchboard;
+            }
             set 
             {
                 if (null != _switchboard)

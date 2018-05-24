@@ -253,7 +253,7 @@ namespace Telegraphy.Net
         public void Register<T>(Action<T> action) where T : class
         {
             if (IsUsingSingleOperator())
-                this.MainOperator.Register<T>(action);
+                this.MainOperator.Switchboard.Register<T>(action);
             else
                 throw new FunctionNotSupportedWhenMultipleOperatorsAreRegisteredException();
         }
@@ -263,7 +263,7 @@ namespace Telegraphy.Net
             where K : IActor
         {
             if (IsUsingSingleOperator())
-                this.MainOperator.Register<T, K>(factory);
+                this.MainOperator.Switchboard.Register<T, K>(factory);
             else
                 throw new FunctionNotSupportedWhenMultipleOperatorsAreRegisteredException();
         }
@@ -271,7 +271,7 @@ namespace Telegraphy.Net
         public void Register(Type exceptionType, Func<Exception, IActor, IActorMessage, IActorInvocation, IActor> handler)
         {
             if (IsUsingSingleOperator())
-                this.MainOperator.Register(exceptionType, handler);
+                this.MainOperator.Switchboard.Register(exceptionType, handler);
             else
                 throw new FunctionNotSupportedWhenMultipleOperatorsAreRegisteredException();
         }
@@ -283,12 +283,12 @@ namespace Telegraphy.Net
                 op.ID = GetNextOperatorID();
 
                 if (!operators.TryAdd(op.ID, op))
-                    throw new FailedToRegisterOperatorException("Failed To Register Operator for new ID"+op.ID);
+                    throw new FailedToRegisterOperatorForNewIdException(op.ID.ToString());
             }
             else if (!operators.ContainsKey(op.ID))
             {
                 if (!operators.TryAdd(op.ID, op))
-                    throw new FailedToRegisterOperatorException("Failed to Register Operator for existing ID"+op.ID);
+                    throw new FailedToRegisterOperatorForExistingIdException(op.ID.ToString());
             }
 
             if (null == mainOperator)
@@ -297,9 +297,27 @@ namespace Telegraphy.Net
             return op.ID;
         }
 
-        public void Register<T>(IOperator op)
+        public long Register<T>(IOperator op, string registrationString)
         {
-            Register(op);
+            if (String.IsNullOrEmpty(registrationString))
+                op.Switchboard.Register<T>();
+            else
+                op.Switchboard.Register<T>(registrationString);
+
+            return Register<T>(op, false);
+        }
+
+        public long Register<T>(IOperator op)
+        {
+            return Register<T>(op, true);
+        }
+
+        private long Register<T>(IOperator op, bool registerSwitchBoard = true)
+        {
+            long opID = Register(op);
+
+            if (registerSwitchBoard)
+                op.Switchboard.Register<T>();
 
             var handlesType = typeof(T);
 
@@ -326,6 +344,8 @@ namespace Telegraphy.Net
                 if (msgTypeToOperator[handlesType].TryAdd(op))
                     throw new FailedToRegisterOperatorForTypeException(handlesType.ToString());
             }
+
+            return opID;
         }
         
         public void Register<T>(long opId)
@@ -333,7 +353,7 @@ namespace Telegraphy.Net
             IOperator op = null;
             if (!operators.TryGetValue(opId, out op))
                 throw new NoOperatorFoundForIDException();
-            Register<T>(op);
+            Register<T>(op, true);
         }
 
         public void Register<T>(long opID, Action<T> action) where T : class
@@ -348,8 +368,8 @@ namespace Telegraphy.Net
         public long Register<T>(IOperator op, Action<T> action) where T : class
         {
             long nextID = Register(op);
-            op.Register<T>(action);
-            Register<T>(op);
+            op.Switchboard.Register<T>(action);
+            Register<T>(op, false);
             return nextID;
         }
 
@@ -369,8 +389,8 @@ namespace Telegraphy.Net
             where K : IActor
         {
             long nextID = Register(op);
-            op.Register<T, K>(factory);
-            Register<T>(op);
+            op.Switchboard.Register<T, K>(factory);
+            Register<T>(op, false);
             return nextID;
         }
 
@@ -386,7 +406,7 @@ namespace Telegraphy.Net
         public long Register(IOperator op, Type exceptionType, Func<Exception, IActor, IActorMessage, IActorInvocation, IActor> handler)
         {
             long nextID = Register(op);
-            op.Register(exceptionType, handler);
+            op.Switchboard.Register(exceptionType, handler);
             return nextID;
         }
 

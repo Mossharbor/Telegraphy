@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Telegraphy.Net;
 using Mossharbor.AzureWorkArounds.ServiceBus;
 using System.Collections.Concurrent;
-using Telegraphy.Azure.Exceptions;
 using Microsoft.Azure.EventHubs;
 
 namespace Telegraphy.Azure
@@ -120,36 +119,13 @@ namespace Telegraphy.Azure
 
             this.Switchboard?.Disable();
         }
-
-        public void Register<T>(Action<T> action) where T : class
-        {
-            if (null == this.Switchboard && null != EventHubMsgReciever)
-                throw new CannotRegisterActionWithOperatorSinceWeAreSendingToAzureEventHubOnlyException();
-
-            this.Switchboard.Register<T>(action);
-        }
-
-        public void Register<T, K>(Expression<Func<K>> factory)
-            where T : class
-            where K : IActor
-        {
-            if (null == this.Switchboard && null != EventHubMsgReciever)
-                throw new CannotRegisterActionWithOperatorSinceWeAreSendingToAzureEventHubOnlyException();
-
-            this.Switchboard.Register<T, K>(factory);
-        }
-
+        
         public void Register(Type exceptionType, Action<Exception> handler)
         {
             while (!_exceptionTypeToHandler.TryAdd(exceptionType, handler))
                 _exceptionTypeToHandler.TryAdd(exceptionType, handler);
         }
-
-        public void Register(Type exceptionType, Func<Exception, IActor, IActorMessage, IActorInvocation, IActor> handler)
-        {
-            this.Switchboard.Register(exceptionType, handler);
-        }
-
+        
         public bool WaitTillEmpty(TimeSpan timeout)
         {
             DateTime start = DateTime.Now;

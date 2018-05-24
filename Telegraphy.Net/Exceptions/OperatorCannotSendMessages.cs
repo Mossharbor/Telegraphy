@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Telegraphy.Net.Exceptions
+namespace Telegraphy.Net
 {
 
     [Serializable]

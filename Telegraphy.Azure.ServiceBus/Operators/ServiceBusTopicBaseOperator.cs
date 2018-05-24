@@ -11,7 +11,6 @@ namespace Telegraphy.Azure
     using Microsoft.Azure.ServiceBus.Core;
     using System.Collections.Concurrent;
     using System.Threading;
-    using Telegraphy.Azure.Exceptions;
     using Telegraphy.Net;
     using Telegraphy.Net.Exceptions;
 
@@ -179,36 +178,13 @@ namespace Telegraphy.Azure
 
             this.Switchboard?.Disable();
         }
-
-        public void Register<T>(Action<T> action) where T : class
-        {
-            if (null == this.Switchboard && null != ServiceBusMsgReciever)
-                throw new CannotRegisterActionWithOperatorSinceWeAreSendingToAzureQueueOnlyException();
-
-            this.Switchboard.Register<T>(action);
-        }
-
-        public void Register<T, K>(Expression<Func<K>> factory)
-            where T : class
-            where K : IActor
-        {
-            if (null == this.Switchboard && null != ServiceBusMsgReciever)
-                throw new CannotRegisterActionWithOperatorSinceWeAreSendingToAzureQueueOnlyException();
-
-            this.Switchboard.Register<T, K>(factory);
-        }
-
+        
         public void Register(Type exceptionType, Action<Exception> handler)
         {
             while (!_exceptionTypeToHandler.TryAdd(exceptionType, handler))
                 _exceptionTypeToHandler.TryAdd(exceptionType, handler);
         }
-
-        public void Register(Type exceptionType, Func<Exception, IActor, IActorMessage, IActorInvocation, IActor> handler)
-        {
-            this.Switchboard.Register(exceptionType, handler);
-        }
-
+        
         public uint ApproximateMessageCount
         {
             get

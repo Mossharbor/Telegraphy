@@ -124,7 +124,7 @@ namespace Telegraphy.Msmq
             }
 
             if (recieveMessagesOnly)
-                throw new Telegraphy.Net.Exceptions.OperatorCannotSendMessagesException();
+                throw new Telegraphy.Net.OperatorCannotSendMessagesException();
             
             // Serialize the message first
             try
@@ -176,36 +176,13 @@ namespace Telegraphy.Msmq
         {
             this.Switchboard.Disable();
         }
-
-        public void Register<T>(Action<T> action) where T : class
-        {
-            if (null == this.Switchboard && !recieveMessagesOnly)
-                throw new CannotRegisterActionWithOperatorSinceWeAreSendingToMsmqQueueOnlyException();
-
-            this.Switchboard.Register<T>(action);
-        }
-
-        public void Register<T, K>(Expression<Func<K>> factory)
-            where T : class
-            where K : IActor
-        {
-            if (null == this.Switchboard && !recieveMessagesOnly)
-                throw new CannotRegisterActionWithOperatorSinceWeAreSendingToMsmqQueueOnlyException();
-
-            this.Switchboard.Register<T, K>(factory);
-        }
-
+        
         public void Register(Type exceptionType, Action<Exception> handler)
         {
             while (!_exceptionTypeToHandler.TryAdd(exceptionType, handler))
                 _exceptionTypeToHandler.TryAdd(exceptionType, handler);
         }
-
-        public void Register(Type exceptionType, Func<Exception, IActor, IActorMessage, IActorInvocation, IActor> handler)
-        {
-            this.Switchboard.Register(exceptionType, handler);
-        }
-
+        
         public virtual bool WaitTillEmpty(TimeSpan timeout)
         {
             DateTime start = DateTime.Now;
@@ -222,7 +199,6 @@ namespace Telegraphy.Msmq
         #endregion
 
         #region IActor
-
         public bool OnMessageRecieved<T>(T msg) where T : class, IActorMessage
         {
             AddMessage(msg);
