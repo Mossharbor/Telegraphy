@@ -25,9 +25,9 @@ namespace UnitTests.Azure
     {
         private string TableStorageName = "telegraphytesttable";
         private string StorageContainerName = "telagraphytesteventhub";
-        private string ServiceBusConnectionString { get { return ""; } }
-        private string StorageConnectionString { get { return ""; } }
-        private string EventHubConnectionString { get { return ""; } }
+        private string ServiceBusConnectionString { get { return @""; } }
+        private string StorageConnectionString { get { return @""; } }
+        private string EventHubConnectionString { get { return @""; } }
 
         #region Storage Queue ServiceBus and Event Hub Helpers
         ConcurrentQueue<Message> sbMsgQueue = new ConcurrentQueue<Message>();
@@ -279,7 +279,7 @@ namespace UnitTests.Azure
         public void SendStringToEventHub()
         {
             string eventHubName = "test-" + "SendStringToEventHub".ToLower();
-            string consumerGroup = eventHubName + Guid.NewGuid().ToString().Substring(0, 6);
+            string consumerGroup = @"$Default"; // eventHubName + Guid.NewGuid().ToString().Substring(0, 6);
             CreateEventHub(eventHubName, consumerGroup);
             try
             {
