@@ -29,7 +29,7 @@ namespace DiningPhilosophers
 
             var localOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneThreadPerActor));
 
-            Telegraph.Instance.MainOperator = localOperator;
+            Telegraph.Instance.Register(localOperator);
             var t = new UnculturedPhilosopher();
             Telegraph.Instance.Register<EatingMessage, UnculturedPhilosopher>(() => t);
             Telegraph.Instance.Register<ThinkingMessage, UnculturedPhilosopher>(() => t);
@@ -45,7 +45,7 @@ namespace DiningPhilosophers
 
             var localOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneThreadPerActor));
 
-            Telegraph.Instance.MainOperator = localOperator;
+            Telegraph.Instance.Register(localOperator);
             var t = new CulturedPhilosopher();
             Telegraph.Instance.Register<EatingMessage, CulturedPhilosopher>(() => t);
             Telegraph.Instance.Register<ThinkingMessage, CulturedPhilosopher>(() => t);

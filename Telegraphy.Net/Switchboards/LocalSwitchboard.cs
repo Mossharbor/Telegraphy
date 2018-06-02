@@ -53,12 +53,12 @@ namespace Telegraphy.Net
         #region ISwitchBoard
         public virtual void Register<T>()
         {
-            throw new LocalSwitchBoardRequiresARegisteredActorOrActionException();
+            throw new SwitchBoardRequiresARegisteredActorOrActionException();
         }
 
         public virtual void Register<T>(string registrationString)
         {
-            throw new LocalSwitchBoardRequiresARegisteredActorOrActionException();
+            throw new SwitchBoardRequiresARegisteredActorOrActionException();
         }
 
         public virtual void Register<T>(Action<T> action) where T : class
@@ -150,7 +150,7 @@ namespace Telegraphy.Net
                     SpawnThreads();
                 }
                 else
-                    throw new InvalidOperationException("We cannot change operators once we have started processing messages.");
+                    throw new CannotSwitchOperatorsOnExecutingSwitchboardException();
             }
         }
 
@@ -168,11 +168,7 @@ namespace Telegraphy.Net
             Interlocked.Increment(ref threadExitFlag);
             lock (_threadAllocationLock)
             {
-                try
-                {
-                    _actorRegistered.Set();
-                }
-                catch (SemaphoreFullException) { }
+                 _actorRegistered.Set();
 
                 foreach (var thread in _concurrentThreadList)
                 {

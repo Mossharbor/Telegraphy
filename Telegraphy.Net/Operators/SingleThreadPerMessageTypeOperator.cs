@@ -21,7 +21,7 @@ namespace Telegraphy.Net
         {
         }
 
-        public SingleThreadPerMessageTypeOperator(Func<ILocalSwitchboard> createSwitchBoard)
+        private SingleThreadPerMessageTypeOperator(Func<ILocalSwitchboard> createSwitchBoard)
         {
             this.createSwitchBoard = createSwitchBoard;
             this.ID = 0;
@@ -56,7 +56,8 @@ namespace Telegraphy.Net
         {
             if (!messageQueues.ContainsKey(msg.GetType()))
             {
-                if (!messageQueues.TryAdd(msg.GetType(), new LocalOperator(createSwitchBoard())))
+                LocalOperator op = new LocalOperator(createSwitchBoard());
+                if (!messageQueues.TryAdd(msg.GetType(), op))
                     throw new FailedMessageEnqueException(msg.GetType().ToString());
             }
             else
@@ -65,14 +66,19 @@ namespace Telegraphy.Net
 
         public IActorMessage GetMessage()
         {
-            // We are farming this out to the dictionary of local operators.
+            // We are farming this out to the dictionary of local operators. we dont actually have any ourselves
             throw new NotImplementedException();
         }
         
-        public ILocalSwitchboard Switchboard
+        public ICollection<ILocalSwitchboard> Switchboards
         {
-            get { throw new NotImplementedException("We have sub operators each with their own switch board."); }
-            set {throw new NotImplementedException("We have sub operators each with their own switch board."); }
+            get
+            {
+                List<ILocalSwitchboard> switchBoards = new List<ILocalSwitchboard>();
+                foreach (var op in messageQueues.Values)
+                    switchBoards.AddRange(op.Switchboards);
+                return switchBoards;
+            }
         }
 
         public bool WaitTillEmpty(TimeSpan timeout)

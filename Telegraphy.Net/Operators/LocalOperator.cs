@@ -80,8 +80,14 @@ namespace Telegraphy.Net
             return true;
         }
 
+        private List<ILocalSwitchboard> _switchboards = new List<ILocalSwitchboard>();
+        public ICollection<ILocalSwitchboard> Switchboards
+        {
+            get { return _switchboards; }
+        }
+
         private ILocalSwitchboard _switchboard = null;
-        public virtual ILocalSwitchboard Switchboard
+        public ILocalSwitchboard Switchboard
         {
             get
             {
@@ -94,8 +100,10 @@ namespace Telegraphy.Net
                 if (null != _switchboard)
                 {
                     _switchboard.Disable();
+                    _switchboards.Clear();
                 }
 
+                _switchboards.Add(value);
                 _switchboard = value;
                 _switchboard.Operator = this;
             }

@@ -76,7 +76,7 @@ namespace BasicStartHere
             string messageStr = "HelloWorld2.";
             try
             {
-                Telegraph.Instance.MainOperator = new LocalOperator(); // performs a reset when we assign a new operator
+                Telegraph.Instance.Register(new LocalOperator()); // performs a reset when we assign a new operator
                 Telegraph.Instance.Register<ValueTypeMessage<byte>, LazyInstantiationActor>(() => new LazyInstantiationActor());
             }
             catch (FailedRegistrationException ex)
@@ -102,7 +102,7 @@ namespace BasicStartHere
             int msgCount = 0;
             try
             {
-                Telegraph.Instance.MainOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneThreadPerActor));
+                Telegraph.Instance.Register(new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneThreadPerActor)));
 
                 Telegraph.Instance.Register<string>(message =>
                 {
@@ -121,7 +121,7 @@ namespace BasicStartHere
                 throw;
             }
 
-            Telegraph.Instance.WaitTillEmpty(TimeSpan.FromSeconds(1));
+            bool isEmpty = Telegraph.Instance.WaitTillEmpty(TimeSpan.FromSeconds(2));
             Task task = Telegraph.Instance.Ask(new ControlMessages.HangUp());
             task.Wait();
             System.Diagnostics.Debug.Assert(11 == msgCount);
@@ -130,8 +130,8 @@ namespace BasicStartHere
         public static void ThreadPool()
         {
             int msgCount = 0;
-            Telegraph.Instance.MainOperator = new LocalOperator();
-            Telegraph.Instance.MainOperator.Switchboard = new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool);
+            Telegraph.Instance.Register(new LocalOperator());
+            Telegraph.Instance.MainOperator.Switchboards.Add(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool));
 
             Telegraph.Instance.Register<string>(message =>
             {
@@ -151,7 +151,7 @@ namespace BasicStartHere
         {
             int msgCount = 0;
             var localOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool, 2));
-            Telegraph.Instance.MainOperator = localOperator;
+            Telegraph.Instance.Register(localOperator);
 
             Telegraph.Instance.Register<string>(message =>
             {
@@ -171,7 +171,7 @@ namespace BasicStartHere
         {
             int msgCount = 0;
             System.Diagnostics.Debug.WriteLine("WorkerThreads");
-            Telegraph.Instance.MainOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneActorPerThread, 20));
+            Telegraph.Instance.Register(new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneActorPerThread, 20)));
 
             Telegraph.Instance.Register<string>(message =>
             {
@@ -192,7 +192,7 @@ namespace BasicStartHere
         public static void LazyInstantiation()
         {
             System.Diagnostics.Debug.WriteLine("LazyInstantiation");
-            Telegraph.Instance.MainOperator = new LocalOperator(); // performs a reset.
+            Telegraph.Instance.Register(new LocalOperator()); // performs a reset.
             string messageStr = "LazyInstantiationActor.";
 
             Telegraph.Instance.Register<byte[]>(message =>
@@ -210,7 +210,7 @@ namespace BasicStartHere
         public static void LazyInstantiation2()
         {
             System.Diagnostics.Debug.WriteLine("LazyInstantiation2");
-            Telegraph.Instance.MainOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool)); // performs a reset.
+            Telegraph.Instance.Register(new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool))); // performs a reset.
             string messageStr = "LazyInstantiation2.";
 
             // this is using the local threadpool concurrency type which will create a new Actor for each message.
@@ -227,7 +227,7 @@ namespace BasicStartHere
         public static void WaitOnMultipleMessagesToComplete()
         {
             System.Diagnostics.Debug.WriteLine("WaitOnMultipleMessagesToComplete");
-            Telegraph.Instance.MainOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneActorPerThread, 20)); // performs a reset.
+            Telegraph.Instance.Register(new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneActorPerThread, 20))); // performs a reset.
             string messageStr = "WaitOnMultipleMessagesToComplete.";
 
             int msgCount = 0;
@@ -257,7 +257,7 @@ namespace BasicStartHere
         {
             int msgCount = 0;
             System.Diagnostics.Debug.WriteLine("WaitForCompletion");
-            Telegraph.Instance.MainOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool)); // performs a reset.
+            Telegraph.Instance.Register(new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool))); // performs a reset.
             Telegraph.Instance.Register<string>(message =>
             {
                 ++msgCount;
@@ -277,7 +277,7 @@ namespace BasicStartHere
         {
             int msgCount = 0;
             System.Diagnostics.Debug.WriteLine("MessageTimeOut");
-            Telegraph.Instance.MainOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneActorPerThread)); // performs a reset.
+            Telegraph.Instance.Register(new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneActorPerThread))); // performs a reset.
             Telegraph.Instance.Register<string>(message =>
             {
                 msgCount++;
@@ -309,12 +309,12 @@ namespace BasicStartHere
         {
             int msgCount = 0;
             System.Diagnostics.Debug.WriteLine("MessageCancelled");
-            Telegraph.Instance.MainOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneActorPerThread)); // performs a reset.
+            Telegraph.Instance.Register(new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneActorPerThread))); // performs a reset.
             Telegraph.Instance.Register<string>(message =>
             {
-                ++msgCount;
                 System.Threading.Thread.Sleep(4000);
                 Console.WriteLine(message + " bar");
+                ++msgCount;
             });
 
             TimeSpan timeout = new TimeSpan(0, 0, 2); // death if we take longer than 20 seconds
@@ -345,7 +345,7 @@ namespace BasicStartHere
         {
             int msgCount = 0;
             System.Diagnostics.Debug.WriteLine("GetResultOfProcessing");
-            Telegraph.Instance.MainOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneThreadAllActors)); // performs a reset.
+            Telegraph.Instance.Register(new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneThreadAllActors))); // performs a reset.
             Telegraph.Instance.Register<Compute>(compute =>
             {
                 ++msgCount;
@@ -367,7 +367,7 @@ namespace BasicStartHere
         public static void MessageOrdering()
         {
             int strmsgCount = 0, computeMsgCount = 0;
-            Telegraph.Instance.MainOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneThreadPerActor)); // performs a reset.
+            Telegraph.Instance.Register(new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneThreadPerActor))); // performs a reset.
             Telegraph.Instance.Register<string>(message =>
             {
                 ++strmsgCount;
@@ -408,16 +408,18 @@ namespace BasicStartHere
         {
             int strmsgCount = 0, computeMsgCount = 0;
             System.Diagnostics.Debug.WriteLine("MessageOrdering2");
-            Telegraph.Instance.MainOperator = new SingleThreadPerMessageTypeOperator();
+            //Telegraph.Instance.Register(new SingleThreadPerMessageTypeOperator());
+            long computeOpID = Telegraph.Instance.Register(new LocalOperator(new SingleThreadPerMessageTypeSwitchBoard()));
+            long printOpID = Telegraph.Instance.Register(new LocalOperator(new SingleThreadPerMessageTypeSwitchBoard()));
 
-            Telegraph.Instance.Register<string>(message =>
+            Telegraph.Instance.Register<string>(computeOpID, message =>
             {
                 ++strmsgCount;
                 System.Threading.Thread.Sleep(300);
                 Console.WriteLine(message + " bar");
             });
 
-            Telegraph.Instance.Register<Compute>(compute =>
+            Telegraph.Instance.Register<Compute>(printOpID, compute =>
             {
                 ++computeMsgCount;
                 compute.RaiseToPower(2);
@@ -431,13 +433,13 @@ namespace BasicStartHere
             var printTask3 = Telegraph.Instance.Ask("2 - foo 3");
             var printTask4 = Telegraph.Instance.Ask("2 - foo 4");
 
-            computeTask.Wait();
-            printTask1.Wait();
-            printTask2.Wait();
-            printTask3.Wait();
-            printTask4.Wait();
+            bool computed = computeTask.Wait(TimeSpan.FromSeconds(1));
+            printTask1.Wait(TimeSpan.FromSeconds(1));
+            printTask2.Wait(TimeSpan.FromSeconds(1));
+            printTask3.Wait(TimeSpan.FromSeconds(1));
+            printTask4.Wait(TimeSpan.FromSeconds(1));
 
-            double result = (double)(computeTask.Result.ProcessingResult);
+            double result = computed ? (double)(computeTask.Result.ProcessingResult) : 0;
             Console.WriteLine("MessageOrdering2 compute task returned " + result.ToString("00"));
             System.Diagnostics.Debug.Assert(computeMsgCount == 1);
             System.Diagnostics.Debug.Assert(strmsgCount == 4);
@@ -445,7 +447,7 @@ namespace BasicStartHere
 
         public static void BasicMessageSerializationDeserialization()
         {
-            Telegraph.Instance.MainOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool)); // performs a reset.
+            Telegraph.Instance.Register(new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool))); // performs a reset.
 
             Telegraph.Instance.Register<string>(message => Console.WriteLine("BasicMessageSerializationDeserialization: "+message));
             Telegraph.Instance.Register<SerializeMessage<IActorMessage>, IActorMessageSerializationActor>(() => new IActorMessageSerializationActor());
@@ -479,7 +481,7 @@ namespace BasicStartHere
 
         public static void ComplexMessageSerializationDeserialization()
         {
-            Telegraph.Instance.MainOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool)); // performs a reset.
+            Telegraph.Instance.Register(new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool))); // performs a reset.
 
             IActorMessageDeserializationActor deserialization = new IActorMessageDeserializationActor();
             Telegraph.Instance.Register<SerializeMessage<IActorMessage>, IActorMessageSerializationActor>(() => new IActorMessageSerializationActor());
@@ -596,7 +598,7 @@ namespace BasicStartHere
             int msgCount = 0;
             AsyncSemaphore messageThrottle = new AsyncSemaphore(2, 2); // allow 2 at a time so we dont bombard the thread pool
 
-            Telegraph.Instance.MainOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool)); // performs a reset.
+            Telegraph.Instance.Register(new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool))); // performs a reset.
 
             Telegraph.Instance.Register<string>(message => {
                 msgCount++;

@@ -30,7 +30,7 @@ namespace DurableSender
 
             // send queued items to the 
             string durableQueueName = "DurableQueueName";
-            Telegraph.Instance.MainOperator = new LocalOperator(); 
+            Telegraph.Instance.Register(new LocalOperator()); 
             string messageStr = "DurableSenderException.";
             DefaultActor da = new DefaultActor();
             da.OnMessageHandler = delegate (IActorMessage s) { throw new System.Net.WebException(); };

@@ -8,7 +8,6 @@ namespace Telegraphy.Azure
 {
     using Microsoft.WindowsAzure.Storage.Queue;
     using Telegraphy.Azure.Exceptions;
-    using Telegraphy.Azure.Exceptions;
     using Telegraphy.Net;
 
     public class SendStringToStorageQueue : IActor
@@ -25,7 +24,7 @@ namespace Telegraphy.Azure
             if (!(msg as IActorMessage).Message.GetType().Name.Equals("String"))
                 throw new SendStringActorCanOnlySendStringMessagesException();
 
-            StorageQueueBaseOperator<object>.SerializeAndSend(msg, queue, (string)msg.Message);
+            StorageQueueBaseOperator<string>.SerializeAndSend(msg, queue, (string)msg.Message);
             return true;
         }
     }

@@ -24,7 +24,7 @@ namespace Telegraphy.Azure
             if (!(msg as IActorMessage).Message.GetType().Name.Equals("Byte[]"))
                 throw new SendBytesStorageActorCanOnlySendValueTypeByteArrayMessagesException("ValueTypeMessage<byte>");
 
-            StorageQueueBaseOperator<T>.SerializeAndSend(msg, queue);
+            StorageQueueBaseOperator<byte[]>.SerializeAndSend(msg, queue);
             return true;
         }
     }

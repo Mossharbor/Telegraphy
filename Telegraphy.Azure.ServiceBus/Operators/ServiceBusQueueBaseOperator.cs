@@ -25,8 +25,8 @@ namespace Telegraphy.Azure
         internal ServiceBusQueueBaseOperator(ILocalSwitchboard switchBoard, ServiceBusQueue queue, int maxDequeueCount)
             : this(queue, true)
         {
-            this.Switchboard = switchBoard;
-            this.Switchboard.Operator = this;
+            this.Switchboards.Add(switchBoard);
+            switchBoard.Operator = this;
             this.maxDequeueCount = maxDequeueCount;
         }
 
@@ -121,7 +121,8 @@ namespace Telegraphy.Azure
 
         public ulong Count { get { return (ulong)queue.ApproximateMessageCount; } }
 
-        public ILocalSwitchboard Switchboard { get; set; }
+        private List<ILocalSwitchboard> switchboards = new List<ILocalSwitchboard>();
+        public ICollection<ILocalSwitchboard> Switchboards { get { return switchboards; } }
 
         public void AddMessage(IActorMessage msg)
         {
@@ -140,7 +141,8 @@ namespace Telegraphy.Azure
 
                 this.queue.CloseAsync().Wait();
                 hangUp = (msg as ControlMessages.HangUp);
-                this.Switchboard.Disable();
+                foreach(var switchboard in this.Switchboards)
+                    switchboard.Disable();
                 return;
             }
 
@@ -203,20 +205,15 @@ namespace Telegraphy.Azure
 
             return msg;
         }
-
-        public bool IsAlive()
-        {
-            if (queue.IsClosedOrClosing)
-                return false;
-
-            if (recievingOnly)
-                return this.Switchboard.IsDisabled();
-            return true;
-        }
-
+        
         public void Kill()
         {
-            queue.CloseAsync().Wait();
+            var waitTask = queue.CloseAsync();
+
+            foreach (var switchBoard in this.Switchboards)
+                switchBoard.Disable();
+
+            waitTask.Wait();
         }
         
         public void Register(Type exceptionType, Action<Exception> handler)

@@ -19,7 +19,7 @@ namespace Telegraphy.Azure
 
         bool IActor.OnMessageRecieved<T>(T msg)
         {
-            StorageQueueBaseOperator<object>.SerializeAndSend(msg, queue);
+            StorageQueueBaseOperator<IActorMessage>.SerializeAndSend(msg, queue);
             return true;
         }
     }

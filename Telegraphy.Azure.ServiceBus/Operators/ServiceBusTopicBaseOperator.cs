@@ -32,11 +32,11 @@ namespace Telegraphy.Azure
         internal ServiceBusTopicBaseOperator(ILocalSwitchboard switchboard, ServiceBusTopicReciever serviceBusMsgReciever, int maxDequeueCount)
         {
             this.maxDequeueCount = maxDequeueCount;
-            this.Switchboard = switchboard;
+            this.Switchboards.Add(switchboard);
+            switchboard.Operator = this;
             this.ServiceBusMsgReciever = serviceBusMsgReciever;
             this.ID = 0;
-            if (null != Switchboard)
-                Switchboard.Operator = this;
+            switchboard.Operator = this;
 
             if (null == switchboard)
                 throw new SwitchBoardNeededWhenRecievingMessagesException();
@@ -108,7 +108,8 @@ namespace Telegraphy.Azure
 
         public ulong Count { get { return (ulong)msgQueue.Count; } }
 
-        public ILocalSwitchboard Switchboard { get; set; }
+        private List<ILocalSwitchboard> switchboards = new List<ILocalSwitchboard>();
+        public ICollection<ILocalSwitchboard> Switchboards { get { return switchboards; } }
 
         public void AddMessage(IActorMessage msg)
         {
@@ -127,7 +128,8 @@ namespace Telegraphy.Azure
 
                 ServiceBusMsgReciever.CloseAsync().Wait();
                 hangUp = (msg as ControlMessages.HangUp);
-                this.Switchboard.Disable();
+                foreach (var switchBoard in this.Switchboards)
+                    switchBoard.Disable();
                 return;
             }
 
@@ -140,8 +142,7 @@ namespace Telegraphy.Azure
 
         internal static Message SerializeAndSend(IActorMessage msg, ServiceBusTopicDeliverer queue)
         {
-            Message message = null;
-            ServiceBusQueueBaseOperator<MsgType>.BuildMessage(msg);
+            Message message = ServiceBusQueueBaseOperator<MsgType>.BuildMessage(msg);
             queue.SendAsync(message).Wait();
             return message;
         }
@@ -156,15 +157,7 @@ namespace Telegraphy.Azure
             
             return msg;
         }
-
-        public bool IsAlive()
-        {
-            if (null == ServiceBusMsgReciever ? this.ServiceBusMsgSender.IsClosedOrClosing : this.ServiceBusMsgReciever.IsClosedOrClosing)
-                return false;
-
-            return null != this.Switchboard ? this.Switchboard.IsDisabled() : true;
-        }
-
+        
         public void Kill()
         {
             if (null != this.ServiceBusMsgSender)
@@ -176,7 +169,8 @@ namespace Telegraphy.Azure
                 this.ServiceBusMsgReciever.CloseAsync().Wait();
             }
 
-            this.Switchboard?.Disable();
+            foreach (var switchBoard in this.Switchboards)
+                switchBoard.Disable();
         }
         
         public void Register(Type exceptionType, Action<Exception> handler)

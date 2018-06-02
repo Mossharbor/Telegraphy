@@ -23,10 +23,10 @@ namespace UnitTests.Azure
     [TestClass]
     public class AzureTests
     {
-        static string storageAccountKey = @"";
-        private string StorageContainerName = "";
-        private string ServiceBusConnectionString { get { return @""; } }
-        private string StorageConnectionString { get { return @""; } }
+        private string TableStorageName = "telegraphytesttable";
+        private string StorageContainerName = "telagraphytesteventhub";
+        private string ServiceBusConnectionString { get { return ""; } }
+        private string StorageConnectionString { get { return ""; } }
         private string EventHubConnectionString { get { return ""; } }
 
         #region Storage Queue ServiceBus and Event Hub Helpers
@@ -833,7 +833,7 @@ namespace UnitTests.Azure
             string TopicName = "test-" + "SendActorMessageToServiceBusTopic".ToLower();
 
             // we cannot send messages to topics that have no subscriptions in them
-            CreateSubscriptions(TopicName, new string[] { "test" });
+            CreateTopicAndSubscriptions(TopicName, new string[] { "test" });
             var Topic = GetServiceBusTopicReciever(TopicName, "test");
             try
             {
@@ -1640,18 +1640,18 @@ namespace UnitTests.Azure
             Telegraph.Instance.Register<InsertStringIntoTableStorageMessage, SendITableEntityToTableStorage>(
                     () => new Telegraphy.Azure.SendITableEntityToTableStorage(
                         StorageConnectionString,
-                        "telegraphytesttable",
+                        TableStorageName,
                         TableOperationType.InsertOrReplace));
 
             Telegraph.Instance.Register<RetrieveFromTableStorageMessage, RetrieveFromTableStorage<string>>(
                     () => new Telegraphy.Azure.RetrieveFromTableStorage<string>(
                         StorageConnectionString,
-                        "telegraphytesttable"));
+                        TableStorageName));
 
             Telegraph.Instance.Register<DeleteFromTableStorageMessage, DeleteFromTableStorage>(
                     () => new Telegraphy.Azure.DeleteFromTableStorage(
                         StorageConnectionString,
-                        "telegraphytesttable"));
+                        TableStorageName));
 
             Telegraph.Instance.Ask(new InsertStringIntoTableStorageMessage("foo", "bar", "hello")).Wait();
             Telegraph.Instance.Ask(new InsertStringIntoTableStorageMessage("foo", "bar2", "world")).Wait();

@@ -1,19 +1,17 @@
 ﻿using System;
 namespace Telegraphy.Net
 {
-    using System.Linq.Expressions;
+    using System.Collections.Generic;
 
     public interface IOperator : IActor
     {
         long ID {get;set;}
 
-        bool IsAlive();
-
         void Kill();
 
         ulong Count { get; }
 
-        ILocalSwitchboard Switchboard { get; set; }
+        ICollection<ILocalSwitchboard> Switchboards { get; }
 
         void AddMessage(IActorMessage msg);
 

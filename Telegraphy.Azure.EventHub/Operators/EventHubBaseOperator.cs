@@ -24,8 +24,8 @@ namespace Telegraphy.Azure
 
         internal EventHubBaseOperator(ILocalSwitchboard switchBoard, EventHubDataSubscriber eventHubMsgReciever)
         {
-            this.Switchboard = switchBoard;
-            this.Switchboard.Operator = this;
+            this.Switchboards.Add(switchBoard);
+            switchBoard.Operator = this;
             this.EventHubMsgReciever = eventHubMsgReciever;
             this.ID = 0;
         }
@@ -58,8 +58,9 @@ namespace Telegraphy.Azure
 
         public ulong Count { get { return (ulong)msgQueue.Count; } }
 
-        public ILocalSwitchboard Switchboard { get; set; }
-
+        private List<ILocalSwitchboard> switchboards = new List<ILocalSwitchboard>();
+        public ICollection<ILocalSwitchboard> Switchboards { get { return switchboards; } }
+        
         public void AddMessage(IActorMessage msg)
         {
             EventData eventData = SendBytesToEventHub.BuildMessage<MsgType>(msg);
@@ -104,12 +105,7 @@ namespace Telegraphy.Azure
             // save the first one to return
             return ConvertToActorMessage(recievedList.ElementAt(0).Body.Array);
         }
-
-        public bool IsAlive()
-        {
-            return null != this.Switchboard ? this.Switchboard.IsDisabled() : true;
-        }
-
+        
         public void Kill()
         {
             if (null != EventHubMsgReciever)
@@ -117,7 +113,8 @@ namespace Telegraphy.Azure
                 EventHubMsgReciever.Close();
             }
 
-            this.Switchboard?.Disable();
+            foreach(var switchBoard in this.Switchboards)
+                switchBoard.Disable();
         }
         
         public void Register(Type exceptionType, Action<Exception> handler)

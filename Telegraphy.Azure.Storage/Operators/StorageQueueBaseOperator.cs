@@ -51,7 +51,7 @@ namespace Telegraphy.Azure
         }
 
         protected StorageQueueBaseOperator(
-            ILocalSwitchboard switchBoard,
+            ILocalSwitchboard switchboard,
             CloudQueue queue,
             CloudQueue deadLetterQueue,
             bool recieve,
@@ -61,17 +61,19 @@ namespace Telegraphy.Azure
             Microsoft.WindowsAzure.Storage.OperationContext retrievalOperationContext = null)
         {
             this.recieveMessagesOnly = recieve;
-            this.Switchboard = switchBoard;
+            if (null != switchboard)
+            {
+                this.Switchboards.Add(switchboard);
+                switchboard.Operator = this;
+            }
             this.ID = 0;
             this.queue = queue;
             this.deadLetterQueue = deadLetterQueue;
             this.retrieveVisibilityTimeout = retrieveVisibilityTimeout;
             this.retrievalRequestOptions = retrievalRequestOptions;
             this.retrievalOperationContext = retrievalOperationContext;
-            if (null != switchBoard)
-                switchBoard.Operator = this;
 
-            if (null == switchBoard && recieve)
+            if (null == switchboard && recieve)
                 throw new SwitchBoardNeededWhenRecievingMessagesException();
         }
         
@@ -110,18 +112,11 @@ namespace Telegraphy.Azure
         #region IOperator
 
         public long ID { get; set; }
-
-        public bool IsAlive()
-        {
-            // check and see if the azure queue exists.
-            if (!this.queue.Exists())
-                return false;
-            return this.Switchboard.IsDisabled();
-        }
-
+        
         public void Kill()
         {
-            this.Switchboard.Disable();
+            foreach (var switchBoard in this.Switchboards)
+                switchBoard.Disable();
         }
 
         public ulong Count
@@ -132,7 +127,8 @@ namespace Telegraphy.Azure
             }
         }
 
-        public ILocalSwitchboard Switchboard { get; set; }
+        private List<ILocalSwitchboard> switchboards = new List<ILocalSwitchboard>();
+        public ICollection<ILocalSwitchboard> Switchboards { get { return switchboards; } }
 
         public void AddMessage(IActorMessage msg)
         {
@@ -146,7 +142,7 @@ namespace Telegraphy.Azure
                 }
                 
                 hangUp = (msg as ControlMessages.HangUp);
-                this.Switchboard.Disable();
+                Kill();
                 return;
             }
 

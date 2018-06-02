@@ -45,14 +45,15 @@ namespace Telegraphy.Msmq
             }
         }
 
-        public ILocalSwitchboard Switchboard { get; set; }
+        private List<ILocalSwitchboard> switchboards = new List<ILocalSwitchboard>();
+        public ICollection<ILocalSwitchboard> Switchboards { get { return switchboards; } }
         public MessageQueue Queue { get { return queue; }  set { queue = value; } }
 
         internal MsmqBaseOperator(ILocalSwitchboard switchboard, string machineName, string queueName) :
             this(machineName, queueName, QueueAccessMode.Receive)
         {
-            this.Switchboard = switchboard;
-            this.Switchboard.Operator = this;
+            this.Switchboards.Add(switchboard);
+            switchboard.Operator = this;
             this.recieveMessagesOnly = true;
         }
 
@@ -119,7 +120,7 @@ namespace Telegraphy.Msmq
                 }
 
                 hangUp = (msg as ControlMessages.HangUp);
-                this.Switchboard.Disable();
+                Kill();
                 return;
             }
 
@@ -163,18 +164,11 @@ namespace Telegraphy.Msmq
                 return null;
             }
         }
-
-        public bool IsAlive()
-        {
-            // check and see if the azure queue exists.
-            if (!MessageQueue.Exists(Queue.Path))
-                return false;
-            return this.Switchboard.IsDisabled();
-        }
-
+        
         public void Kill()
         {
-            this.Switchboard.Disable();
+            foreach (var switchBoard in this.Switchboards)
+                switchBoard.Disable();
         }
         
         public void Register(Type exceptionType, Action<Exception> handler)

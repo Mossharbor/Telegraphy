@@ -25,7 +25,7 @@ namespace UnitTests.Switchboard
                 Telegraph.Instance.Tell(message);
                 Assert.IsTrue(false); // we expected this exception
             }
-            catch(LocalSwitchBoardRequiresARegisteredActorOrActionException ex)
+            catch(SwitchBoardRequiresARegisteredActorOrActionException ex)
             {
                 Assert.IsTrue(true); // we expected this exception
             }
