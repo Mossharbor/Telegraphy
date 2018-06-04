@@ -11,5 +11,6 @@ namespace UnitTests
         public static string EventHubConnectionString { get { return @""; } }
         public static string StorageConnectionString { get { return @""; } }
         public static string ServiceBusConnectionString { get { return @""; } }
+        public static string RelayConnectionString { get { return @""; } }
     }
 }
