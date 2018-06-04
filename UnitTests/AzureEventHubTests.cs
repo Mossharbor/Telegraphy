@@ -17,9 +17,7 @@ namespace UnitTests.Azure.EventHub
     [TestClass]
     public class AzureEventHubTests
     {
-        private string StorageContainerName = "telagraphytesteventhub";
-        private string EventHubConnectionString { get { return @""; } }
-        private string StorageConnectionString { get { return @""; } }
+        public static string StorageContainerName = "telagraphytesteventhub";
 
         static ConcurrentQueue<EventData> ehMsgQueue = new ConcurrentQueue<EventData>();
 
@@ -41,8 +39,8 @@ namespace UnitTests.Azure.EventHub
             var eventProcessorHost = new EventProcessorHost(
                 eventHubName,
                 consumerGroup, //GroupPartitionReceiver.DefaultConsumerGroupName,
-                EventHubConnectionString,
-                StorageConnectionString,
+                Connections.EventHubConnectionString,
+                Connections.StorageConnectionString,
                 StorageContainerName);
 
 
@@ -51,7 +49,7 @@ namespace UnitTests.Azure.EventHub
 
         private void CreateEventHub(string eventHubName, string consumerGroup)
         {
-            NamespaceManager ns = NamespaceManager.CreateFromConnectionString(EventHubConnectionString);
+            NamespaceManager ns = NamespaceManager.CreateFromConnectionString(Connections.EventHubConnectionString);
             EventHubDescription qd;
             if (!ns.EventHubExists(eventHubName, out qd))
                 ns.CreateEventHub(eventHubName);
@@ -63,7 +61,7 @@ namespace UnitTests.Azure.EventHub
 
         private void DeleteEventHub(string eventHubName)
         {
-            NamespaceManager ns = NamespaceManager.CreateFromConnectionString(EventHubConnectionString);
+            NamespaceManager ns = NamespaceManager.CreateFromConnectionString(Connections.EventHubConnectionString);
             EventHubDescription qd;
             if (ns.EventHubExists(eventHubName, out qd))
                 ns.DeleteEventHub(eventHubName);
@@ -83,7 +81,7 @@ namespace UnitTests.Azure.EventHub
                 string message = "HelloWorld";
                 PingPong.Ping aMsg = new PingPong.Ping(message);
                 IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
-                Telegraph.Instance.Register<PingPong.Ping, SendMessageToEventHub>(() => new SendMessageToEventHub(EventHubConnectionString, eventHubName, true));
+                Telegraph.Instance.Register<PingPong.Ping, SendMessageToEventHub>(() => new SendMessageToEventHub(Connections.EventHubConnectionString, eventHubName, true));
                 Telegraph.Instance.Register<SerializeMessage<IActorMessage>, IActorMessageSerializationActor>(() => serializer);
 
                 if (!Telegraph.Instance.Ask(aMsg).Wait(new TimeSpan(0, 0, 10)))
@@ -118,7 +116,7 @@ namespace UnitTests.Azure.EventHub
                 PingPong.Ping aMsg = new PingPong.Ping(message);
 
                 long localOperatorID = Telegraph.Instance.Register(new LocalQueueOperator(LocalConcurrencyType.DedicatedThreadCount, 2));
-                long azureOperatorId = Telegraph.Instance.Register(new EventHubPublishOperator<IActorMessage>(EventHubConnectionString, eventHubName, true));
+                long azureOperatorId = Telegraph.Instance.Register(new EventHubPublishOperator<IActorMessage>(Connections.EventHubConnectionString, eventHubName, true));
                 Telegraph.Instance.Register<PingPong.Ping>(azureOperatorId);
                 IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
                 Telegraph.Instance.Register<SerializeMessage<IActorMessage>, IActorMessageSerializationActor>(localOperatorID, () => serializer);
@@ -149,7 +147,7 @@ namespace UnitTests.Azure.EventHub
             string eventHubName = "test-" + "RecieveActorMessageFromEventHub".ToLower();
             string consumerGroup = eventHubName + Guid.NewGuid().ToString().Substring(0, 6);
             CreateEventHub(eventHubName, consumerGroup);
-            var connectionStringBuilder = new EventHubsConnectionStringBuilder(EventHubConnectionString) { EntityPath = eventHubName };
+            var connectionStringBuilder = new EventHubsConnectionStringBuilder(Connections.EventHubConnectionString) { EntityPath = eventHubName };
             EventHubClient queue = EventHubClient.CreateFromConnectionString(connectionStringBuilder.ToString());
             try
             {
@@ -162,7 +160,7 @@ namespace UnitTests.Azure.EventHub
                 queue.SendAsync(new EventData(msgBytes));
 
                 long azureOperatorID = Telegraph.Instance.Register(
-                     new EventHubSubscriptionOperator<IActorMessage>(EventHubConnectionString, eventHubName, false),
+                     new EventHubSubscriptionOperator<IActorMessage>(Connections.EventHubConnectionString, eventHubName, false),
                     (PingPong.Ping foo) => { Assert.IsTrue(message.Equals((string)foo.Message, StringComparison.InvariantCulture)); });
             }
             finally
@@ -183,7 +181,7 @@ namespace UnitTests.Azure.EventHub
                 StartEventHubReciever(eventHubName, consumerGroup);
 
                 string message = "HelloWorld";
-                Telegraph.Instance.Register<string, SendStringToEventHub>(() => new SendStringToEventHub(EventHubConnectionString, eventHubName, true));
+                Telegraph.Instance.Register<string, SendStringToEventHub>(() => new SendStringToEventHub(Connections.EventHubConnectionString, eventHubName, true));
                 Telegraph.Instance.Ask(message).Wait();
                 EventData ehMessage = null;
                 WaitForQueue(ehMsgQueue, out ehMessage);
@@ -207,7 +205,7 @@ namespace UnitTests.Azure.EventHub
                 StartEventHubReciever(eventHubName, consumerGroup);
                 string message = "HelloWorld";
 
-                Telegraph.Instance.Register(new EventHubPublishOperator<string>(EventHubConnectionString, eventHubName, true));
+                Telegraph.Instance.Register(new EventHubPublishOperator<string>(Connections.EventHubConnectionString, eventHubName, true));
                 if (!Telegraph.Instance.Ask(message).Wait(new TimeSpan(0, 0, 10)))
                     Assert.Fail("Waited too long to send a message");
                 EventData ehMessage = null;
@@ -228,7 +226,7 @@ namespace UnitTests.Azure.EventHub
             string eventHubName = "test-" + "RecieveStringFromEventHub".ToLower();
             string consumerGroup = eventHubName + Guid.NewGuid().ToString().Substring(0, 6);
             CreateEventHub(eventHubName, consumerGroup);
-            var connectionStringBuilder = new EventHubsConnectionStringBuilder(EventHubConnectionString) { EntityPath = eventHubName };
+            var connectionStringBuilder = new EventHubsConnectionStringBuilder(Connections.EventHubConnectionString) { EntityPath = eventHubName };
             EventHubClient queue = EventHubClient.CreateFromConnectionString(connectionStringBuilder.ToString());
             try
             {
@@ -237,7 +235,7 @@ namespace UnitTests.Azure.EventHub
                 queue.SendAsync(new EventData(msgBytes));
 
                 long azureOperatorID = Telegraph.Instance.Register(
-                     new EventHubSubscriptionOperator<string>(EventHubConnectionString, eventHubName, false),
+                     new EventHubSubscriptionOperator<string>(Connections.EventHubConnectionString, eventHubName, false),
                     (string foo) => { Assert.IsTrue(message.Equals(foo, StringComparison.InvariantCulture)); });
             }
             finally
@@ -260,7 +258,7 @@ namespace UnitTests.Azure.EventHub
                 string message = "HelloWorld";
                 byte[] messageBytes = Encoding.UTF8.GetBytes(message);
 
-                Telegraph.Instance.Register<ValueTypeMessage<byte>, SendBytesToEventHub>(() => new SendBytesToEventHub(EventHubConnectionString, eventHubName, true));
+                Telegraph.Instance.Register<ValueTypeMessage<byte>, SendBytesToEventHub>(() => new SendBytesToEventHub(Connections.EventHubConnectionString, eventHubName, true));
                 Telegraph.Instance.Ask(messageBytes.ToActorMessage()).Wait();
                 EventData ehMessage = null;
                 WaitForQueue(ehMsgQueue, out ehMessage);
@@ -285,7 +283,7 @@ namespace UnitTests.Azure.EventHub
                 string message = "HelloWorld";
                 byte[] messageBytes = Encoding.UTF8.GetBytes(message);
 
-                Telegraph.Instance.Register(new EventHubPublishOperator<byte[]>(EventHubConnectionString, eventHubName, true));
+                Telegraph.Instance.Register(new EventHubPublishOperator<byte[]>(Connections.EventHubConnectionString, eventHubName, true));
 
                 if (!Telegraph.Instance.Ask(messageBytes.ToActorMessage()).Wait(new TimeSpan(0, 0, 10)))
                     Assert.Fail("Waited too long to send a message");
@@ -307,7 +305,7 @@ namespace UnitTests.Azure.EventHub
             string eventHubName = "test-" + "RecieveBytesFromEventHub".ToLower();
             string consumerGroup = eventHubName + Guid.NewGuid().ToString().Substring(0, 6);
             CreateEventHub(eventHubName, consumerGroup);
-            var connectionStringBuilder = new EventHubsConnectionStringBuilder(EventHubConnectionString) { EntityPath = eventHubName };
+            var connectionStringBuilder = new EventHubsConnectionStringBuilder(Connections.EventHubConnectionString) { EntityPath = eventHubName };
             EventHubClient queue = EventHubClient.CreateFromConnectionString(connectionStringBuilder.ToString());
             try
             {
@@ -316,7 +314,7 @@ namespace UnitTests.Azure.EventHub
                 queue.SendAsync(new EventData(msgBytes));
 
                 long azureOperatorID = Telegraph.Instance.Register(
-                     new EventHubSubscriptionOperator<string>(EventHubConnectionString, eventHubName, false),
+                     new EventHubSubscriptionOperator<string>(Connections.EventHubConnectionString, eventHubName, false),
                     (ValueTypeMessage<byte> foo) => { Assert.IsTrue(message.Equals(Encoding.UTF8.GetString(foo.ToArray()), StringComparison.InvariantCulture)); });
             }
             finally
