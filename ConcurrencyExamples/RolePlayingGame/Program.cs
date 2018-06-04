@@ -11,7 +11,7 @@ namespace RolePlayingGame
     {
         static void Main(string[] args)
         {
-            Telegraph.Instance.Register(new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneActorPerThread)));
+            Telegraph.Instance.Register(new LocalQueueOperator(new LocalSwitchboard(LocalConcurrencyType.OneActorPerThread)));
 
             Knight player = new Knight();
             Dragon dragon = new Dragon();

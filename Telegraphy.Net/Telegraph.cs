@@ -45,7 +45,7 @@ namespace Telegraphy.Net
             get 
             {
                 if (null == mainOperator)
-                    Register(new LocalOperator());
+                    Register(new LocalQueueOperator());
 
                 return mainOperator; 
             }

@@ -43,7 +43,7 @@ namespace UnitTests.Serialization
         {
             Telegraph.Instance.UnRegisterAll();
 
-            Telegraph.Instance.Register(new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool))); // performs a reset.
+            Telegraph.Instance.Register(new LocalQueueOperator(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool))); // performs a reset.
             IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
             SimpleMessage<string> msgToSerialize = new SimpleMessage<string>();
             msgToSerialize.Status = GetMessageCompletionMonitor();
@@ -71,7 +71,7 @@ namespace UnitTests.Serialization
         {
             Telegraph.Instance.UnRegisterAll();
 
-            Telegraph.Instance.Register(new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool))); // performs a reset.
+            Telegraph.Instance.Register(new LocalQueueOperator(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool))); // performs a reset.
             IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
             SimpleMessage<string> msgToSerialize = new SimpleMessage<string>();
             msgToSerialize.Message = "Foo";
@@ -95,7 +95,7 @@ namespace UnitTests.Serialization
         {
             Telegraph.Instance.UnRegisterAll();
 
-            Telegraph.Instance.Register(new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool))); // performs a reset.
+            Telegraph.Instance.Register(new LocalQueueOperator(new LocalSwitchboard(LocalConcurrencyType.ActorsOnThreadPool))); // performs a reset.
             IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
             IActorMessageDeserializationActor deserializer = new IActorMessageDeserializationActor();
             SimpleMessage<string> msgToSerialize = new SimpleMessage<string>();

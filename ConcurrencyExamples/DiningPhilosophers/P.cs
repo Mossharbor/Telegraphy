@@ -27,7 +27,7 @@ namespace DiningPhilosophers
             // since all actors and messages share the same thread.
             //var localOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.Sequential));
 
-            var localOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneThreadPerActor));
+            var localOperator = new LocalQueueOperator(new LocalSwitchboard(LocalConcurrencyType.OneThreadPerActor));
 
             Telegraph.Instance.Register(localOperator);
             var t = new UnculturedPhilosopher();
@@ -43,7 +43,7 @@ namespace DiningPhilosophers
             // modify the philosopher’s behavior to include a state transition through “hungry”, where chopsticks are obtained before eating.
             // the philosophers must send an AquireChopstick message to the InfiiteChopstick Actor (and receive a response) before they can eat.
 
-            var localOperator = new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneThreadPerActor));
+            var localOperator = new LocalQueueOperator(new LocalSwitchboard(LocalConcurrencyType.OneThreadPerActor));
 
             Telegraph.Instance.Register(localOperator);
             var t = new CulturedPhilosopher();

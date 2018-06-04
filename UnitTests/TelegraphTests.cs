@@ -15,7 +15,7 @@ namespace UnitTests.TelegraphTests
         public void RegisterOperatorOnly()
         {
             Telegraph.Instance.UnRegisterAll();
-            LocalOperator op = new LocalOperator();
+            LocalQueueOperator op = new LocalQueueOperator();
             long operatorID = Telegraph.Instance.Register(op);
 
             string message = "RegisterOperatorOnly";
@@ -29,7 +29,7 @@ namespace UnitTests.TelegraphTests
         public void RegisterTypeAndOperator()
         {
             Telegraph.Instance.UnRegisterAll();
-            LocalOperator op = new LocalOperator(new TestSwitchBoard());
+            LocalQueueOperator op = new LocalQueueOperator(new TestSwitchBoard());
             long operatorID = Telegraph.Instance.Register<string>(op);
 
             string message = "RegisterTypeAndOperator";
@@ -43,7 +43,7 @@ namespace UnitTests.TelegraphTests
         public void RegisterTypeAndOperatorByOpID()
         {
             Telegraph.Instance.UnRegisterAll();
-            LocalOperator op = new LocalOperator(new TestSwitchBoard());
+            LocalQueueOperator op = new LocalQueueOperator(new TestSwitchBoard());
             long operatorID = Telegraph.Instance.Register(op);
             Telegraph.Instance.Register<string>(operatorID);
 
@@ -60,7 +60,7 @@ namespace UnitTests.TelegraphTests
             Telegraph.Instance.UnRegisterAll();
             string message = "RegisterTypeActionAndOperatorByOpID";
             bool called = false;
-            LocalOperator op = new LocalOperator();
+            LocalQueueOperator op = new LocalQueueOperator();
             long operatorID = Telegraph.Instance.Register(op);
             Telegraph.Instance.Register<string>(operatorID, (data) =>
             {
@@ -78,7 +78,7 @@ namespace UnitTests.TelegraphTests
             Telegraph.Instance.UnRegisterAll();
             string message = "RegisterMessageToActorByOp";
             bool called = false;
-            LocalOperator op = new LocalOperator();
+            LocalQueueOperator op = new LocalQueueOperator();
             DefaultActor da = new DefaultActor();
             Telegraph.Instance.Register<string, DefaultActor>(op, () => da);
 
@@ -99,7 +99,7 @@ namespace UnitTests.TelegraphTests
             Telegraph.Instance.UnRegisterAll();
             string message = "RegisterMessageToActorByOpId";
             bool called = false;
-            LocalOperator op = new LocalOperator();
+            LocalQueueOperator op = new LocalQueueOperator();
             long operatorID = Telegraph.Instance.Register(op);
             DefaultActor da = new DefaultActor();
             Telegraph.Instance.Register<string, DefaultActor>(operatorID, () => da);

@@ -18,7 +18,7 @@ namespace UnitTests.Switchboard
             try
             {
                 Telegraph.Instance.UnRegisterAll();
-                LocalOperator op = new LocalOperator();
+                LocalQueueOperator op = new LocalQueueOperator();
                 long operatorID = Telegraph.Instance.Register<string>(op);
 
                 string message = "VerifyRegisterOfDefaultSwitchBoardWithoutActorThrowsException";

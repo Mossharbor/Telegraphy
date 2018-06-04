@@ -30,7 +30,7 @@ namespace BasicToleranceToFailure
         static void LogExceptions()
         {
             System.Diagnostics.Debug.WriteLine("LogExceptions");
-            Telegraph.Instance.Register(new LocalOperator()); // performs a reset.
+            Telegraph.Instance.Register(new LocalQueueOperator()); // performs a reset.
             string messageStr = "LogExceptions.";
 
             // this is using the sequential local concurrency type which will create a new Actor for each message.
@@ -54,7 +54,7 @@ namespace BasicToleranceToFailure
         static void RetryMessage()
         {
             System.Diagnostics.Debug.WriteLine("RetryMessage");
-            Telegraph.Instance.Register(new LocalOperator()); // performs a reset.
+            Telegraph.Instance.Register(new LocalQueueOperator()); // performs a reset.
             string messageStr = "RetryMessage.";
 
             // this is using the sequential local concurrency type which will create a new Actor for each message.
@@ -99,7 +99,7 @@ namespace BasicToleranceToFailure
         static void RestartActorAndReprocess()
         {
             System.Diagnostics.Debug.WriteLine("RetryMessage");
-            Telegraph.Instance.Register(new LocalOperator()); // performs a reset.
+            Telegraph.Instance.Register(new LocalQueueOperator()); // performs a reset.
             string messageStr = "RetryMessage.";
 
             // this is using the sequential local concurrency type which will create a new Actor for each message.
@@ -142,7 +142,7 @@ namespace BasicToleranceToFailure
         static void KillGroupsOfMessages()
         {
             System.Diagnostics.Debug.WriteLine("MessageCancelled");
-            Telegraph.Instance.Register(new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneActorPerThread))); // performs a reset.
+            Telegraph.Instance.Register(new LocalQueueOperator(new LocalSwitchboard(LocalConcurrencyType.OneActorPerThread))); // performs a reset.
             Telegraph.Instance.Register<string>(message =>
             {
                 System.Threading.Thread.Sleep(4000);
@@ -188,7 +188,7 @@ namespace BasicToleranceToFailure
         {
             Random rand = new Random();
             System.Diagnostics.Debug.WriteLine("MessageCancelled");
-            Telegraph.Instance.Register(new LocalOperator(new LocalSwitchboard(LocalConcurrencyType.OneActorPerThread))); // performs a reset.
+            Telegraph.Instance.Register(new LocalQueueOperator(new LocalSwitchboard(LocalConcurrencyType.OneActorPerThread))); // performs a reset.
             Telegraph.Instance.Register<string>(message =>
             {
                 int sleepTime = 1000 * rand.Next(20);
