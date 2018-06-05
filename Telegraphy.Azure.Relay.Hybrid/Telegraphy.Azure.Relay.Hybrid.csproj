@@ -30,12 +30,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Azure.Relay, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7e34167dcc6d6d8c, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Azure.Relay.1.0.0\lib\net45\Microsoft.Azure.Relay.dll</HintPath>
+    <Reference Include="Microsoft.Azure.Relay, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7e34167dcc6d6d8c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.Relay.2.0.0-preview1-20180523\lib\net451\Microsoft.Azure.Relay.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -48,9 +49,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Operators\" />
   </ItemGroup>
   <ItemGroup>
@@ -58,6 +56,9 @@
       <Project>{0d5eda21-0e26-4e10-b109-bfa71559163e}</Project>
       <Name>Telegraphy.Net</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

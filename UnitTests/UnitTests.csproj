@@ -66,6 +66,7 @@
     <PackageReference Include="Microsoft.Azure.EventHubs" Version="2.0.0" />
     <PackageReference Include="Microsoft.Azure.EventHubs.Processor" Version="2.0.1" />
     <PackageReference Include="Microsoft.Azure.KeyVault.Core" Version="2.0.4" />
+    <PackageReference Include="Microsoft.Azure.Relay" Version="2.0.0-preview1-20180523" />
     <PackageReference Include="Microsoft.Azure.ServiceBus" Version="3.0.2" />
     <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="3.19.6" />
     <PackageReference Include="Microsoft.IdentityModel.Logging" Version="5.2.2" />
