@@ -9,7 +9,7 @@ using System.Net.Http;
 
 namespace Telegraphy.Azure.Relay.Hybrid
 {
-    public class RecieveResponseFromRelayRequest : IActor
+    public class RecieveResponseFromRelayRequest<MsgType> : IActor where MsgType:class
     {
         string hybridConnectionName;
 
@@ -42,17 +42,31 @@ namespace Telegraphy.Azure.Relay.Hybrid
             //var tokenProvider = TokenProvider.CreateSharedAccessSignatureTokenProvider("testKey", "1");
             var uri = new Uri(string.Format("https://{0}/{1}", connectionStringBuilder.Endpoint.Host, hybridConnectionName));
             var token = (tokenProvider.GetTokenAsync(uri.AbsoluteUri, TimeSpan.FromHours(1)).Result).TokenString;
+            HttpContent content = (msg.GetType() == typeof(string)) ? new StringContent(msg.Message as string) : new ByteArrayContent(TempSerialization.GetBytes<MsgType>(msg));
+                
             var client = new HttpClient();
             var request = new HttpRequestMessage()
             {
                 RequestUri = uri,
-                Method = HttpMethod.Get,
+                Method = HttpMethod.Post,
+                Content = content
             };
             request.Headers.Add("ServiceBusAuthorization", token);
             var response = client.SendAsync(request).Result;
             response.EnsureSuccessStatusCode();
             if (null != msg.Status && null != response.Content)
-                msg.Status.SetResult(response.Content.ReadAsStringAsync().Result.ToActorMessage());
+            {
+                if (typeof(MsgType) == typeof(string))
+                    msg.Status.SetResult(response.Content.ReadAsStringAsync().Result.ToActorMessage());
+                else if (typeof(MsgType) == typeof(byte[]))
+                    msg.Status.SetResult(response.Content.ReadAsByteArrayAsync().Result.ToActorMessage());
+                else
+                {
+                    byte[] msgBytes = response.Content.ReadAsByteArrayAsync().Result;
+                    var t = Telegraph.Instance.Ask(new DeserializeMessage<IActorMessage>(msgBytes));
+                    msg.Status.SetResult(t.Result as IActorMessage);
+                }
+            }
             return true;
         }
     }

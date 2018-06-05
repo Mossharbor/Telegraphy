@@ -52,7 +52,7 @@ namespace UnitTests.Azure.Relay
                 ns.CreateHybridConnection(hybridConnectionName);
         }
 
-        public HybridConnectionListener CreateHybridListener(string hybridConnectionName)
+        public HybridConnectionListener CreateHybridListener(string hybridConnectionName, string responseMessage)
         {
             RelayConnectionStringBuilder connectionStringBuilder = new RelayConnectionStringBuilder(Connections.RelayConnectionString) { EntityPath = hybridConnectionName };
             //var tokenProvider = TokenProvider.CreateSharedAccessSignatureTokenProvider(connectionStringBuilder.SharedAccessKeyName, connectionStringBuilder.SharedAccessKey);
@@ -72,7 +72,7 @@ namespace UnitTests.Azure.Relay
                 context.Response.StatusDescription = "OK";
                 using (var sw = new StreamWriter(context.Response.OutputStream))
                 {
-                    sw.WriteLine("hello!");
+                    sw.Write(responseMessage);
                 }
 
                 // The context MUST be closed here
@@ -93,18 +93,53 @@ namespace UnitTests.Azure.Relay
         [TestMethod]
         public void TestSendingStringToHybridConnection()
         {
-            string relayName = "TestHybridConnection";
+            string relayName = "TestSendingStringToHybridConnection";
+            string responseMessage = "Well hello to you!!";
             CreateHybridConnection(relayName);
             Telegraph.Instance.Register(typeof(Exception), FailOnException);
             HybridConnectionListener listener = null;
             try
             {
-                listener = CreateHybridListener(relayName);
-                var relayConnection = new Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRelayRequest(Connections.RelayConnectionString, relayName);
+                listener = CreateHybridListener(relayName, responseMessage);
+                var relayConnection = new Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRelayRequest<string>(Connections.RelayConnectionString, relayName);
 
-                Telegraph.Instance.Register<string, Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRelayRequest>(() => relayConnection);
-                bool success = Telegraph.Instance.Ask("Hello").Wait(TimeSpan.FromSeconds(10));
+                Telegraph.Instance.Register<string, Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRelayRequest<string>>(() => relayConnection);
+                var result = Telegraph.Instance.Ask("Hello");
+                bool success = result.Wait(TimeSpan.FromSeconds(10));
                 Assert.IsTrue(success);
+
+                if (success)
+                    Assert.IsTrue(result.Result.Message.Equals(responseMessage));
+            }
+            finally
+            {
+                try { listener?.CloseAsync().Wait(); } catch (Exception) { }
+                DeleteRelay(relayName);
+            }
+        }
+
+        [TestMethod]
+        public void TestSendingBytesoHybridConnection()
+        {
+            string relayName = "TestSendingBytesoHybridConnection";
+            string responseMessage = "Well hello to you!!";
+            string askMessage = "Hello";
+            byte[] msgBytes = Encoding.UTF8.GetBytes(askMessage);
+            CreateHybridConnection(relayName);
+            Telegraph.Instance.Register(typeof(Exception), FailOnException);
+            HybridConnectionListener listener = null;
+            try
+            {
+                listener = CreateHybridListener(relayName, responseMessage);
+                var relayConnection = new Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRelayRequest<byte[]>(Connections.RelayConnectionString, relayName);
+
+                Telegraph.Instance.Register<byte[], Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRelayRequest<byte[]>>(() => relayConnection);
+                var result = Telegraph.Instance.Ask(msgBytes);
+                bool success = result.Wait(TimeSpan.FromSeconds(10));
+                Assert.IsTrue(success);
+
+                if (success)
+                    Assert.IsTrue(Encoding.UTF8.GetString(result.Result.Message as byte[]).Equals(responseMessage));
             }
             finally
             {
