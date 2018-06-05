@@ -20,7 +20,7 @@ namespace UnitTests.Azure.Relay
     {
         public void DeleteRelay(string relayName)
         {
-            NamespaceManager ns = NamespaceManager.CreateFromConnectionString(Connections.EventHubConnectionString);
+            NamespaceManager ns = NamespaceManager.CreateFromConnectionString(Connections.RelayConnectionString);
             RelayDescription rd;
             if (ns.RelayExists(relayName, out rd))
                 ns.DeleteRelay(relayName);
@@ -28,10 +28,10 @@ namespace UnitTests.Azure.Relay
 
         public void CreateRelay(string relayName)
         {
-            NamespaceManager ns = NamespaceManager.CreateFromConnectionString(Connections.EventHubConnectionString);
+            NamespaceManager ns = NamespaceManager.CreateFromConnectionString(Connections.RelayConnectionString);
             RelayDescription rd;
             if (!ns.RelayExists(relayName, out rd))
-                ns.CreateRelay(relayName, RelayType.Http);
+                ns.CreateRelay(relayName, RelayType.NetTcp);
         }
 
         [TestMethod]
@@ -41,10 +41,11 @@ namespace UnitTests.Azure.Relay
             CreateRelay(relayName);
             try
             {
-                RecieveResponseFromRelayRequest relayConnection = new RecieveResponseFromRelayRequest(Connections.RelayConnectionString);
+                RecieveResponseFromRelayRequest relayConnection = new RecieveResponseFromRelayRequest(Connections.RelayConnectionString, relayName);
 
                 Telegraph.Instance.Register<string, RecieveResponseFromRelayRequest>(() => relayConnection);
-                Telegraph.Instance.Ask("Hello");
+                bool success = Telegraph.Instance.Ask("Hello").Wait(TimeSpan.FromSeconds(10));
+                Assert.IsTrue(success);
             }
             finally
             {

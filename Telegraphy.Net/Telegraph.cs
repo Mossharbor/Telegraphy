@@ -261,14 +261,14 @@ namespace Telegraphy.Net
                 throw new FunctionNotSupportedWhenMultipleOperatorsAreRegisteredException();
         }
 
-        public void Register<TMsgType, ActorType>(System.Linq.Expressions.Expression<Func<ActorType>> factory)
-            where TMsgType : class
+        public void Register<MsgType, ActorType>(System.Linq.Expressions.Expression<Func<ActorType>> factory)
+            where MsgType : class
             where ActorType : IActor
         {
             if (IsUsingSingleOperator())
             {
                 foreach (var switchboard in this.MainOperator.Switchboards)
-                    switchboard.Register<TMsgType, ActorType>(factory);
+                    switchboard.Register<MsgType, ActorType>(factory);
             }
             else
                 throw new FunctionNotSupportedWhenMultipleOperatorsAreRegisteredException();
