@@ -7,8 +7,8 @@
     <ProjectGuid>{7CA206D0-7BF4-4A8B-823C-1BFA42BC206D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Telegraphy.Azure.Relay</RootNamespace>
-    <AssemblyName>Telegraphy.Azure.Relay</AssemblyName>
+    <RootNamespace>Telegraphy.Azure.Relay.Hybrid</RootNamespace>
+    <AssemblyName>Telegraphy.Azure.Relay.Hybrid</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
