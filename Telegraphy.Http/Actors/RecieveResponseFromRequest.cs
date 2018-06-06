@@ -34,6 +34,7 @@ namespace Telegraphy.Http
             {
                 NameValueCollection items = queryBuilder(url, msg);
                 //TODO turn NameValueCollection into requestURI
+                throw new NotImplementedException("TODO turn NameValueCollection into requestURI");
             }
 
             HttpContent content = null;
