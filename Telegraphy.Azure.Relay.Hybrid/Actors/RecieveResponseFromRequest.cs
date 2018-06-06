@@ -9,7 +9,7 @@ using System.Net.Http;
 
 namespace Telegraphy.Azure.Relay.Hybrid
 {
-    public class RecieveResponseFromRelayRequest<MsgType> : IActor where MsgType:class
+    public class RecieveResponseFromRequest<MsgType> : IActor where MsgType:class
     {
         string hybridConnectionName;
 
@@ -17,7 +17,7 @@ namespace Telegraphy.Azure.Relay.Hybrid
         //HybridConnectionClient client;
         //Task<HybridConnectionStream> connectionTask = null;
 
-        public RecieveResponseFromRelayRequest(string relayConnectionString, string hybridConnectionName)
+        public RecieveResponseFromRequest(string relayConnectionString, string hybridConnectionName)
         {
             //https://docs.microsoft.com/en-us/azure/service-bus-relay/relay-hybrid-connections-dotnet-api-overview
             connectionStringBuilder = new RelayConnectionStringBuilder(relayConnectionString) { EntityPath = hybridConnectionName };

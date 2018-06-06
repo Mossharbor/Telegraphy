@@ -101,9 +101,9 @@ namespace UnitTests.Azure.Relay
             try
             {
                 listener = CreateHybridListener(relayName, responseMessage);
-                var relayConnection = new Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRelayRequest<string>(Connections.RelayConnectionString, relayName);
+                var relayConnection = new Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRequest<string>(Connections.RelayConnectionString, relayName);
 
-                Telegraph.Instance.Register<string, Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRelayRequest<string>>(() => relayConnection);
+                Telegraph.Instance.Register<string, Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRequest<string>>(() => relayConnection);
                 var result = Telegraph.Instance.Ask("Hello");
                 bool success = result.Wait(TimeSpan.FromSeconds(10));
                 Assert.IsTrue(success);
@@ -131,9 +131,9 @@ namespace UnitTests.Azure.Relay
             try
             {
                 listener = CreateHybridListener(relayName, responseMessage);
-                var relayConnection = new Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRelayRequest<byte[]>(Connections.RelayConnectionString, relayName);
+                var relayConnection = new Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRequest<byte[]>(Connections.RelayConnectionString, relayName);
 
-                Telegraph.Instance.Register<byte[], Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRelayRequest<byte[]>>(() => relayConnection);
+                Telegraph.Instance.Register<byte[], Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRequest<byte[]>>(() => relayConnection);
                 var result = Telegraph.Instance.Ask(msgBytes);
                 bool success = result.Wait(TimeSpan.FromSeconds(10));
                 Assert.IsTrue(success);
@@ -155,9 +155,9 @@ namespace UnitTests.Azure.Relay
             CreateRelay(relayName);
             try
             {
-                var relayConnection = new Telegraphy.Azure.Relay.Wcf.RecieveResponseFromRelayRequest(Connections.RelayConnectionString, relayName);
+                var relayConnection = new Telegraphy.Azure.Relay.Wcf.RecieveResponseFromRequest(Connections.RelayConnectionString, relayName);
 
-                Telegraph.Instance.Register<string, Telegraphy.Azure.Relay.Wcf.RecieveResponseFromRelayRequest>(() => relayConnection);
+                Telegraph.Instance.Register<string, Telegraphy.Azure.Relay.Wcf.RecieveResponseFromRequest>(() => relayConnection);
                 bool success = Telegraph.Instance.Ask("Hello").Wait(TimeSpan.FromSeconds(10));
                 Assert.IsTrue(success);
             }

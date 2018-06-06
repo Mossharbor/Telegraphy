@@ -8,14 +8,14 @@ using Telegraphy.Net;
 
 namespace Telegraphy.Azure.Relay.Wcf
 {
-    public class RecieveResponseFromRelayRequest : IActor
+    public class RecieveResponseFromRequest : IActor
     {
         string relayName;
         RelayConnectionStringBuilder connectionStringBuilder;
         HybridConnectionClient client;
         Task<HybridConnectionStream> connectionTask = null;
 
-        public RecieveResponseFromRelayRequest(string relayConnectionString, string relayName)
+        public RecieveResponseFromRequest(string relayConnectionString, string relayName)
         {
             //https://docs.microsoft.com/en-us/azure/service-bus-relay/relay-hybrid-connections-dotnet-api-overview
             connectionStringBuilder = new RelayConnectionStringBuilder(relayConnectionString) { EntityPath = relayName };
