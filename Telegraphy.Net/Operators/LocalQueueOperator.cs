@@ -121,11 +121,7 @@ namespace Telegraphy.Net
             while (!_exceptionTypeToHandler.TryAdd(exceptionType, handler))
                 _exceptionTypeToHandler.TryAdd(exceptionType, handler);
         }
-
-        public void Register(Type exceptionType, Func<Exception, IActor, IActorMessage, IActorInvocation, IActor> handler)
-        {
-            this.Switchboard.Register(exceptionType, handler);
-        }
+        
         #endregion
 
         private IActorMessage NextMessage
