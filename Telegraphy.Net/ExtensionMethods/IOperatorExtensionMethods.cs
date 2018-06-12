@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Telegraphy.Net
 {
-    public static class IOperatorExtentionMethods
+    public static class IOperatorExtensionMethods
     {
         public static Action<Exception> FindExceptionHandler(this IOperator me, IDictionary<Type, Action<Exception>> _exceptionTypeToHandler, Exception ex, out Exception foundEx)
         {

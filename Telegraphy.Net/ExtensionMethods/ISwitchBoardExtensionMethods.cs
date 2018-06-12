@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Telegraphy.Net
 {
-    public static class ISwitchBoardExtentionMethods
+    public static class ISwitchBoardExtensionMethods
     {
         public static Func<Exception, IActor, IActorMessage, IActorInvocation, IActor> FindExceptionHandler(this ILocalSwitchboard me, IDictionary<Type, Func<Exception, IActor, IActorMessage, IActorInvocation, IActor>> _exceptionTypeToHandler, Exception ex, IActor actor, IActorMessage msg, out Exception foundEx)
         {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Telegraphy.Net
 {
-    public static class DotNetValueTypeExtentions
+    public static class DotNetValueTypeExtensions
     {
         public static IActorMessage ToActorMessage(this string self)
         {

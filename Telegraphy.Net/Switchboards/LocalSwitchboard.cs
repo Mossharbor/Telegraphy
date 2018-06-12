@@ -144,9 +144,7 @@ namespace Telegraphy.Net
             {
                 if (0 == Interlocked.Read(ref tellingCount))
                 {
-                    //this.Disable();
                     myOperator = value;
-
                     SpawnThreads();
                 }
                 else

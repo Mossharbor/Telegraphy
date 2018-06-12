@@ -9,7 +9,7 @@ namespace Telegraphy.Net
     using System.Threading;
     using System.Threading.Tasks;
 
-    public static class IActorExtentionMethods
+    public static class IActorExtensionMethods
     {
         #region Ask and Tell
         public static bool Tell<T>(this IActor self, T message) where T : class
@@ -62,7 +62,7 @@ namespace Telegraphy.Net
             cancelToken = new TaskCompletionSource<IActorMessage>();
             GetMessageTask(timeout, cancelToken);
 
-            return IActorExtentionMethods.Ask<T>(self, cancelToken, message);
+            return IActorExtensionMethods.Ask<T>(self, cancelToken, message);
         }
 
         #endregion

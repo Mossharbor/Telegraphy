@@ -149,6 +149,34 @@ namespace UnitTests.Azure.Relay
         }
 
         [TestMethod]
+        public void TestSendingStringToHybridConnectionSwitchboard()
+        {
+            string connectionName = "TestSendingStringToHybridConnectionSwitchboard";
+            string responseMessage = "Well hello to you!!";
+            CreateHybridConnection(connectionName);
+            HybridConnectionListener listener = null;
+            try
+            {
+                listener = CreateHybridListener(connectionName, responseMessage);
+                ILocalSwitchboard switchBoard = new Telegraphy.Azure.Relay.Hybrid.HybridConnectionSwitchboard(3, Connections.RelayConnectionString, connectionName);
+                IOperator localOP = new LocalQueueOperator(switchBoard);
+                Telegraph.Instance.Register(localOP);
+                Telegraph.Instance.Register(typeof(Exception), FailOnException);
+
+                // We want to send the byte[] to the localOP which will forward calls to the hybrid connection switchboard operator
+                Telegraph.Instance.Register<string>(localOP);
+
+                string responseString = (string)Telegraph.Instance.Ask("Foo").Result.Message;
+                Assert.IsTrue(responseString.Equals(responseMessage));
+            }
+            finally
+            {
+                try { listener?.CloseAsync().Wait(); } catch (Exception) { }
+                DeleteHybridConnection(connectionName);
+            }
+        }
+
+        [TestMethod]
         public void TestSendingStringToWcfRelay()
         {
             string relayName = "TestRelay";
