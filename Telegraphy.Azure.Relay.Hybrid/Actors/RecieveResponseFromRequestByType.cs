@@ -18,6 +18,12 @@ namespace Telegraphy.Azure.Relay.Hybrid
         //HybridConnectionClient client;
         //Task<HybridConnectionStream> connectionTask = null;
 
+        internal RecieveResponseFromRequestByType(Type msgType, string relayConnectionString)
+        {
+            connectionStringBuilder = new RelayConnectionStringBuilder(relayConnectionString) { EntityPath = hybridConnectionName };
+            this.hybridConnectionName = connectionStringBuilder.EntityPath;
+            this.msgType = msgType;
+        }
         internal RecieveResponseFromRequestByType(Type msgType, string relayConnectionString, string hybridConnectionName)
         {
             //https://docs.microsoft.com/en-us/azure/service-bus-relay/relay-hybrid-connections-dotnet-api-overview

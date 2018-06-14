@@ -11,6 +11,11 @@ namespace Telegraphy.Azure.Relay.Hybrid
 {
     public class RecieveResponseFromRequest<MsgType> : RecieveResponseFromRequestByType, IActor where MsgType : class
     {
+        public RecieveResponseFromRequest(string relayConnectionString)
+            : base(typeof(MsgType), relayConnectionString)
+        {
+        }
+
         public RecieveResponseFromRequest(string relayConnectionString, string hybridConnectionName)
             : base (typeof(MsgType), relayConnectionString, hybridConnectionName)
         {

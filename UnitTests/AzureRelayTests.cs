@@ -177,6 +177,40 @@ namespace UnitTests.Azure.Relay
         }
 
         [TestMethod]
+        public void TestSubscribingToHybridConnection()
+        {
+            string connectionName = "TestSubscribingToHybridConnection";
+            string responseMessage = "Well hello to you!!";
+            CreateHybridConnection(connectionName);
+            HybridConnectionListener listener = null;
+            try
+            {
+                //listener = CreateHybridListener(connectionName, responseMessage);
+                IOperator localOP = new Telegraphy.Azure.Relay.Hybrid.HybridConnectionSubscriptionOperator<string>(Connections.RelayConnectionString, connectionName);
+
+                bool recieved = false;
+                Telegraph.Instance.Register<string>(localOP, (msgString) =>
+                {
+                    recieved = true;
+                    Console.WriteLine(msgString);
+                    Assert.IsTrue(responseMessage.Equals(responseMessage));
+                });
+                Telegraph.Instance.Register(typeof(Exception), FailOnException);
+
+                var client = new Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRequest<string>(Connections.RelayConnectionString, connectionName);
+                (client as IActor).OnMessageRecieved(responseMessage.ToActorMessage());
+
+                System.Threading.Thread.Sleep(3000);
+                Assert.IsTrue(recieved);
+            }
+            finally
+            {
+                try { listener?.CloseAsync().Wait(); } catch (Exception) { }
+                DeleteHybridConnection(connectionName);
+            }
+        }
+
+        [TestMethod]
         public void TestSendingStringToWcfRelay()
         {
             string relayName = "TestRelay";

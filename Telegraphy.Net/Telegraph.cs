@@ -254,7 +254,10 @@ namespace Telegraphy.Net
         {
             if (IsUsingSingleOperator())
             {
-                foreach( var switchboard in this.MainOperator.Switchboards)
+                if (0 == this.MainOperator.Switchboards.Count)
+                    throw new CannotRegisterActionSinceOperatorHasNoSwitchBoardsException();
+
+                foreach ( var switchboard in this.MainOperator.Switchboards)
                     switchboard.Register<T>(action);
             }
             else
@@ -267,6 +270,9 @@ namespace Telegraphy.Net
         {
             if (IsUsingSingleOperator())
             {
+                if(0 == this.MainOperator.Switchboards.Count)
+                    throw new CannotRegisterExpressionSinceOperatorHasNoSwitchBoardsException();
+
                 foreach (var switchboard in this.MainOperator.Switchboards)
                     switchboard.Register<MsgType, ActorType>(factory);
             }
@@ -278,7 +284,10 @@ namespace Telegraphy.Net
         {
             if (IsUsingSingleOperator())
             {
-                foreach(var switchboard in this.MainOperator.Switchboards)
+                if(0 == this.MainOperator.Switchboards.Count)
+                    throw new CannotRegisterExceptionHandlerSinceOperatorHasNoSwitchBoardsException();
+
+                foreach (var switchboard in this.MainOperator.Switchboards)
                     switchboard.Register(exceptionType, handler);
             }
             else
@@ -382,6 +391,8 @@ namespace Telegraphy.Net
 
         public long Register<T>(IOperator op, Action<T> action) where T : class
         {
+            if (0 == op.Switchboards.Count)
+                throw new CannotRegisterActionSinceOperatorHasNoSwitchBoardsException();
             long nextID = Register(op);
             foreach(var switchBoard in op.Switchboards)
                 switchBoard.Register<T>(action);
@@ -404,6 +415,9 @@ namespace Telegraphy.Net
             where T : class
             where K : IActor
         {
+            if (0 == op.Switchboards.Count)
+                throw new CannotRegisterExpressionSinceOperatorHasNoSwitchBoardsException();
+
             long nextID = Register(op);
 
             foreach (var switchboard in op.Switchboards)
@@ -424,6 +438,9 @@ namespace Telegraphy.Net
         public long Register(IOperator op, Type exceptionType, Func<Exception, IActor, IActorMessage, IActorInvocation, IActor> handler)
         {
             long nextID = Register(op);
+
+            if (0 == op.Switchboards.Count)
+                throw new CannotRegisterExceptionHandlerSinceOperatorHasNoSwitchBoardsException();
 
             foreach (var switchboard in op.Switchboards)
                 switchboard.Register(exceptionType, handler);
