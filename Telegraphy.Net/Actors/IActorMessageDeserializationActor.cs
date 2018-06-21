@@ -30,7 +30,7 @@ namespace Telegraphy.Net
             if (null == msg.Message)
                 throw new NullReferenceException("Could not deserialize " + msg.GetType() + " because the message was null.");
 
-            if (msg.GetType() != typeof(DeserializeMessage<IActorMessage>))
+            if (!(msg.GetType().Name.Contains("DeserializeMessage")))
                 throw new CantDeserlializeAnythingButADeSerializeMessageException();
 
             if (!(msg.Message is byte[]))

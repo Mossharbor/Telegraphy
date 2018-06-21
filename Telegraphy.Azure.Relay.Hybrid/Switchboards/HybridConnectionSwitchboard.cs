@@ -93,7 +93,7 @@ namespace Telegraphy.Azure.Relay.Hybrid
                 try
                 {
                     string relayName = messageTypeToConnectionString[msg.GetType()];
-                    IActor actor = new RecieveResponseFromRequestByType(msg.GetType(), connectionString, relayName);
+                    IActor actor = new RecieveResponseFromRequestByType(msg.GetType(), msg.GetType(), connectionString, relayName);
 
                     Interlocked.Increment(ref tellingCount);
                     Type msgType = msg.GetType();

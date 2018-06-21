@@ -129,7 +129,7 @@ namespace Telegraphy.Azure.Relay.Hybrid
 
                     //using (var sw = new StreamWriter(context.Response.OutputStream))
                     {
-                        var relay = new RecieveResponseFromRequest<MsgType>(connectionItems.ToString());
+                        var relay = new RecieveResponseFromRequest<MsgType, MsgType>(connectionItems.ToString());
                         relay.Tell(msg.Status.Task.Result); // send the answer back to the calling application.
                         //sw.Write(responseMessage);
                     }

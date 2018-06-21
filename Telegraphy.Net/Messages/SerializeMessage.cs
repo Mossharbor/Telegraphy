@@ -21,6 +21,7 @@ namespace Telegraphy.Net
             this.Status = null;
             this.ProcessingResult = result;
         }
+
         #region IActorMessageIdentifier
         private string id = null;
         public string Id

@@ -24,6 +24,13 @@ namespace Telegraphy.Net
             this.Message = message;
         }
 
+        public new Type GetType()
+        {
+            if (!isArray)
+                return typeof(T);
+            return typeof(T[]);
+        }
+
         public ValueTypeMessage(SerializationInfo info, StreamingContext context)
         {
             if (info == null)

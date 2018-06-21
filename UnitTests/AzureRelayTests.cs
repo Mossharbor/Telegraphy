@@ -84,6 +84,70 @@ namespace UnitTests.Azure.Relay
             return listener;
         }
 
+        public HybridConnectionListener CreateHybridListener(string hybridConnectionName, byte[] responseBytes)
+        {
+            RelayConnectionStringBuilder connectionStringBuilder = new RelayConnectionStringBuilder(Connections.RelayConnectionString) { EntityPath = hybridConnectionName };
+            //var tokenProvider = TokenProvider.CreateSharedAccessSignatureTokenProvider(connectionStringBuilder.SharedAccessKeyName, connectionStringBuilder.SharedAccessKey);
+            //var uri = new Uri(string.Format("https://{0}/{1}", connectionStringBuilder.Endpoint.Host, hybridConnectionName));
+            var listener = new HybridConnectionListener(connectionStringBuilder.ToString());
+
+            // Subscribe to the status events.
+            listener.Connecting += (o, e) => { Console.WriteLine("Connecting"); };
+            listener.Offline += (o, e) => { Console.WriteLine("Offline"); };
+            listener.Online += (o, e) => { Console.WriteLine("Online"); };
+
+            // Provide an HTTP request handler
+            listener.RequestHandler = (context) =>
+            {
+                // Do something with context.Request.Url, HttpMethod, Headers, InputStream...
+                context.Response.StatusCode = HttpStatusCode.OK;
+                context.Response.StatusDescription = "OK";
+                context.Response.OutputStream.Write(responseBytes, 0, responseBytes.Length);
+
+                // The context MUST be closed here
+                context.Response.Close();
+            };
+
+            listener.OpenAsync().Wait();
+            Console.WriteLine("Server listening");
+            return listener;
+        }
+
+        public HybridConnectionListener CreateHybridListener(string hybridConnectionName, PingPong.Pong response)
+        {
+            RelayConnectionStringBuilder connectionStringBuilder = new RelayConnectionStringBuilder(Connections.RelayConnectionString) { EntityPath = hybridConnectionName };
+            //var tokenProvider = TokenProvider.CreateSharedAccessSignatureTokenProvider(connectionStringBuilder.SharedAccessKeyName, connectionStringBuilder.SharedAccessKey);
+            //var uri = new Uri(string.Format("https://{0}/{1}", connectionStringBuilder.Endpoint.Host, hybridConnectionName));
+            var listener = new HybridConnectionListener(connectionStringBuilder.ToString());
+
+            SerializeMessage<IActorMessage> sMsg = new SerializeMessage<IActorMessage>(response);
+            IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
+            serializer.OnMessageRecieved(sMsg);
+            byte[] responseBytes = (byte[])sMsg.ProcessingResult;
+
+            // Subscribe to the status events.
+            listener.Connecting += (o, e) => { Console.WriteLine("Connecting"); };
+            listener.Offline += (o, e) => { Console.WriteLine("Offline"); };
+            listener.Online += (o, e) => { Console.WriteLine("Online"); };
+
+            // Provide an HTTP request handler
+            listener.RequestHandler = (context) =>
+            {
+                // Do something with context.Request.Url, HttpMethod, Headers, InputStream...
+                context.Response.StatusCode = HttpStatusCode.OK;
+                context.Response.StatusDescription = "OK";
+                context.Response.OutputStream.Write(responseBytes, 0, responseBytes.Length);
+
+                // The context MUST be closed here
+                context.Response.Close();
+            };
+
+            listener.OpenAsync().Wait();
+            Console.WriteLine("Server listening");
+            return listener;
+        }
+
+
         private static IActor FailOnException(Exception exception, IActor actor, IActorMessage actorMessage, IActorInvocation actorInvocation)
         {
             Assert.Fail();
@@ -101,15 +165,52 @@ namespace UnitTests.Azure.Relay
             try
             {
                 listener = CreateHybridListener(relayName, responseMessage);
-                var relayConnection = new Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRequest<string>(Connections.RelayConnectionString, relayName);
+                var relayConnection = new Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRequest<string,string>(Connections.RelayConnectionString, relayName);
 
-                Telegraph.Instance.Register<string, Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRequest<string>>(() => relayConnection);
+                Telegraph.Instance.Register<string, Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRequest<string, string>>(() => relayConnection);
                 var result = Telegraph.Instance.Ask("Hello");
                 bool success = result.Wait(TimeSpan.FromSeconds(10));
                 Assert.IsTrue(success);
 
                 if (success)
                     Assert.IsTrue(result.Result.Message.Equals(responseMessage));
+            }
+            finally
+            {
+                try { listener?.CloseAsync().Wait(); } catch (Exception) { }
+                DeleteRelay(relayName);
+            }
+        }
+
+        [TestMethod]
+        public void TestSendingActorMessageToHybridConnection()
+        {
+            string relayName = "TestSendingActorMessageToHybridConnection";
+            string sendMessage = "Hello";
+            var actorSendMessage = new PingPong.Ping(sendMessage);
+            var actorResponseMessage = new PingPong.Pong();
+            CreateHybridConnection(relayName);
+            Telegraph.Instance.Register(typeof(Exception), FailOnException);
+            HybridConnectionListener listener = null;
+            try
+            {
+                listener = CreateHybridListener(relayName, actorResponseMessage);
+                var relayConnection = new Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRequest<PingPong.Ping, PingPong.Pong>(Connections.RelayConnectionString, relayName);
+
+                IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
+                IActorMessageDeserializationActor deserializer = new IActorMessageDeserializationActor();
+                deserializer.Register<PingPong.Pong>((object msg) => (PingPong.Pong)msg);
+
+                Telegraph.Instance.Register<SerializeMessage<PingPong.Ping>, IActorMessageSerializationActor>(() => serializer);
+                Telegraph.Instance.Register<DeserializeMessage<PingPong.Pong>, IActorMessageDeserializationActor>(() => deserializer);
+
+                Telegraph.Instance.Register<PingPong.Ping, Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRequest<PingPong.Ping, PingPong.Pong>>(() => relayConnection);
+                var resultTask = Telegraph.Instance.Ask(actorSendMessage);
+                bool success = resultTask.Wait(TimeSpan.FromSeconds(10));
+                Assert.IsTrue(success);
+
+                if (success)
+                    Assert.IsTrue(resultTask.Result is PingPong.Pong);
             }
             finally
             {
@@ -131,9 +232,9 @@ namespace UnitTests.Azure.Relay
             try
             {
                 listener = CreateHybridListener(relayName, responseMessage);
-                var relayConnection = new Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRequest<byte[]>(Connections.RelayConnectionString, relayName);
+                var relayConnection = new Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRequest<byte[], byte[]>(Connections.RelayConnectionString, relayName);
 
-                Telegraph.Instance.Register<byte[], Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRequest<byte[]>>(() => relayConnection);
+                Telegraph.Instance.Register<byte[], Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRequest<byte[], byte[]>>(() => relayConnection);
                 var result = Telegraph.Instance.Ask(msgBytes);
                 bool success = result.Wait(TimeSpan.FromSeconds(10));
                 Assert.IsTrue(success);
@@ -145,6 +246,36 @@ namespace UnitTests.Azure.Relay
             {
                 try { listener?.CloseAsync().Wait(); } catch (Exception) { }
                 DeleteRelay(relayName);
+            }
+        }
+
+        [TestMethod]
+        public void TestSendingBytesToHybridConnectionSwitchboard()
+        {
+            string connectionName = "TestSendingStringToHybridConnectionSwitchboard";
+            string responseMessage = "Well hello to you!!";
+            byte[] responseBytes = Encoding.UTF8.GetBytes(responseMessage);
+            CreateHybridConnection(connectionName);
+            HybridConnectionListener listener = null;
+            try
+            {
+                listener = CreateHybridListener(connectionName, responseBytes);
+                ILocalSwitchboard switchBoard = new Telegraphy.Azure.Relay.Hybrid.HybridConnectionSwitchboard(3, Connections.RelayConnectionString, connectionName);
+                IOperator localOP = new LocalQueueOperator(switchBoard);
+                Telegraph.Instance.Register(localOP);
+                Telegraph.Instance.Register(typeof(Exception), FailOnException);
+
+                // We want to send the byte[] to the localOP which will forward calls to the hybrid connection switchboard operator
+                Telegraph.Instance.Register<byte[]>(localOP);
+
+                byte[] resultBytes= (byte[])Telegraph.Instance.Ask(Encoding.UTF8.GetBytes("Foo").ToActorMessage()).Result.Message;
+                string responseString = Encoding.UTF8.GetString(resultBytes);
+                Assert.IsTrue(responseString.Equals(responseMessage));
+            }
+            finally
+            {
+                try { listener?.CloseAsync().Wait(); } catch (Exception) { }
+                DeleteHybridConnection(connectionName);
             }
         }
 
@@ -197,7 +328,7 @@ namespace UnitTests.Azure.Relay
                 });
                 Telegraph.Instance.Register(typeof(Exception), FailOnException);
 
-                var client = new Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRequest<string>(Connections.RelayConnectionString, connectionName);
+                var client = new Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRequest<string,string>(Connections.RelayConnectionString, connectionName);
                 (client as IActor).OnMessageRecieved(responseMessage.ToActorMessage());
 
                 System.Threading.Thread.Sleep(3000);

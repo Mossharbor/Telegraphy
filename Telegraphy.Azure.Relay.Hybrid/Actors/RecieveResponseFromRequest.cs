@@ -9,15 +9,15 @@ using System.Net.Http;
 
 namespace Telegraphy.Azure.Relay.Hybrid
 {
-    public class RecieveResponseFromRequest<MsgType> : RecieveResponseFromRequestByType, IActor where MsgType : class
+    public class RecieveResponseFromRequest<RequestType,ResponseType> : RecieveResponseFromRequestByType, IActor where RequestType : class where ResponseType : class
     {
         public RecieveResponseFromRequest(string relayConnectionString)
-            : base(typeof(MsgType), relayConnectionString)
+            : base(typeof(RequestType), typeof(ResponseType), relayConnectionString)
         {
         }
 
         public RecieveResponseFromRequest(string relayConnectionString, string hybridConnectionName)
-            : base (typeof(MsgType), relayConnectionString, hybridConnectionName)
+            : base (typeof(RequestType), typeof(ResponseType), relayConnectionString, hybridConnectionName)
         {
         }
     }
