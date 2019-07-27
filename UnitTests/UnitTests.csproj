@@ -60,6 +60,7 @@
     <ProjectReference Include="..\Telegraphy.Azure.Storage\Telegraphy.Azure.Storage.csproj" />
     <ProjectReference Include="..\Telegraphy.Msmq\Telegraphy.Msmq.csproj" />
     <ProjectReference Include="..\Telegraphy.Net\Telegraphy.Net.csproj" />
+    <ProjectReference Include="..\Telegraphy.Office365\Telegraphy.Office365.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.Amqp" Version="2.3.0" />

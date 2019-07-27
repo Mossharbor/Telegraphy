@@ -13,7 +13,7 @@ namespace UnitTests.TestImplemenations
 
     public class TestQuestionStorage : IQuestionStorage
     {
-        public int msgRecievedCount = 0;
+        public static int msgRecievedCount = 0;
 
         bool IActor.OnMessageRecieved<T>(T msg)
         {
