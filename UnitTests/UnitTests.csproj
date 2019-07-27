@@ -63,6 +63,7 @@
     <ProjectReference Include="..\Telegraphy.Office365\Telegraphy.Office365.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Exchange.WebServices.Managed.Api" Version="2.2.1.2" />
     <PackageReference Include="Microsoft.Azure.Amqp" Version="2.3.0" />
     <PackageReference Include="Microsoft.Azure.EventHubs" Version="2.0.0" />
     <PackageReference Include="Microsoft.Azure.EventHubs.Processor" Version="2.0.1" />

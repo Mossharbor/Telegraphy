@@ -57,6 +57,17 @@ namespace Telegraphy.Office365
                 throw new SwitchBoardNeededWhenRecievingMessagesException();
         }
 
+        protected OutlookEmailBaseOperator(
+            string emailAddress, 
+            string password)
+        {
+            this.emailAddress = emailAddress;
+            this.password = password;
+            this.recieveMessagesOnly = false;
+
+            this.ID = 0;
+        }
+
         public long ID { get; set; }
 
         public ulong Count
@@ -89,12 +100,17 @@ namespace Telegraphy.Office365
             if (recieveMessagesOnly)
                 throw new Telegraphy.Net.OperatorCannotSendMessagesException();
 
-            if (!(msg is EmailMessage))
+            if (!(msg is EmailMsg))
                 throw new UnsupportedMessageException("Outlook Email Operators only support the Email Message type. They do not support " + msg.GetType());
+
 
             try
             {
-                SendEmail((EmailMessage)msg);
+                SendEmail((EmailMsg)msg);
+
+                if (null != msg.Status && !msg.Status.Task.IsCanceled)
+                    msg.Status.TrySetResult(msg);
+
             }
             catch (Exception ex)
             {
@@ -103,10 +119,13 @@ namespace Telegraphy.Office365
 
                 if (null != handler)
                     handler.Invoke(foundEx);
+
+                if (null != msg.Status && !msg.Status.Task.IsCanceled)
+                    msg.Status.TrySetException(ex);
             }
         }
 
-        private void SendEmail(EmailMessage emailMsg)
+        private void SendEmail(EmailMsg emailMsg)
         {
             MailMessage msg = emailMsg.ToMailMessage(this.emailAddress, this.password, this.fromFriendlyName);
 
@@ -117,6 +136,8 @@ namespace Telegraphy.Office365
             client.Host = "smtp.office365.com";
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.EnableSsl = true;
+
+            emailMsg.DateTimeSent = DateTime.Now;
 
             client.Send(msg);
         }

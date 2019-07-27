@@ -8,7 +8,7 @@ using Telegraphy.Net;
 
 namespace Telegraphy.Office365
 {
-    public class EmailMessage : IActorMessage
+    public class EmailMsg : IActorMessage
     {
         private string toEmailAddress;
         private string toEmailFriendlyName;
@@ -16,6 +16,8 @@ namespace Telegraphy.Office365
         private string body;
         private bool isBodyHtml;
         private string fromEmailAddress;
+        private DateTime? dateTimeSent;
+        private DateTime? dateTimeRecieved;
 
         public object Message { get => subject; set => subject = value.ToString(); }
         public object ProcessingResult { get; set; }
@@ -27,6 +29,8 @@ namespace Telegraphy.Office365
         public string Body { get => body; set => body = value; }
         public bool IsBodyHtml { get => isBodyHtml; set => isBodyHtml = value; }
         public string FromEmailAddress { get => fromEmailAddress; set => fromEmailAddress = value; }
+        public DateTime? DateTimeSent { get => dateTimeSent; set => dateTimeSent = value; }
+        public DateTime? DateTimeRecieved { get => dateTimeRecieved; set => dateTimeRecieved = value; }
 
         internal MailMessage ToMailMessage(string fromEmailAddress, string password, string fromFriendlyName)
         {

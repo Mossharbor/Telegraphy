@@ -11,13 +11,15 @@ namespace Telegraphy.Office365
         public static IActorMessage ToActorMessage(this Item self,string fromEmailAddress)
         {
             //return new SimpleMessage<string>(self);
-            EmailMessage msg = new EmailMessage()
+            EmailMsg msg = new EmailMsg()
             {
                 Subject = self.Subject,
                 Body = self.Body.Text,
                 IsBodyHtml = self.Body.BodyType == BodyType.HTML,
                 ToEmailAddress = self.DisplayTo,
-                FromEmailAddress = fromEmailAddress
+                FromEmailAddress = fromEmailAddress,
+                DateTimeSent = self.DateTimeSent,
+                DateTimeRecieved = self.DateTimeReceived
             };
 
             // TODO to email friendly name is missing.
