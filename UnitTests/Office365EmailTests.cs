@@ -50,8 +50,7 @@ namespace UnitTests.Office365
 
             if (!Telegraph.Instance.Ask(msg).Wait(new TimeSpan(0, 0, 45)))
                 Assert.Fail("Waited too long to send a message");
-
-            // TODO check the inbox and see if the email has shown up
+            
             ExchangeService service = new ExchangeService(ExchangeVersion.Exchange2016);
             service.Credentials = new WebCredentials(emailAccount, accountPassword);
             service.Url = new Uri("https://outlook.office365.com/EWS/Exchange.asmx");
