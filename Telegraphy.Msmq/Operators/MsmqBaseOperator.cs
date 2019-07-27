@@ -136,6 +136,9 @@ namespace Telegraphy.Msmq
                     SerializeAndSend(msg, Queue, (MsgType)(msg as IActorMessage).Message);
                 else
                     throw new DontKnowHowToSerializeTypeException(msg.GetType().ToString());
+
+                if (null != msg.Status && !msg.Status.Task.IsCanceled)
+                    msg.Status.TrySetResult(msg);
             }
             catch (Exception ex)
             {
