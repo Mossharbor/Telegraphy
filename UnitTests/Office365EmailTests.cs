@@ -36,7 +36,7 @@ namespace UnitTests.Office365
         }
 
         [TestMethod]
-        public void TestSendingEmail()
+        public void TestSendingEmailViaOperator()
         {
             Telegraph.Instance.UnRegisterAll();
 
