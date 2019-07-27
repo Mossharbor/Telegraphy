@@ -113,31 +113,45 @@ namespace Telegraphy.Azure
 
         public void AddMessage(IActorMessage msg)
         {
-            if (msg is ControlMessages.HangUp)
+            try
             {
-                if (null != hangUp)
-                    return;
-
-                if (null != ServiceBusMsgSender)
+                if (msg is ControlMessages.HangUp)
                 {
-                    ServiceBusMsgSender.CloseAsync().Wait();
-                    if (null != msg.Status && !msg.Status.Task.IsCompleted)
-                        msg.Status.SetResult(msg);
+                    if (null != hangUp)
+                        return;
+
+                    if (null != ServiceBusMsgSender)
+                    {
+                        ServiceBusMsgSender.CloseAsync().Wait();
+                        if (null != msg.Status && !msg.Status.Task.IsCompleted)
+                            msg.Status.SetResult(msg);
+                        return;
+                    }
+
+                    ServiceBusMsgReciever.CloseAsync().Wait();
+                    hangUp = (msg as ControlMessages.HangUp);
+                    foreach (var switchBoard in this.Switchboards)
+                        switchBoard.Disable();
                     return;
                 }
 
-                ServiceBusMsgReciever.CloseAsync().Wait();
-                hangUp = (msg as ControlMessages.HangUp);
-                foreach (var switchBoard in this.Switchboards)
-                    switchBoard.Disable();
-                return;
+                System.Diagnostics.Debug.Assert(null != ServiceBusMsgSender);
+                Message message = SerializeAndSend(msg, this.ServiceBusMsgSender);
+
+                if (null != msg.Status)
+                    msg.Status?.SetResult(new ServiceBusMessage(message));
             }
+            catch (Exception ex)
+            {
+                Exception foundEx = null;
+                var handler = this.FindExceptionHandler(_exceptionTypeToHandler, ex, out foundEx);
 
-            System.Diagnostics.Debug.Assert(null != ServiceBusMsgSender);
-            Message message = SerializeAndSend(msg, this.ServiceBusMsgSender);
+                if (null != handler)
+                    handler.Invoke(foundEx);
 
-            if (null != msg.Status)
-                msg.Status?.SetResult(new ServiceBusMessage(message));
+                if (null != msg.Status && !msg.Status.Task.IsCanceled)
+                    msg.Status.TrySetException(ex);
+            }
         }
 
         internal static Message SerializeAndSend(IActorMessage msg, ServiceBusTopicDeliverer queue)
@@ -149,13 +163,25 @@ namespace Telegraphy.Azure
 
         public IActorMessage GetMessage()
         {
-            System.Diagnostics.Debug.Assert(null != ServiceBusMsgReciever);
+            try
+            {
+                System.Diagnostics.Debug.Assert(null != ServiceBusMsgReciever);
 
-            IActorMessage msg = null;
-            if (!msgQueue.TryDequeue(out msg))
+                IActorMessage msg = null;
+                if (!msgQueue.TryDequeue(out msg))
+                    return null;
+
+                return msg;
+            }
+            catch (Exception ex)
+            {
+                Exception foundEx = null;
+                var handler = this.FindExceptionHandler(_exceptionTypeToHandler, ex, out foundEx);
+
+                if (null != handler)
+                    handler.Invoke(foundEx);
                 return null;
-            
-            return msg;
+            }
         }
         
         public void Kill()
