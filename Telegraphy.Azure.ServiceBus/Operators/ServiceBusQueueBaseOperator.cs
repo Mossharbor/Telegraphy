@@ -126,34 +126,48 @@ namespace Telegraphy.Azure
 
         public void AddMessage(IActorMessage msg)
         {
-            if (msg is ControlMessages.HangUp)
+            try
             {
-                if (null != hangUp)
-                    return;
-
-                if (null != queue)
+                if (msg is ControlMessages.HangUp)
                 {
+                    if (null != hangUp)
+                        return;
+
+                    if (null != queue)
+                    {
+                        this.queue.CloseAsync().Wait();
+                        if (null != msg.Status && !msg.Status.Task.IsCompleted)
+                            msg.Status.SetResult(msg);
+                        return;
+                    }
+
                     this.queue.CloseAsync().Wait();
-                    if (null != msg.Status && !msg.Status.Task.IsCompleted)
-                        msg.Status.SetResult(msg);
+                    hangUp = (msg as ControlMessages.HangUp);
+                    foreach (var switchboard in this.Switchboards)
+                        switchboard.Disable();
                     return;
                 }
 
-                this.queue.CloseAsync().Wait();
-                hangUp = (msg as ControlMessages.HangUp);
-                foreach(var switchboard in this.Switchboards)
-                    switchboard.Disable();
-                return;
+                if (this.recievingOnly)
+                    throw new OperatorCannotSendMessagesException();
+
+                System.Diagnostics.Debug.Assert(null != queue);
+                Message message = SerializeAndSend(msg, this.queue);
+
+                if (null != msg.Status)
+                    msg.Status?.SetResult(new ServiceBusMessage(message));
             }
+            catch (Exception ex)
+            {
+                Exception foundEx = null;
+                var handler = this.FindExceptionHandler(_exceptionTypeToHandler, ex, out foundEx);
 
-            if (this.recievingOnly)
-                throw new OperatorCannotSendMessagesException();
+                if (null != handler)
+                    handler.Invoke(foundEx);
 
-            System.Diagnostics.Debug.Assert(null != queue);
-            Message message = SerializeAndSend(msg, this.queue);
-
-            if (null != msg.Status)
-                msg.Status?.SetResult(new ServiceBusMessage(message));
+                if (null != msg.Status && !msg.Status.Task.IsCanceled)
+                    msg.Status.TrySetException(ex);
+            }
         }
 
         internal static Message BuildMessage(IActorMessage msg)
@@ -199,11 +213,23 @@ namespace Telegraphy.Azure
 
         public IActorMessage GetMessage()
         {
-            IActorMessage msg = null;
-            if (!msgQueue.TryDequeue(out msg))
-                return null;
+            try
+            {
+                IActorMessage msg = null;
+                if (!msgQueue.TryDequeue(out msg))
+                    return null;
 
-            return msg;
+                return msg;
+            }
+            catch (Exception ex)
+            {
+                Exception foundEx = null;
+                var handler = this.FindExceptionHandler(_exceptionTypeToHandler, ex, out foundEx);
+
+                if (null != handler)
+                    handler.Invoke(foundEx);
+                return null;
+            }
         }
         
         public void Kill()
