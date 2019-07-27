@@ -13,8 +13,8 @@ namespace UnitTests.Office365
     [TestClass]
     public class EmailTests
     {
-        static string emailAccount = null;
-        static string accountPassword = null;
+        static string emailAccount = "";
+        static string accountPassword = "";
 
         [TestMethod]
         public void TestGatheringUnreadEmailsFromInbox()
@@ -36,6 +36,28 @@ namespace UnitTests.Office365
         }
 
         [TestMethod]
+        public void TestSendingEmail()
+        {
+            Telegraph.Instance.UnRegisterAll();
+
+            Telegraph.Instance.Register<EmailMsg, SendEmail>(() => new SendEmail(emailAccount, accountPassword, "Test Friendly Name"));
+
+            EmailMsg msg = new EmailMsg();
+            msg.Subject = "Testing email for actor message";
+            msg.ToEmailAddress = emailAccount;
+
+            var askTask = Telegraph.Instance.Ask(msg);
+            if (!askTask.Wait(new TimeSpan(0, 0, 45)))
+                Assert.Fail("Waited too long to send a message");
+
+            Assert.IsTrue(askTask.Status == System.Threading.Tasks.TaskStatus.RanToCompletion);
+
+            bool found = DoesEmailExistInInbox(msg);
+
+            Assert.IsTrue(found, "We did not find the item in the inbox");
+        }
+
+        [TestMethod]
         public void TestSendingEmailViaOperator()
         {
             Telegraph.Instance.UnRegisterAll();
@@ -45,12 +67,19 @@ namespace UnitTests.Office365
             Telegraph.Instance.Register<EmailMsg>(emailOperatorId);
 
             EmailMsg msg = new EmailMsg();
-            msg.Subject = "Testing email";
+            msg.Subject = "Testing email for operator sent message";
             msg.ToEmailAddress = emailAccount;
 
             if (!Telegraph.Instance.Ask(msg).Wait(new TimeSpan(0, 0, 45)))
                 Assert.Fail("Waited too long to send a message");
-            
+
+            bool found = DoesEmailExistInInbox(msg);
+
+            Assert.IsTrue(found, "We did not find the item in the inbox");
+        }
+
+        private static bool DoesEmailExistInInbox(EmailMsg msg)
+        {
             ExchangeService service = new ExchangeService(ExchangeVersion.Exchange2016);
             service.Credentials = new WebCredentials(emailAccount, accountPassword);
             service.Url = new Uri("https://outlook.office365.com/EWS/Exchange.asmx");
@@ -70,7 +99,7 @@ namespace UnitTests.Office365
                 }
             }
 
-            Assert.IsTrue(found, "We did not find the item in the inbox");
+            return found;
         }
     }
 }

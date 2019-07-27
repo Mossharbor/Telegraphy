@@ -101,12 +101,11 @@ namespace Telegraphy.Office365
                 throw new Telegraphy.Net.OperatorCannotSendMessagesException();
 
             if (!(msg is EmailMsg))
-                throw new UnsupportedMessageException("Outlook Email Operators only support the Email Message type. They do not support " + msg.GetType());
-
+                throw new UnsupportedMessageException("Outlook Email Operators only support the EmailMsg type. They do not support " + msg.GetType());
 
             try
             {
-                SendEmail((EmailMsg)msg);
+                SendEmail((EmailMsg)msg, this.emailAddress, this.password, this.fromFriendlyName);
 
                 if (null != msg.Status && !msg.Status.Task.IsCanceled)
                     msg.Status.TrySetResult(msg);
@@ -125,13 +124,13 @@ namespace Telegraphy.Office365
             }
         }
 
-        private void SendEmail(EmailMsg emailMsg)
+        internal static void SendEmail(EmailMsg emailMsg, string emailAddress, string password, string fromFriendlyName)
         {
-            MailMessage msg = emailMsg.ToMailMessage(this.emailAddress, this.password, this.fromFriendlyName);
+            MailMessage msg = emailMsg.ToMailMessage(emailAddress, password, fromFriendlyName);
 
             SmtpClient client = new SmtpClient();
             client.UseDefaultCredentials = false;
-            client.Credentials = new System.Net.NetworkCredential(emailAddress, this.password);
+            client.Credentials = new System.Net.NetworkCredential(emailAddress, password);
             client.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
             client.Host = "smtp.office365.com";
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
