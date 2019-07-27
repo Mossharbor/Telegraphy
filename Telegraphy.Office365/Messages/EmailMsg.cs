@@ -8,7 +8,7 @@ using Telegraphy.Net;
 
 namespace Telegraphy.Office365
 {
-    public class EmailMsg : IActorMessage
+    public abstract class EmailMsg : IActorMessage
     {
         private string toEmailAddress;
         private string toEmailFriendlyName;

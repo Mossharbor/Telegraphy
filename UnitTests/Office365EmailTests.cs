@@ -25,7 +25,7 @@ namespace UnitTests.Office365
             int count = 0;
             Telegraph.Instance.Register(
                 new OutlookInboxSubscriptionOperator(emailAccount, accountPassword, true),
-                (EmailMessage msg) =>
+                (RecieveEmailMessage msg) =>
                 {
                     ++count;
                     receivedAnUnreadEmailMessage = true;
@@ -40,9 +40,9 @@ namespace UnitTests.Office365
         {
             Telegraph.Instance.UnRegisterAll();
 
-            Telegraph.Instance.Register<EmailMsg, SendEmail>(() => new SendEmail(emailAccount, accountPassword, "Test Friendly Name"));
+            Telegraph.Instance.Register<SendEmailMessage, SendEmail>(() => new SendEmail(emailAccount, accountPassword, "Test Friendly Name"));
 
-            EmailMsg msg = new EmailMsg();
+            SendEmailMessage msg = new SendEmailMessage();
             msg.Subject = "Testing email for actor message";
             msg.ToEmailAddress = emailAccount;
 
@@ -64,9 +64,9 @@ namespace UnitTests.Office365
 
             DateTime sent = DateTime.Now;
             long emailOperatorId = Telegraph.Instance.Register(new OutlookEmailPublisherOperator(emailAccount, accountPassword));
-            Telegraph.Instance.Register<EmailMsg>(emailOperatorId);
+            Telegraph.Instance.Register<SendEmailMessage>(emailOperatorId);
 
-            EmailMsg msg = new EmailMsg();
+            SendEmailMessage msg = new SendEmailMessage();
             msg.Subject = "Testing email for operator sent message";
             msg.ToEmailAddress = emailAccount;
 

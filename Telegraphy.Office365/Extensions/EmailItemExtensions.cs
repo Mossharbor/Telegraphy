@@ -11,7 +11,7 @@ namespace Telegraphy.Office365
         public static IActorMessage ToActorMessage(this Item self,string fromEmailAddress)
         {
             //return new SimpleMessage<string>(self);
-            EmailMsg msg = new EmailMsg()
+            RecieveEmailMessage msg = new RecieveEmailMessage()
             {
                 Subject = self.Subject,
                 Body = self.Body.Text,
