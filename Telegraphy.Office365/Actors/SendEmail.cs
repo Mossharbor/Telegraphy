@@ -19,7 +19,7 @@ namespace Telegraphy.Office365
             this.fromFriendlyName = fromFiendlyName;
         }
 
-        public bool OnMessageRecieved<T>(T msg) where T : class, IActorMessage
+        public virtual bool OnMessageRecieved<T>(T msg) where T : class, IActorMessage
         {
             if (!(msg is EmailMsg))
                 throw new UnsupportedMessageException("Sending emails can only be done with a EmailMsg type. They do not support " + msg.GetType());
