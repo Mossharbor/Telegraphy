@@ -154,6 +154,9 @@ namespace Telegraphy.Azure
             try
             {
                 SerializeAndSend(msg, queue);
+
+                if (null != msg.Status && !msg.Status.Task.IsCanceled)
+                    msg.Status.TrySetResult(msg);
             }
             catch(Exception ex)
             {
