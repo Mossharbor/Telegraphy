@@ -19,12 +19,15 @@ namespace Telegraphy.Office365
             this.fromFriendlyName = fromFiendlyName;
         }
 
+        public string EmailAddress { get => emailAddress; }
+        public string FromFriendlyName { get => fromFriendlyName; }
+
         public virtual bool OnMessageRecieved<T>(T msg) where T : class, IActorMessage
         {
             if (!(msg is EmailMsg))
                 throw new UnsupportedMessageException("Sending emails can only be done with a EmailMsg type. They do not support " + msg.GetType());
 
-            OutlookEmailBaseOperator.SendEmail((msg as EmailMsg), this.emailAddress, this.password, this.fromFriendlyName);
+            OutlookEmailBaseOperator.SendEmail((msg as EmailMsg), this.EmailAddress, this.password, this.FromFriendlyName);
 
             return true;
         }
