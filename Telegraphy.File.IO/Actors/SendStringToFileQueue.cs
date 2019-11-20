@@ -13,9 +13,9 @@ namespace Telegraphy.File.IO
     {
         DirectoryQueue queue = null;
 
-        public SendStringToStorageQueue(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true)
+        public SendStringToStorageQueue(string queueRootDirectory, string queueName, bool createQueueIfItDoesNotExist = true)
         {
-            queue = DirectoryQueueBaseOperator<object>.GetQueueFrom(storageConnectionString, queueName, createQueueIfItDoesNotExist);
+            queue = DirectoryQueueBaseOperator<object>.GetQueueFrom(queueRootDirectory, queueName, createQueueIfItDoesNotExist);
         }
 
         bool IActor.OnMessageRecieved<T>(T msg)

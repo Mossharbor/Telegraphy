@@ -10,24 +10,20 @@ namespace Telegraphy.File.IO
 {
     public class SendBytesToLocalQueue : FileActionBase, IActor
     {
-        private string queuePath;
+        DirectoryQueue queue = null;
 
-        public SendBytesToLocalQueue(string queuePath)
+        public SendBytesToLocalQueue(string queueRootDirectory, string queueName, bool createQueueIfItDoesNotExist = true)
         {
-            this.queuePath = queuePath;
+            queue = DirectoryQueueBaseOperator<object>.GetQueueFrom(queueRootDirectory, queueName, createQueueIfItDoesNotExist);
         }
 
         bool IActor.OnMessageRecieved<T>(T msg)
         {
-            string fileNameAndPath = this.GetFinalPath(this.queuePath, DateTime.Now.Ticks.ToString("00000000"));
-            while (System.IO.File.Exists(fileNameAndPath))
-            {
-                fileNameAndPath = this.GetFinalPath(this.queuePath, DateTime.Now.Ticks.ToString("00000000"));
-            }
+            if (!(msg as IActorMessage).Message.GetType().Name.Equals("Byte[]"))
+                throw new SendBytesCanOnlySendValueTypeByteArrayMessagesException("ValueTypeMessage<byte>");
 
-            SendBytesToTruncateFile writer = new SendBytesToTruncateFile(fileNameAndPath);
-
-            return writer.Tell(msg);
+            DirectoryQueueBaseOperator<byte[]>.SerializeAndSend(msg, queue);
+            return true;
         }
     }
 }

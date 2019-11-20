@@ -17,18 +17,25 @@ namespace Telegraphy.File.IO
             this.pathToFile = pathToFile;
         }
 
+        internal void Truncate(byte[] msgBytes)
+        {
+            System.IO.FileMode mode = System.IO.File.Exists(this.pathToFile) ? System.IO.FileMode.Create : System.IO.FileMode.Truncate;
+
+            using (System.IO.FileStream fs = System.IO.File.Open(this.pathToFile, mode))
+            {
+                fs.Write(msgBytes, 0, msgBytes.Length);
+            }
+        }
+
         bool IActor.OnMessageRecieved<T>(T msg)
         {
             if (!(msg as IActorMessage).Message.GetType().Name.Equals("Byte[]"))
                 throw new SendBytesCanOnlySendValueTypeByteArrayMessagesException("ValueTypeMessage<byte>");
 
-            System.IO.FileMode mode = System.IO.File.Exists(this.pathToFile) ? System.IO.FileMode.Create : System.IO.FileMode.Truncate;
-
             byte[] msgBytes = (byte[])msg.Message;
-            using (System.IO.FileStream fs = System.IO.File.Open(this.pathToFile, mode))
-            {
-                fs.Write(msgBytes, 0, msgBytes.Length);
-            }
+
+            this.Truncate(msgBytes);
+
             return true;
         }
     }
