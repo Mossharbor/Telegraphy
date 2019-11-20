@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Mossharbor.Telegraphy.Azure.Storage</id>
+    <version>2.0.0</version>
+    <authors>M@ J.</authors>
+    <owners>M@ J.</owners>
+    <licenseUrl>https://raw.githubusercontent.com/Mossharbor/Telegraphy/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/Mossharbor/Telegraphy</projectUrl>
+    <!-- <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl> -->
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Telegraphy.Net adapter for azure storage (tables/queues/blobs)</description>
+    <releaseNotes>Initial release</releaseNotes>
+    <copyright>Copyright 2018 Mossharbor</copyright>
+    <tags>Azure dotnetcore blob queue tables storage</tags>
+  </metadata>
+  <files>
+    <file src="bin\Debug\**" target="lib/" />
+  </files>
+</package>
