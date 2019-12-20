@@ -19,7 +19,7 @@ namespace Telegraphy.File.IO
 
         internal void Truncate(byte[] msgBytes)
         {
-            System.IO.FileMode mode = System.IO.File.Exists(this.pathToFile) ? System.IO.FileMode.Create : System.IO.FileMode.Truncate;
+            System.IO.FileMode mode = System.IO.File.Exists(this.pathToFile) ? System.IO.FileMode.Truncate : System.IO.FileMode.CreateNew;
 
             using (System.IO.FileStream fs = System.IO.File.Open(this.pathToFile, mode))
             {

@@ -3,22 +3,33 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Telegraphy.File.IO
 {
     [Serializable]
     public class DirectoryQueueMessage
     {
-        private string messagePath = null;
+        private string localPathToQueuedMessage = null;
         private bool deleted = false;
 
         public DirectoryQueueMessage()
         {
         }
 
-        internal DirectoryQueueMessage(string messagePath)
+        public DirectoryQueueMessage(string message)
         {
-            this.MessagePath = messagePath;
+            this.SetMessageContent(message);
+        }
+
+        public DirectoryQueueMessage(byte[] messageContents)
+        {
+            this.SetMessageContent(messageContents);
+        }
+
+        internal void SetMessagePath(string messagePath)
+        {
+            this.LocalPathToQueuedMessage = messagePath;
         }
 
         internal void SetMessageContent(byte[] contents)
@@ -27,7 +38,6 @@ namespace Telegraphy.File.IO
                 return;
 
             this.Message = contents;
-            this.Store();
         }
 
         public void SetMessageContent(string contents)
@@ -36,13 +46,12 @@ namespace Telegraphy.File.IO
                 return;
 
             this.Message = System.Text.Encoding.UTF8.GetBytes(contents);
-            this.Store();
         }
 
         public void Delete()
         {
             this.deleted = true;
-            System.IO.File.Delete(this.messagePath);
+            System.IO.File.Delete(this.localPathToQueuedMessage);
         }
 
         public byte[] Message { get; set; }
@@ -57,11 +66,26 @@ namespace Telegraphy.File.IO
             }
         }
 
-        internal void Hide(TimeSpan? retrieveVisibilityTimeout)
+        internal void Hide(TimeSpan? visibilityTimeout)
         {
-            System.IO.File.SetAttributes(this.messagePath, System.IO.FileAttributes.Hidden);
-            // TODO set reteval visibility timer in message;
-            throw new NotImplementedException();
+            System.IO.File.SetAttributes(this.localPathToQueuedMessage, System.IO.FileAttributes.Hidden);
+
+            if (visibilityTimeout != null && visibilityTimeout.HasValue)
+            {
+                Task.Delay(visibilityTimeout.Value).ContinueWith((t) =>
+                {
+                    try
+                    {
+                        if (!this.deleted && t.IsCompleted && System.IO.File.Exists(this.localPathToQueuedMessage))
+                        {
+                            System.IO.File.SetAttributes(this.localPathToQueuedMessage, System.IO.FileAttributes.Normal);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    }
+                });
+            }
         }
 
         public byte[] AsBytes
@@ -72,10 +96,52 @@ namespace Telegraphy.File.IO
             }
         }
 
-        internal string MessagePath { get => messagePath; set => messagePath = value; }
+        internal string LocalPathToQueuedMessage { get => localPathToQueuedMessage; set => localPathToQueuedMessage = value; }
+
+        internal void SetInitialVisibilityDelay(TimeSpan? initialVisibilityDelay)
+        {
+            this.InitialVisibilityDelay = initialVisibilityDelay;
+
+        }
+
+        internal void SetTimeToLive(TimeSpan? timeToLive)
+        {
+            this.TimeToLive = timeToLive;
+
+            if (null == timeToLive || !timeToLive.HasValue)
+                return;
+
+            Task.Delay(this.TimeToLive.Value).ContinueWith((t) =>
+            {
+                try
+                {
+                    if (!this.deleted && t.IsCompleted && System.IO.File.Exists(this.localPathToQueuedMessage))
+                    {
+                        this.Delete();
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            });
+        }
+
+        public TimeSpan? TimeToLive { get; internal set; }
+        public TimeSpan? InitialVisibilityDelay { get; internal set; }
 
         internal void Store()
         {
+            if (null != InitialVisibilityDelay && !System.IO.File.Exists(this.localPathToQueuedMessage))
+            {
+                string tempPath = System.IO.Path.GetTempPath();
+                string tempName = System.IO.Path.GetFileName(this.localPathToQueuedMessage);
+                string tempFile = System.IO.Path.Combine(tempPath, tempName);
+                System.IO.File.Create(tempFile).Close();
+                System.IO.File.SetAttributes(tempFile, System.IO.FileAttributes.Hidden);
+                System.IO.File.Move(tempFile, this.localPathToQueuedMessage);
+                this.Hide(this.InitialVisibilityDelay);
+            }
+
             IFormatter formatter = new BinaryFormatter();
             byte[] messageInBytes = null;
             using (var ms = new System.IO.MemoryStream())
@@ -84,7 +150,7 @@ namespace Telegraphy.File.IO
                 messageInBytes = ms.GetBuffer();
             }
 
-            SendBytesToTruncateFile truncator = new SendBytesToTruncateFile(this.messagePath);
+            SendBytesToTruncateFile truncator = new SendBytesToTruncateFile(this.localPathToQueuedMessage);
             if (!this.deleted)
             {
                 truncator.Truncate(messageInBytes);
@@ -94,7 +160,10 @@ namespace Telegraphy.File.IO
         internal static DirectoryQueueMessage FromQueueFile(string msgpath)
         {
             IFormatter formatter = new BinaryFormatter();
-            return (DirectoryQueueMessage)formatter.Deserialize(System.IO.File.OpenRead(msgpath));
+            using (var stream = System.IO.File.OpenRead(msgpath))
+            {
+                return (DirectoryQueueMessage)formatter.Deserialize(stream);
+            }
         }
     }
 }

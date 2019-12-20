@@ -8,16 +8,17 @@ using Telegraphy.File.IO.Exceptions;
 
 namespace Telegraphy.File.IO
 {
-    public class DeleteFile : FileActionBase, IActor
+    public class DeleteFolder : FileActionBase, IActor
     {
         private string folderName;
+        private DeleteAllFilesInFolder fileCleaner = new DeleteAllFilesInFolder();
 
-        public DeleteFile(string folderName)
+        public DeleteFolder(string folderName)
         {
             this.folderName = folderName;
         }
 
-        public DeleteFile()
+        public DeleteFolder()
         {
         }
 
@@ -26,9 +27,11 @@ namespace Telegraphy.File.IO
             if (!(msg as IActorMessage).Message.GetType().Name.Equals("String"))
                 throw new CannotDeleteFilesInFolderFileNameIsNotAStringException();
 
-            string finalPath = this.GetFilePath((msg.Message as string), folderName);
+            string finalPath = !string.IsNullOrEmpty(folderName) ? this.GetFolderPath(folderName, (string)(msg as IActorMessage).Message) : (string)(msg as IActorMessage).Message;
 
-            System.IO.File.Delete(finalPath);
+            fileCleaner.DeleteAllFiles(System.IO.Directory.GetFiles(finalPath));
+
+            System.IO.Directory.Delete(finalPath);
 
             return true;
         }

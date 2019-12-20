@@ -9,17 +9,19 @@ using Telegraphy.Net;
 
 namespace Telegraphy.File.IO
 {
-    public class SendFile : FileActionBase, IActor
+    public class CopyFile : FileActionBase, IActor
     {
         private string folderName;
+        private bool overwrite = false;
 
-        public SendFile()
+        public CopyFile()
         {
         }
 
-        public SendFile(string folderName)
+        public CopyFile(string folderName, bool overwrite = false)
         {
             this.folderName = folderName;
+            this.overwrite = overwrite;
         }
 
         bool IActor.OnMessageRecieved<T>(T msg)
@@ -29,9 +31,9 @@ namespace Telegraphy.File.IO
 
             string sourcePath = (string)msg.Message;
             string fileName = Path.GetFileName((string)msg.Message);
-            string finalpath = this.GetFinalPath(fileName, this.folderName);
+            string finalpath = this.GetFilePath(fileName, this.folderName, false);
 
-            System.IO.File.Copy(sourcePath, finalpath);
+            System.IO.File.Copy(sourcePath, finalpath, overwrite);
 
             return true;
         }

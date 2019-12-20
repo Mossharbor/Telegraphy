@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <Configurations>Debug;Release</Configurations>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
@@ -58,6 +58,7 @@
     <ProjectReference Include="..\Telegraphy.Azure.Relay.Wcf\Telegraphy.Azure.Relay.Wcf.csproj" />
     <ProjectReference Include="..\Telegraphy.Azure.ServiceBus\Telegraphy.Azure.ServiceBus.csproj" />
     <ProjectReference Include="..\Telegraphy.Azure.Storage\Telegraphy.Azure.Storage.csproj" />
+    <ProjectReference Include="..\Telegraphy.File.IO\Telegraphy.File.IO.csproj" />
     <ProjectReference Include="..\Telegraphy.Msmq\Telegraphy.Msmq.csproj" />
     <ProjectReference Include="..\Telegraphy.Net\Telegraphy.Net.csproj" />
     <ProjectReference Include="..\Telegraphy.Office365\Telegraphy.Office365.csproj" />

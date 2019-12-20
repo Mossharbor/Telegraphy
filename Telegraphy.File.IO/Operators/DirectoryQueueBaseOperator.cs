@@ -30,13 +30,13 @@ namespace Telegraphy.File.IO
             string storageConnectionString, 
             string queueName, 
             bool createQueueIfItDoesNotExist,
-            bool recieve, 
+            bool recieveMessagesOnly, 
             int maxDequeueCount = DefaultDequeueMaxCount,
             TimeSpan? retrieveVisibilityTimeout = null)
             : this (switchBoard,
                   GetQueueFrom(storageConnectionString, queueName, createQueueIfItDoesNotExist),
                   GetDeadLetterQueueFrom(storageConnectionString, queueName),
-                  recieve, 
+                  recieveMessagesOnly, 
                   maxDequeueCount,
                   retrieveVisibilityTimeout)
         {
@@ -46,11 +46,11 @@ namespace Telegraphy.File.IO
             ILocalSwitchboard switchboard,
             DirectoryQueue queue,
             DirectoryQueue deadLetterQueue,
-            bool recieve,
+            bool recieveMessagesOnly,
             int maxDequeueCount = DefaultDequeueMaxCount,
             TimeSpan? retrieveVisibilityTimeout = null)
         {
-            this.recieveMessagesOnly = recieve;
+            this.recieveMessagesOnly = recieveMessagesOnly;
             if (null != switchboard)
             {
                 this.Switchboards.Add(switchboard);
@@ -61,7 +61,7 @@ namespace Telegraphy.File.IO
             this.deadLetterQueue = deadLetterQueue;
             this.retrieveVisibilityTimeout = retrieveVisibilityTimeout;
 
-            if (null == switchboard && recieve)
+            if (null == switchboard && recieveMessagesOnly)
                 throw new SwitchBoardNeededWhenRecievingMessagesException();
         }
         
@@ -77,9 +77,11 @@ namespace Telegraphy.File.IO
 
         internal static DirectoryQueue GetDeadLetterQueueFrom(string queueRootDirectory, string queueName)
         {
-            DirectoryQueue queue = new DirectoryQueue(queueRootDirectory, queueName);
-            queue.CreateIfNotExists();
-            return queue;
+            using (DirectoryQueue queue = new DirectoryQueue(queueRootDirectory, queueName))
+            {
+                queue.CreateIfNotExists();
+                return queue;
+            }
         }
 
         #region IActor
@@ -182,7 +184,7 @@ namespace Telegraphy.File.IO
 
         internal static void AddMessageProperties(DirectoryQueue queue, DirectoryQueueMessage cloudMessage, IStorageQueuePropertiesProvider props)
         {
-            if (null == props)
+            if (null == props || (null == props.TimeToLive && null == props.InitialVisibilityDelay))
             {
                 queue.AddMessage(cloudMessage);
             }

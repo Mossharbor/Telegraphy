@@ -8,11 +8,11 @@ using Telegraphy.Net;
 
 namespace Telegraphy.File.IO
 {
-    public class SendBytesToLocalQueue : FileActionBase, IActor
+    public class SendBytesToDirectoryQueue : FileActionBase, IActor
     {
         DirectoryQueue queue = null;
 
-        public SendBytesToLocalQueue(string queueRootDirectory, string queueName, bool createQueueIfItDoesNotExist = true)
+        public SendBytesToDirectoryQueue(string queueRootDirectory, string queueName, bool createQueueIfItDoesNotExist = true)
         {
             queue = DirectoryQueueBaseOperator<object>.GetQueueFrom(queueRootDirectory, queueName, createQueueIfItDoesNotExist);
         }

@@ -7,16 +7,16 @@ using Telegraphy.Net;
 
 namespace Telegraphy.File.IO
 {
-    public class SendMessageToStorageQueue : IActor
+    public class SendMessageToDirectoryQueue : IActor
     {
         DirectoryQueue queue = null;
 
-        public SendMessageToStorageQueue(string queueRootDirectory, string queueName)
+        public SendMessageToDirectoryQueue(string queueRootDirectory, string queueName)
             : this(queueRootDirectory, queueName, true)
         {
         }
 
-        public SendMessageToStorageQueue(string queueRootDirectory, string queueName, bool createQueueIfItDoesNotExist)
+        public SendMessageToDirectoryQueue(string queueRootDirectory, string queueName, bool createQueueIfItDoesNotExist)
         {
             queue = DirectoryQueueBaseOperator<object>.GetQueueFrom(queueRootDirectory, queueName, createQueueIfItDoesNotExist);
         }

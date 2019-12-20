@@ -11,21 +11,19 @@ namespace Telegraphy.File.IO
 {
     public class DeleteAllFilesInFolder : IActor
     {
-        private string localFolder = null;
         private string wildcard = null;
 
-        public DeleteAllFilesInFolder(string localFolder) :
-            this(localFolder, null)
+        public DeleteAllFilesInFolder() :
+            this(null)
         {
         }
 
-        public DeleteAllFilesInFolder(string localFolder, string wildCard = null)
+        public DeleteAllFilesInFolder(string wildCard = null)
         {
-            this.localFolder = localFolder;
             this.wildcard = wildcard ?? "*";
         }
 
-        void DeleteAllFiles (IEnumerable<string> files)
+        internal void DeleteAllFiles (IEnumerable<string> files)
         {
             foreach (var file in files)
             {

@@ -30,6 +30,10 @@ namespace UnitTests
         {
         }
 
+        public void Register<T>(IActor actor) where T : class, IActorMessage
+        {
+        }
+
         public void Register<T, K>(Expression<Func<K>> factory) where K : IActor
         {
         }

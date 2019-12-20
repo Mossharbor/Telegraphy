@@ -9,11 +9,11 @@ namespace Telegraphy.File.IO
     using Telegraphy.File.IO.Exceptions;
     using Telegraphy.Net;
 
-    public class SendStringToStorageQueue : IActor
+    public class SendStringToDirectoryQueue : IActor
     {
         DirectoryQueue queue = null;
 
-        public SendStringToStorageQueue(string queueRootDirectory, string queueName, bool createQueueIfItDoesNotExist = true)
+        public SendStringToDirectoryQueue(string queueRootDirectory, string queueName, bool createQueueIfItDoesNotExist = true)
         {
             queue = DirectoryQueueBaseOperator<object>.GetQueueFrom(queueRootDirectory, queueName, createQueueIfItDoesNotExist);
         }

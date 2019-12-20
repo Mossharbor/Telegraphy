@@ -23,7 +23,7 @@ namespace Telegraphy.File.IO
             if (!(msg as IActorMessage).Message.GetType().Name.Equals("String"))
                 throw new CannotDeleteFilesInFolderFileNameIsNotAStringException();
 
-            string finalPath = this.GetFinalPath((msg.Message as string), folderName);
+            string finalPath = this.GetFilePath((msg.Message as string), folderName);
             msg.ProcessingResult = new System.IO.FileInfo(finalPath);
             return true;
         }

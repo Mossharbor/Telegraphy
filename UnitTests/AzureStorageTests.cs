@@ -83,10 +83,53 @@ namespace UnitTests.Azure.Storage
                 serializer.OnMessageRecieved(sMsg);
                 byte[] msgBytes = (byte[])sMsg.ProcessingResult;
                 queue.AddMessage(new CloudQueueMessage(msgBytes));
+                ManualResetEvent received = new ManualResetEvent(false);
 
                 long azureOperatorID = Telegraph.Instance.Register(
                     new StorageQueueSubscriptionOperator<IActorMessage>(LocalConcurrencyType.DedicatedThreadCount, Connections.StorageConnectionString, queueName, false, 2),
-                    (PingPong.Ping foo) => { Assert.IsTrue(message.Equals((string)foo.Message, StringComparison.InvariantCulture)); });
+                    (PingPong.Ping foo) => 
+                    {
+                        Assert.IsTrue(message.Equals((string)foo.Message, StringComparison.InvariantCulture));
+                        received.Set();
+                    });
+
+                Assert.IsTrue(received.WaitOne(TimeSpan.FromSeconds(3), true), "We did not receive the message");
+            }
+            finally
+            {
+                Telegraph.Instance.UnRegisterAll();
+                GetStorageQueue(queueName).DeleteAsync();
+                GetStorageQueue(queueName + "-deadletter").DeleteAsync();
+            }
+        }
+
+        [TestMethod]
+        public void RecieveActorMessageFromStorageQueuePostRegister()
+        {
+            string queueName = "test-" + "RecieveActorMessageFromStorageQueue".ToLower();
+            var queue = GetStorageQueue(queueName);
+            queue.CreateIfNotExists();
+            try
+            {
+                string message = "HelloWorld";
+                var actorMessage = new PingPong.Ping(message);
+                SerializeMessage<IActorMessage> sMsg = new SerializeMessage<IActorMessage>(actorMessage);
+                IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
+                serializer.OnMessageRecieved(sMsg);
+                byte[] msgBytes = (byte[])sMsg.ProcessingResult;
+                ManualResetEvent received = new ManualResetEvent(false);
+
+                long azureOperatorID = Telegraph.Instance.Register(
+                    new StorageQueueSubscriptionOperator<IActorMessage>(LocalConcurrencyType.DedicatedThreadCount, Connections.StorageConnectionString, queueName, false, 2),
+                    (PingPong.Ping foo) =>
+                    {
+                        Assert.IsTrue(message.Equals((string)foo.Message, StringComparison.InvariantCulture));
+                        received.Set();
+                    });
+
+                queue.AddMessage(new CloudQueueMessage(msgBytes));
+
+                Assert.IsTrue(received.WaitOne(TimeSpan.FromSeconds(3), true), "We did not receive the message");
             }
             finally
             {

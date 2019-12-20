@@ -8,11 +8,11 @@ using Telegraphy.Net;
 
 namespace Telegraphy.File.IO
 {
-    public class RecieveBytesFromBlobStorage : FileActionBase, IActor
+    public class RecieveBytesFromFile : FileActionBase, IActor
     {
         private string folderName;
 
-        public RecieveBytesFromBlobStorage(string folderName)
+        public RecieveBytesFromFile(string folderName)
         {
             this.folderName = folderName;
         }
@@ -22,9 +22,8 @@ namespace Telegraphy.File.IO
             if (!(msg as IActorMessage).Message.GetType().Name.Equals("String"))
                 throw new CannotRecievedFileInFolderFileNameIsNotAStringException();
 
-            string finalPath = this.GetFinalPath((msg.Message as string), folderName);
+            string finalPath = this.GetFilePath((msg.Message as string), folderName);
 
-            System.IO.File.Delete(finalPath);
             msg.ProcessingResult = System.IO.File.ReadAllBytes(finalPath);
             return true;
         }
