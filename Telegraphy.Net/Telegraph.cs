@@ -124,7 +124,7 @@ namespace Telegraphy.Net
             {
                 case MessageDispatchProcedureType.RandomSelection:
                     {
-                        var handlesType = typeof(T);
+                        var handlesType = LocalSwitchboard.HandleValueTypeMessage(typeof(T));
 
                         if (!msgTypeToOperator.ContainsKey(handlesType))
                             throw new NoOperatorRegisteredToSupportTypeException();
@@ -161,7 +161,7 @@ namespace Telegraphy.Net
                     break;
                 case MessageDispatchProcedureType.LeastBusy:
                     {
-                        var handlesType = typeof(T);
+                        var handlesType = LocalSwitchboard.HandleValueTypeMessage(typeof(T));
 
                         if (!msgTypeToOperator.ContainsKey(handlesType))
                             throw new NoOperatorRegisteredToSupportTypeException();
@@ -370,7 +370,7 @@ namespace Telegraphy.Net
 
         private void MapTypeToOperator<T>(IOperator op)
         {
-            var handlesType = typeof(T);
+            var handlesType = LocalSwitchboard.HandleValueTypeMessage(typeof(T));
 
             if (!msgTypeToOperator.ContainsKey(handlesType))
             {

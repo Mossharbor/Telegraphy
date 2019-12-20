@@ -165,5 +165,96 @@ namespace UnitTests.TelegraphTests
             Telegraph.Instance.Ask(message.ToActorMessage()).Wait();
             Assert.IsTrue(called);
         }
+
+        [TestMethod]
+        public void RegisterValueTypeToActorForSingleThreadPerMessageTypeSwitchBoard()
+        {
+            Telegraph.Instance.UnRegisterAll();
+            long computeOpID = Telegraph.Instance.Register(new LocalQueueOperator(new SingleThreadPerMessageTypeSwitchBoard()));
+            int message = 1;
+            bool called = false;
+            DefaultActor da = new DefaultActor();
+            Telegraph.Instance.Register<ValueTypeMessage<int>, DefaultActor>(computeOpID, () => da);
+
+            da.OnMessageHandler = (msg) =>
+            {
+                called = true;
+                Assert.IsFalse(!msg.Message.Equals(message));
+                return true;
+            };
+
+            Telegraph.Instance.Ask(message.ToActorMessage()).Wait();
+            Assert.IsTrue(called);
+        }
+
+        [TestMethod]
+        public void RegisterValueTypeToActorForOneThreadPerActorTypeSwitchboard()
+        {
+            Telegraph.Instance.UnRegisterAll();
+            long computeOpID = Telegraph.Instance.Register(new LocalQueueOperator(new OneThreadPerActorTypeSwitchboard()));
+            int message = 1;
+            bool called = false;
+            DefaultActor da = new DefaultActor();
+            Telegraph.Instance.Register<ValueTypeMessage<int>, DefaultActor>(computeOpID, () => da);
+
+            da.OnMessageHandler = (msg) =>
+            {
+                called = true;
+                Assert.IsFalse(!msg.Message.Equals(message));
+                return true;
+            };
+
+            Telegraph.Instance.Ask(message.ToActorMessage()).Wait();
+            Assert.IsTrue(called);
+        }
+
+        [TestMethod]
+        public void RegisterValueTypeToAction()
+        {
+            Telegraph.Instance.UnRegisterAll();
+            int msgCount = 0;
+            int expectedMessageCount = 100;
+            Telegraph.Instance.Register<ValueTypeMessage<int>>(count => 
+            {
+                Console.Write((int)count.Message + ",");
+                ++msgCount;
+            });
+
+            List<Task<IActorMessage>> msgsToWaitOn = new List<Task<IActorMessage>>();
+
+            for (int i = 0; i < expectedMessageCount; ++i)
+            {
+                // this should be sequential since we are on one thread for ints
+                msgsToWaitOn.Add(Telegraph.Instance.Ask(i.ToActorMessage()));
+            }
+
+            Task.WaitAll(msgsToWaitOn.ToArray(), TimeSpan.FromMilliseconds(100));
+            Assert.IsTrue(msgCount == expectedMessageCount, "We did not get the correct number of messages");
+        }
+
+        [TestMethod]
+        public void RegisterValueTypeToActionForSingleThreadPerMessageTypeSwitchBoard()
+        {
+            Telegraph.Instance.UnRegisterAll();
+            long computeOpID = Telegraph.Instance.Register(new LocalQueueOperator(new SingleThreadPerMessageTypeSwitchBoard()));
+            int msgCount = 0;
+            int expectedMessageCount = 100;
+            Telegraph.Instance.Register<ValueTypeMessage<int>>(computeOpID, count =>
+            {
+                Console.Write((int)count.Message + ",");
+                ++msgCount;
+            });
+
+            List<Task<IActorMessage>> msgsToWaitOn = new List<Task<IActorMessage>>();
+
+            for (int i = 0; i < expectedMessageCount; ++i)
+            {
+                // this should be sequential since we are on one thread for ints
+                msgsToWaitOn.Add(Telegraph.Instance.Ask(i.ToActorMessage()));
+            }
+
+            Task.WaitAll(msgsToWaitOn.ToArray(), TimeSpan.FromMilliseconds(100));
+            Assert.IsTrue(msgCount == expectedMessageCount, "We did not get the correct number of messages");
+        }
     }
 }

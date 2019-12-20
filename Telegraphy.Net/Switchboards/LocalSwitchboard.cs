@@ -68,7 +68,7 @@ namespace Telegraphy.Net
 
         public virtual void Register<T>(Action<T> action) where T : class
         {
-            var handlesType = typeof(T);
+            var handlesType = HandleValueTypeMessage(typeof(T));
             bool decorateActorWithMailbox = LocalConcurrencyType.OneThreadPerActor == this.LocalConcurrencyType;
             bool isManyThreads = LocalConcurrencyType.OneActorPerThread == this.LocalConcurrencyType;
 
@@ -101,14 +101,17 @@ namespace Telegraphy.Net
             //var actor = func.Invoke();
             bool decorateActorWithMailbox = LocalConcurrencyType.OneThreadPerActor == this.LocalConcurrencyType;
             var actorType = typeof(K);
-            var handlesType = typeof(T);
+            var handlesType = HandleValueTypeMessage(typeof(T));
+
             IActor actor = null;
             ActorInvocationBase invoker = null;
 
             if (_actorTypeToInstatiation.ContainsKey(actorType))
             {
                 if (!_actorTypeToInstatiation.TryGetValue(actorType, out invoker))
+                {
                     invoker = null;
+                }
                 else
                 {
                     actor = invoker.Invoke(decorateActorWithMailbox);
@@ -130,6 +133,17 @@ namespace Telegraphy.Net
             try { _actorRegistered.Set(); }
             catch (SemaphoreFullException) { }
         }
+
+        internal static Type HandleValueTypeMessage(Type handlesType)
+        {
+            if (handlesType.FullName.StartsWith("Telegraphy.Net.ValueTypeMessage"))
+            {
+                return handlesType.GenericTypeArguments.First();
+            }
+
+            return handlesType;
+        }
+
         public virtual void Register(Type exceptionType, Func<Exception, IActor, IActorMessage, IActorInvocation, IActor> handler)
         {
             _exceptionTypeToHandler.AddOrUpdate(exceptionType, handler, (key, oldValue) => handler);
