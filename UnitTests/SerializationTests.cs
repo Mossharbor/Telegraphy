@@ -1,14 +1,14 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace UnitTests.Serialization
+namespace UnitTests.TelegraphTests
 {
     using Telegraphy.Net;
     using System.Threading;
     using System.Threading.Tasks;
 
     [TestClass]
-    public class Serialization
+    public class SerializationTests
     {
         public static TaskCompletionSource<IActorMessage> GetMessageCompletionMonitor()
         {

@@ -10,7 +10,7 @@ using UnitTests.TestImplemenations;
 namespace UnitTests.TelegraphTests
 {
     [TestClass]
-    public class TelegraphTests
+    public class RegistrationTests
     {
         [TestMethod]
         public void RegisterOperatorOnly()
@@ -142,6 +142,28 @@ namespace UnitTests.TelegraphTests
                 TestQuestionListExtractor.msgSentCount = 0;
                 TestQuestionStorage.msgRecievedCount = 0;
             }
+        }
+
+        [TestMethod]
+        public void RegisterValueTypeToActor()
+        {
+            Telegraph.Instance.UnRegisterAll();
+            int message = 1;
+            bool called = false;
+            LocalQueueOperator op = new LocalQueueOperator();
+            long operatorID = Telegraph.Instance.Register(op);
+            DefaultActor da = new DefaultActor();
+            Telegraph.Instance.Register<ValueTypeMessage<int>, DefaultActor>(operatorID, () => da);
+
+            da.OnMessageHandler = (msg) =>
+            {
+                called = true;
+                Assert.IsFalse(!msg.Message.Equals(message));
+                return true;
+            };
+
+            Telegraph.Instance.Ask(message.ToActorMessage()).Wait();
+            Assert.IsTrue(called);
         }
     }
 }

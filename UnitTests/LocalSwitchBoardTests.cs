@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Telegraphy.Net;
 using Telegraphy.Net.Exceptions;
 
-namespace UnitTests.Switchboard
+namespace UnitTests.TelegraphTests
 {
     [TestClass]
     public class LocalSwitchBoardTests
