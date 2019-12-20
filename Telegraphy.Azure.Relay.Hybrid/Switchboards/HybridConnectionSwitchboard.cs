@@ -158,6 +158,11 @@ namespace Telegraphy.Azure.Relay.Hybrid
             throw new SwitchBoardDoesNotAllowActorRegistrationJustMessageRegistrationException();
         }
 
+        public void Register<T>(IActor actor) where T : class, IActorMessage
+        {
+            this.Register<T>((msg) => actor.OnMessageRecieved<T>(msg));
+        }
+
         public void Register<T, K>(Expression<Func<K>> factory) where K : IActor
         {
             throw new SwitchBoardDoesNotAllowActorRegistrationJustMessageRegistrationException();
