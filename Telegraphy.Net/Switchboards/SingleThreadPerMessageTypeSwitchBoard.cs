@@ -66,6 +66,11 @@ namespace Telegraphy.Net
             // for each T we create a new LocalSwitchboard that only operates on that type T
         }
 
+        public void Register<T>(IActor actor) where T : class, IActorMessage
+        {
+            this.Register<T>((msg) => actor.OnMessageRecieved<T>(msg));
+        }
+
         public void Register<T, K>(Expression<Func<K>> factory) where K : IActor
         {
             Type typeOfMessage = typeof(T);

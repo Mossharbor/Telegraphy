@@ -11,6 +11,8 @@ namespace Telegraphy.Net
         LocalConcurrencyType LocalConcurrencyType { get; }
         IOperator Operator { get; set; }
 
+        void Register<T>(IActor action) where T : class, IActorMessage;
+
         void Register<T>(Action<T> action) where T : class;
 
         void Register<T, K>(System.Linq.Expressions.Expression<Func<K>> factory)

@@ -264,6 +264,22 @@ namespace Telegraphy.Net
                 throw new FunctionNotSupportedWhenMultipleOperatorsAreRegisteredException();
         }
 
+        public void Register<T>(IActor actor) where T : class, IActorMessage
+        {
+            if (IsUsingSingleOperator())
+            {
+                if (0 == this.MainOperator.Switchboards.Count)
+                    throw new CannotRegisterActionSinceOperatorHasNoSwitchBoardsException();
+
+                foreach (var switchboard in this.MainOperator.Switchboards)
+                    switchboard.Register<T>(actor);
+
+                MapTypeToOperator<T>(this.MainOperator);
+            }
+            else
+                throw new FunctionNotSupportedWhenMultipleOperatorsAreRegisteredException();
+        }
+
         public void Register<MsgType, ActorType>(System.Linq.Expressions.Expression<Func<ActorType>> factory)
             where MsgType : class
             where ActorType : IActor
@@ -275,6 +291,8 @@ namespace Telegraphy.Net
 
                 foreach (var switchboard in this.MainOperator.Switchboards)
                     switchboard.Register<MsgType, ActorType>(factory);
+
+                MapTypeToOperator<MsgType>(this.MainOperator);
             }
             else
                 throw new FunctionNotSupportedWhenMultipleOperatorsAreRegisteredException();
@@ -289,6 +307,8 @@ namespace Telegraphy.Net
 
                 foreach (var switchboard in this.MainOperator.Switchboards)
                     switchboard.Register(exceptionType, handler);
+
+                // TODO MapTypeToOperator<T>(this.MainOperator);
             }
             else
                 throw new FunctionNotSupportedWhenMultipleOperatorsAreRegisteredException();
@@ -343,6 +363,13 @@ namespace Telegraphy.Net
                     switchBoard.Register<T>();
             }
 
+            MapTypeToOperator<T>(op);
+
+            return opID;
+        }
+
+        private void MapTypeToOperator<T>(IOperator op)
+        {
             var handlesType = typeof(T);
 
             if (!msgTypeToOperator.ContainsKey(handlesType))
@@ -368,10 +395,8 @@ namespace Telegraphy.Net
                 if (msgTypeToOperator[handlesType].TryAdd(op))
                     throw new FailedToRegisterOperatorForTypeException(handlesType.ToString());
             }
-
-            return opID;
         }
-        
+
         public void Register<T>(long opId)
         {
             IOperator op = null;
@@ -389,6 +414,15 @@ namespace Telegraphy.Net
             this.Register<T>(op,action);
         }
 
+        public void Register<T>(long opID, IActor actor) where T : class, IActorMessage
+        {
+            IOperator op = null;
+            if (!operators.TryGetValue(opID, out op))
+                throw new NoOperatorFoundForIDException();
+
+            this.Register<T>(op, actor);
+        }
+
         public long Register<T>(IOperator op, Action<T> action) where T : class
         {
             if (0 == op.Switchboards.Count)
@@ -396,6 +430,17 @@ namespace Telegraphy.Net
             long nextID = Register(op);
             foreach(var switchBoard in op.Switchboards)
                 switchBoard.Register<T>(action);
+            Register<T>(op, false);
+            return nextID;
+        }
+
+        public long Register<T>(IOperator op, IActor actor) where T : class, IActorMessage
+        {
+            if (0 == op.Switchboards.Count)
+                throw new CannotRegisterActionSinceOperatorHasNoSwitchBoardsException();
+            long nextID = Register(op);
+            foreach (var switchBoard in op.Switchboards)
+                switchBoard.Register<T>(actor);
             Register<T>(op, false);
             return nextID;
         }

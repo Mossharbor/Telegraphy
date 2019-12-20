@@ -56,6 +56,11 @@ namespace Telegraphy.Net
             throw new SwitchBoardRequiresARegisteredActorOrActionException();
         }
 
+        public void Register<T>(IActor actor) where T : class, IActorMessage
+        {
+            this.Register<T>((msg) => actor.OnMessageRecieved<T>(msg));
+        }
+
         public virtual void Register<T>(string registrationString)
         {
             throw new SwitchBoardRequiresARegisteredActorOrActionException();
