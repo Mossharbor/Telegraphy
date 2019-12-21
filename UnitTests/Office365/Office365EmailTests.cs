@@ -13,8 +13,8 @@ namespace UnitTests.Office365
     [TestClass]
     public class EmailTests
     {
-        static string emailAccount = "";
-        static string accountPassword = "";
+        static string emailAccount = Connections.EmailAccount;
+        static string accountPassword = Connections.EmailAccountPassword;
 
         [TestMethod]
         public void TestGatheringUnreadEmailsFromInbox()
