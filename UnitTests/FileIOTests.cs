@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace UnitTests.FileIO
+namespace UnitTests.IO
 {
     using Telegraphy.Net;
     using System.IO;
@@ -13,7 +13,7 @@ namespace UnitTests.FileIO
     using System.Collections.Generic;
 
     [TestClass]
-    public class File
+    public class IO
     {
         private readonly string queueRootPath = System.IO.Path.GetTempPath();
 
