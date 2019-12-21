@@ -2,7 +2,7 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace UnitTests.Examples
+namespace UnitTests.TelegraphTests
 {
     using Telegraphy.Net;
 

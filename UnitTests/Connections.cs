@@ -12,5 +12,7 @@ namespace UnitTests
         public static string StorageConnectionString { get { return @""; } }
         public static string ServiceBusConnectionString { get { return @""; } }
         public static string RelayConnectionString { get { return @""; } }
+        public static string EmailAccount { get { return @""; } }
+        public static string EmailAccountPassword { get { return @""; } }
     }
 }
