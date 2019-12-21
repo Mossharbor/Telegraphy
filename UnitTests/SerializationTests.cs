@@ -167,30 +167,49 @@ namespace UnitTests.TelegraphTests
             IActorMessageSerializationActor serialization = new IActorMessageSerializationActor();
             IActorMessageDeserializationActor deserialization = new IActorMessageDeserializationActor();
             deserialization.Register((object msg) => (ValueTypeMessage<int>)msg);
+            deserialization.Register((object msg) => (ValueArrayTypeMessage<int>)msg);
             deserialization.Register((object msg) => (ValueTypeMessage<double>)msg);
+            deserialization.Register((object msg) => (ValueArrayTypeMessage<double>)msg);
             deserialization.Register((object msg) => (ValueTypeMessage<float>)msg);
+            deserialization.Register((object msg) => (ValueArrayTypeMessage<float>)msg);
             deserialization.Register((object msg) => (ValueTypeMessage<byte>)msg);
+            deserialization.Register((object msg) => (ValueArrayTypeMessage<byte>)msg);
             deserialization.Register((object msg) => (ValueTypeMessage<sbyte>)msg);
+            deserialization.Register((object msg) => (ValueArrayTypeMessage<sbyte>)msg);
             deserialization.Register((object msg) => (ValueTypeMessage<short>)msg);
+            deserialization.Register((object msg) => (ValueArrayTypeMessage<short>)msg);
             deserialization.Register((object msg) => (ValueTypeMessage<ushort>)msg);
+            deserialization.Register((object msg) => (ValueArrayTypeMessage<ushort>)msg);
             deserialization.Register((object msg) => (ValueTypeMessage<uint>)msg);
+            deserialization.Register((object msg) => (ValueArrayTypeMessage<uint>)msg);
             deserialization.Register((object msg) => (ValueTypeMessage<double>)msg);
+            deserialization.Register((object msg) => (ValueArrayTypeMessage<double>)msg);
             deserialization.Register((object msg) => (ValueTypeMessage<long>)msg);
+            deserialization.Register((object msg) => (ValueArrayTypeMessage<long>)msg);
             deserialization.Register((object msg) => (ValueTypeMessage<ulong>)msg);
+            deserialization.Register((object msg) => (ValueArrayTypeMessage<ulong>)msg);
             deserialization.Register((object msg) => (ValueTypeMessage<bool>)msg);
+            deserialization.Register((object msg) => (ValueArrayTypeMessage<bool>)msg);
             deserialization.Register((object msg) => (ValueTypeMessage<decimal>)msg);
+            deserialization.Register((object msg) => (ValueArrayTypeMessage<decimal>)msg);
             deserialization.Register((object msg) => (ValueTypeMessage<char>)msg);
+            deserialization.Register((object msg) => (ValueArrayTypeMessage<char>)msg);
             deserialization.Register((object msg) => (ValueTypeMessage<DateTime>)msg);
+            deserialization.Register((object msg) => (ValueArrayTypeMessage<DateTime>)msg);
             deserialization.Register((object msg) => (ValueTypeMessage<TimeSpan>)msg);
+            deserialization.Register((object msg) => (ValueArrayTypeMessage<TimeSpan>)msg);
             deserialization.Register((object msg) => (ValueTypeMessage<Guid>)msg);
+            deserialization.Register((object msg) => (ValueArrayTypeMessage<Guid>)msg);
             deserialization.Register((object msg) => (ValueTypeMessage<DateTimeOffset>)msg);
+            deserialization.Register((object msg) => (ValueArrayTypeMessage<DateTimeOffset>)msg);
             //deserialization.Register((object msg) => (ValueTypeMessage<ArraySegment<byte>>)msg);
             deserialization.Register((object msg) => (ValueTypeMessage<TimeZoneInfo.TransitionTime>)msg);
+            deserialization.Register((object msg) => (ValueArrayTypeMessage<TimeZoneInfo.TransitionTime>)msg);
 
             DateTime start = DateTime.Now;
             DateTime utcStart = start.ToUniversalTime();
-            TestValTypeArray<int>(serialization, deserialization, new int[] { 4, 3 });
             TestValType<int>(serialization, deserialization, 4);
+            TestValTypeArray<int>(serialization, deserialization, new int[] { 4, 3 });
             TestValType<double>(serialization, deserialization, 4.2);
             TestValTypeArray<double>(serialization, deserialization, new double[] { 4, 3 });
             TestValType<float>(serialization, deserialization, 4.1F);
@@ -247,7 +266,7 @@ namespace UnitTests.TelegraphTests
 
         private static void TestValTypeArray<T>(IActorMessageSerializationActor serialization, IActorMessageDeserializationActor deserialization, T[] val) where T : IEquatable<T>
         {
-            ValueTypeMessage<T> intType = new ValueTypeMessage<T>(val);
+            ValueArrayTypeMessage<T> intType = new ValueArrayTypeMessage<T>(val);
             var typeVal = (T[])intType.Message;
             string id = intType.Id;
 

@@ -20,7 +20,7 @@ namespace Telegraphy.Net
         {
             var func = msgCreationFunction.Compile();
             var invoker = new ActorMessageInvocation<K>(func);
-            var msgType = typeof(K);
+            var msgType = LocalSwitchboard.HandleValueTypeMessage(typeof(K));
 
             _msgTypeToInstatiation.TryAdd(msgType, invoker);
         }

@@ -140,6 +140,10 @@ namespace Telegraphy.Net
             {
                 return handlesType.GenericTypeArguments.First();
             }
+            else if (handlesType.FullName.StartsWith("Telegraphy.Net.ValueArrayTypeMessage"))
+            {
+                return ValueArrayTypeMessage<int>.GetArrayType(handlesType.GenericTypeArguments.First());
+            }
 
             return handlesType;
         }

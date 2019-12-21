@@ -209,6 +209,27 @@ namespace UnitTests.TelegraphTests
         }
 
         [TestMethod]
+        public void RegisterValueArrayTypeToActorForOneThreadPerActorTypeSwitchboard()
+        {
+            Telegraph.Instance.UnRegisterAll();
+            long computeOpID = Telegraph.Instance.Register(new LocalQueueOperator(new OneThreadPerActorTypeSwitchboard()));
+            int[] message = new int[] { 1 };
+            bool called = false;
+            DefaultActor da = new DefaultActor();
+            Telegraph.Instance.Register<ValueArrayTypeMessage<int>, DefaultActor>(computeOpID, () => da);
+
+            da.OnMessageHandler = (msg) =>
+            {
+                called = true;
+                Assert.IsFalse(!msg.Message.Equals(message));
+                return true;
+            };
+
+            Telegraph.Instance.Ask(message.ToActorMessage()).Wait();
+            Assert.IsTrue(called);
+        }
+
+        [TestMethod]
         public void RegisterValueTypeToAction()
         {
             Telegraph.Instance.UnRegisterAll();
@@ -226,6 +247,32 @@ namespace UnitTests.TelegraphTests
             {
                 // this should be sequential since we are on one thread for ints
                 msgsToWaitOn.Add(Telegraph.Instance.Ask(i.ToActorMessage()));
+            }
+
+            Task.WaitAll(msgsToWaitOn.ToArray(), TimeSpan.FromMilliseconds(100));
+            Assert.IsTrue(msgCount == expectedMessageCount, "We did not get the correct number of messages");
+        }
+
+        [TestMethod]
+        public void RegisterValueArrayTypeToAction()
+        {
+            Telegraph.Instance.UnRegisterAll();
+            int msgCount = 0;
+            int expectedMessageCount = 100;
+            Telegraph.Instance.Register<ValueArrayTypeMessage<int>>(count =>
+            {
+                Console.Write((int[])count.Message + ",");
+                ++msgCount;
+            });
+
+            List<Task<IActorMessage>> msgsToWaitOn = new List<Task<IActorMessage>>();
+
+            for (int i = 0; i < expectedMessageCount; ++i)
+            {
+                int[] foo = new int[] { 1, 2, 3 };
+
+                // this should be sequential since we are on one thread for ints
+                msgsToWaitOn.Add(Telegraph.Instance.Ask(foo.ToActorMessage()));
             }
 
             Task.WaitAll(msgsToWaitOn.ToArray(), TimeSpan.FromMilliseconds(100));
