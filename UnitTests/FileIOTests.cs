@@ -5,7 +5,7 @@ namespace UnitTests.FileIO
 {
     using Telegraphy.Net;
     using System.IO;
-    using Telegraphy.File.IO;
+    using Telegraphy.IO;
     using System.Threading.Tasks;
     using System.Threading;
     using System.Text;
@@ -304,7 +304,7 @@ namespace UnitTests.FileIO
             TestSendStreamToStorage(() =>
             {
                 Telegraph.Instance.Register<System.IO.Stream, SendStreamToFile>(
-                () => new Telegraphy.File.IO.SendStreamToFile(destinationFile));
+                () => new Telegraphy.IO.SendStreamToFile(destinationFile));
             }
             , fileToSend
             , destinationFile);
@@ -320,7 +320,7 @@ namespace UnitTests.FileIO
             TestSendStreamToStorage(() =>
             {
                 Telegraph.Instance.Register<System.IO.Stream, SendStreamToAppendToFile>(
-                () => new Telegraphy.File.IO.SendStreamToAppendToFile(destinationFile));
+                () => new Telegraphy.IO.SendStreamToAppendToFile(destinationFile));
             }
             , fileToSend
             , destinationFile);
@@ -335,7 +335,7 @@ namespace UnitTests.FileIO
             TestSendStringToFile(() =>
             {
                 Telegraph.Instance.Register<string, SendStringToAppendToFile>(
-                    () => new Telegraphy.File.IO.SendStringToAppendToFile(destinationFile));
+                    () => new Telegraphy.IO.SendStringToAppendToFile(destinationFile));
             }
             , stringToSend
             , destinationFile);
@@ -369,7 +369,7 @@ namespace UnitTests.FileIO
                 }
 
                 Telegraph.Instance.Register<System.IO.MemoryStream, SendStreamToTruncateFile>(
-                () => new Telegraphy.File.IO.SendStreamToTruncateFile(destinationFile));
+                () => new Telegraphy.IO.SendStreamToTruncateFile(destinationFile));
 
                 using (StreamWriter sw = new StreamWriter(destinationFile))
                 {
@@ -408,7 +408,7 @@ namespace UnitTests.FileIO
                 }
 
                 Telegraph.Instance.Register<string, SendStringToTruncateFile>(
-                () => new Telegraphy.File.IO.SendStringToTruncateFile(destinationFile));
+                () => new Telegraphy.IO.SendStringToTruncateFile(destinationFile));
 
                 using (StreamWriter sw = new StreamWriter(destinationFile))
                 {
@@ -446,7 +446,7 @@ namespace UnitTests.FileIO
                 }
 
                 Telegraph.Instance.Register<byte[], SendBytesToTruncateFile>(
-                () => new Telegraphy.File.IO.SendBytesToTruncateFile(destinationFile));
+                () => new Telegraphy.IO.SendBytesToTruncateFile(destinationFile));
 
                 using (StreamWriter sw = new StreamWriter(destinationFile))
                 {
@@ -489,7 +489,7 @@ namespace UnitTests.FileIO
                 Telegraph.Instance.UnRegisterAll();
 
                 Telegraph.Instance.Register<string, RecieveBytesFromFile>(
-                   () => new Telegraphy.File.IO.RecieveBytesFromFile(destFolder));
+                   () => new Telegraphy.IO.RecieveBytesFromFile(destFolder));
 
                 byte[] sentBytes = (byte[])(Telegraph.Instance.Ask(destFilename).Result).ProcessingResult;
                 string sentString = Encoding.UTF8.GetString(sentBytes);
@@ -520,7 +520,7 @@ namespace UnitTests.FileIO
                 Telegraph.Instance.UnRegisterAll();
 
                 Telegraph.Instance.Register<string, RecieveFileAsString>(
-                   () => new Telegraphy.File.IO.RecieveFileAsString(destFolder));
+                   () => new Telegraphy.IO.RecieveFileAsString(destFolder));
 
                 string sentString = (string)(Telegraph.Instance.Ask(destFilename).Result).ProcessingResult;
 
@@ -550,7 +550,7 @@ namespace UnitTests.FileIO
                 Telegraph.Instance.UnRegisterAll();
 
                 Telegraph.Instance.Register<string, RecieveFileAsStream>(
-                   () => new Telegraphy.File.IO.RecieveFileAsStream(destFolder));
+                   () => new Telegraphy.IO.RecieveFileAsStream(destFolder));
 
                 Stream sentBytes = (Stream)(Telegraph.Instance.Ask(destFilename).Result).ProcessingResult;
                 string sentString = string.Empty;
@@ -586,7 +586,7 @@ namespace UnitTests.FileIO
                 Telegraph.Instance.UnRegisterAll();
 
                 Telegraph.Instance.Register<string, RecieveFileAsStringArray>(
-                   () => new Telegraphy.File.IO.RecieveFileAsStringArray(destFolder));
+                   () => new Telegraphy.IO.RecieveFileAsStringArray(destFolder));
 
                 string[] sentStrings = (string[])(Telegraph.Instance.Ask(destFilename).Result).ProcessingResult;
 
@@ -619,7 +619,7 @@ namespace UnitTests.FileIO
                 Telegraph.Instance.UnRegisterAll();
 
                 Telegraph.Instance.Register<string, RecieveFileInfo>(
-                   () => new Telegraphy.File.IO.RecieveFileInfo(destFolder));
+                   () => new Telegraphy.IO.RecieveFileInfo(destFolder));
 
                 FileInfo fInfo = (FileInfo)(Telegraph.Instance.Ask(destFilename).Result).ProcessingResult;
 
@@ -649,7 +649,7 @@ namespace UnitTests.FileIO
                 Telegraph.Instance.UnRegisterAll();
 
                 Telegraph.Instance.Register<string, DeleteFile>(
-                   () => new Telegraphy.File.IO.DeleteFile(destFolder));
+                   () => new Telegraphy.IO.DeleteFile(destFolder));
 
                 Telegraph.Instance.Ask(destFilename).Wait();
 
@@ -680,7 +680,7 @@ namespace UnitTests.FileIO
                 Telegraph.Instance.UnRegisterAll();
 
                 Telegraph.Instance.Register<string, DeleteFile>(
-                   () => new Telegraphy.File.IO.DeleteFile());
+                   () => new Telegraphy.IO.DeleteFile());
 
                 Telegraph.Instance.Ask(destinationFile).Wait();
 
@@ -712,7 +712,7 @@ namespace UnitTests.FileIO
                 Telegraph.Instance.UnRegisterAll();
 
                 Telegraph.Instance.Register<string, DeleteAllFilesInFolder>(
-                   () => new Telegraphy.File.IO.DeleteAllFilesInFolder());
+                   () => new Telegraphy.IO.DeleteAllFilesInFolder());
 
                 Telegraph.Instance.Ask(destFolder).Wait();
 
@@ -748,7 +748,7 @@ namespace UnitTests.FileIO
                 Telegraph.Instance.UnRegisterAll();
 
                 Telegraph.Instance.Register<string, DeleteFolder>(
-                   () => new Telegraphy.File.IO.DeleteFolder(destFolder));
+                   () => new Telegraphy.IO.DeleteFolder(destFolder));
 
                 Telegraph.Instance.Ask("subDir").Wait();
 
@@ -784,7 +784,7 @@ namespace UnitTests.FileIO
                 Telegraph.Instance.UnRegisterAll();
 
                 Telegraph.Instance.Register<string, DeleteFolder>(
-                   () => new Telegraphy.File.IO.DeleteFolder());
+                   () => new Telegraphy.IO.DeleteFolder());
 
                 Telegraph.Instance.Ask(destFolder).Wait();
 
