@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<package >
+<package>
   <metadata>
     <id>Mossharbor.Telegraphy.Azure.EventHub</id>
-    <version>2.0.0</version>
+    <version>3.0.0</version>
     <authors>M@ J.</authors>
     <owners>M@ J.</owners>
     <licenseUrl>https://raw.githubusercontent.com/Mossharbor/Telegraphy/master/LICENSE</licenseUrl>
@@ -13,6 +13,9 @@
     <releaseNotes>Initial release</releaseNotes>
     <copyright>Copyright 2018 Mossharbor</copyright>
     <tags>Azure dotnetcore EventHub</tags>
+    <dependencies>
+    	<dependency id="Mossharbor.Telegraphy.Net" version="3.0" include="contentFiles, build"/>
+    </dependencies>
   </metadata>
   <files>
     <file src="bin\Debug\**" target="lib/" />
