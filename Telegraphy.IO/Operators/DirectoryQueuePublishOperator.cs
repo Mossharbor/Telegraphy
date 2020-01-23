@@ -6,8 +6,8 @@ namespace Telegraphy.IO
 {
     public class DirectoryQueuePublishOperator<T> : DirectoryQueueBaseOperator<T> where T:class
     {
-        public DirectoryQueuePublishOperator(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true)
-            : base(null, storageConnectionString, queueName, createQueueIfItDoesNotExist, false, DefaultDequeueMaxCount, null)
+        public DirectoryQueuePublishOperator(string queueDirectoryRoot, string queueName, bool createQueueIfItDoesNotExist = true)
+            : base(null, queueDirectoryRoot, queueName, createQueueIfItDoesNotExist, false, DefaultDequeueMaxCount, null)
         {
         }
 
