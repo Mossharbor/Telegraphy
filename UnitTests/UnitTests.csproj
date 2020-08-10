@@ -66,7 +66,7 @@
   <ItemGroup>
     <PackageReference Include="Exchange.WebServices.Managed.Api" Version="2.2.1.2" />
     <PackageReference Include="Microsoft.Azure.Amqp" Version="2.4.5" />
-    <PackageReference Include="Microsoft.Azure.EventHubs" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Azure.EventHubs" Version="4.2.0" />
     <PackageReference Include="Microsoft.Azure.EventHubs.Processor" Version="2.0.1" />
     <PackageReference Include="Microsoft.Azure.KeyVault.Core" Version="2.0.4" />
     <PackageReference Include="Microsoft.Azure.Relay" Version="2.0.1" />
