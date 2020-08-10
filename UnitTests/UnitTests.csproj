@@ -58,15 +58,13 @@
     <ProjectReference Include="..\Telegraphy.Azure.Relay.Wcf\Telegraphy.Azure.Relay.Wcf.csproj" />
     <ProjectReference Include="..\Telegraphy.Azure.ServiceBus\Telegraphy.Azure.ServiceBus.csproj" />
     <ProjectReference Include="..\Telegraphy.Azure.Storage\Telegraphy.Azure.Storage.csproj" />
+    <ProjectReference Include="..\Telegraphy.Azure.Tables\Telegraphy.Azure.Tables.csproj" />
     <ProjectReference Include="..\Telegraphy.IO\Telegraphy.IO.csproj" />
     <ProjectReference Include="..\Telegraphy.Msmq\Telegraphy.Msmq.csproj" />
     <ProjectReference Include="..\Telegraphy.Net\Telegraphy.Net.csproj" />
     <ProjectReference Include="..\Telegraphy.Office365\Telegraphy.Office365.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.4.4" />
-    <PackageReference Include="Azure.Storage.Common" Version="12.4.3" />
-    <PackageReference Include="Azure.Storage.Queues" Version="12.3.2" />
     <PackageReference Include="Exchange.WebServices.Managed.Api" Version="2.2.1.2" />
     <PackageReference Include="Microsoft.Azure.Amqp" Version="2.4.5" />
     <PackageReference Include="Microsoft.Azure.EventHubs" Version="4.2.0" />
@@ -74,6 +72,7 @@
     <PackageReference Include="Microsoft.Azure.KeyVault.Core" Version="2.0.4" />
     <PackageReference Include="Microsoft.Azure.Relay" Version="2.0.1" />
     <PackageReference Include="Microsoft.Azure.ServiceBus" Version="4.1.4" />
+    <PackageReference Include="Microsoft.Azure.Storage.Common" Version="11.2.0" />
     <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="5.2.4" />
     <PackageReference Include="Microsoft.IdentityModel.Logging" Version="5.6.0" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.6.0" />

@@ -1,4 +1,8 @@
-﻿using Microsoft.Azure.Storage.Table;
+﻿#if NETSTANDARD
+using Microsoft.Azure.Cosmos.Table;
+#else
+using Microsoft.Azure.CosmosDB.Table;
+#endif
 using System;
 using System.Collections.Generic;
 using System.Linq;

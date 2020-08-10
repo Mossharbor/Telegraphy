@@ -15,10 +15,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)'=='net40' OR '$(TargetFramework)'=='net45' OR '$(TargetFramework)'=='net46' OR '$(TargetFramework)'=='net461' OR '$(TargetFramework)'=='net462'">
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.Storage.Blob" Version="11.2.0" />
     <PackageReference Include="Microsoft.Azure.Storage.Queue" Version="11.2.0" />
