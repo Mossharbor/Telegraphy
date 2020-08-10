@@ -1,5 +1,4 @@
-﻿using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
+﻿using Microsoft.Azure.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;

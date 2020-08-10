@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Telegraphy.Azure.Exceptions;
 using Telegraphy.Net;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.Azure.Storage;
 
 namespace Telegraphy.Azure
 {

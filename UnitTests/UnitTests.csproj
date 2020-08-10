@@ -64,6 +64,9 @@
     <ProjectReference Include="..\Telegraphy.Office365\Telegraphy.Office365.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.4.4" />
+    <PackageReference Include="Azure.Storage.Common" Version="12.4.3" />
+    <PackageReference Include="Azure.Storage.Queues" Version="12.3.2" />
     <PackageReference Include="Exchange.WebServices.Managed.Api" Version="2.2.1.2" />
     <PackageReference Include="Microsoft.Azure.Amqp" Version="2.4.5" />
     <PackageReference Include="Microsoft.Azure.EventHubs" Version="4.2.0" />
@@ -88,7 +91,6 @@
     <PackageReference Include="System.Security.Cryptography.Encoding" Version="4.3.0" />
     <PackageReference Include="System.Security.Cryptography.Primitives" Version="4.3.0" />
     <PackageReference Include="System.Security.Cryptography.X509Certificates" Version="4.3.2" />
-    <PackageReference Include="WindowsAzure.Storage" Version="9.2.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.0.0" />
     <PackageReference Include="MSTest.TestFramework" Version="2.0.0" />

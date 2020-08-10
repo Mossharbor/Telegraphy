@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Telegraphy.Azure
 {
-    using Microsoft.WindowsAzure.Storage.Queue;
+    using Microsoft.Azure.Storage.Queue;
     using Telegraphy.Azure.Exceptions;
     using Telegraphy.Net;
 

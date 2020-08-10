@@ -1,5 +1,4 @@
-﻿using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
+﻿using Microsoft.Azure.Storage;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegraphy.Azure.Exceptions;
 using Telegraphy.Net.Exceptions;
-using Mossharbor.AzureWorkArounds.Storage;
+using Microsoft.Azure.Storage.Blob;
 
 namespace Telegraphy.Azure
 {

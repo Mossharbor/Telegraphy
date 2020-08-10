@@ -1,4 +1,4 @@
-﻿using Microsoft.WindowsAzure.Storage.Table;
+﻿using Microsoft.Azure.Storage.Table;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,15 +8,13 @@ using Telegraphy.Net;
 
 namespace Telegraphy.Azure
 {
-    public class RetrieveFromTableStorageMessage : TableEntity, IActorMessage
+    public class InsertIntoTableStorageMessage<T> : IActorMessage  where T:ITableEntity
     {
-        public RetrieveFromTableStorageMessage (string primaryKey, string rowKey)
-            : base(primaryKey, rowKey)
+        public InsertIntoTableStorageMessage(T message)
         {
+            this.Message = message;
         }
-
-        public object Message { get { return this; } set {; } }
-
+        public object Message { get; set; }
         public object ProcessingResult { get; set; }
         public TaskCompletionSource<IActorMessage> Status { get; set; }
     }
