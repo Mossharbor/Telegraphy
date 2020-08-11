@@ -99,7 +99,7 @@ namespace Telegraphy.Net
             uint sizeOfType = 0;
             IFormatter formatter = new BinaryFormatter();
             MemoryStream typeMs = new MemoryStream();
-            formatter.Serialize(typeMs, toSerialize.GetType());
+            formatter.Serialize(typeMs, toSerialize);
             typeBytes = typeMs.GetBuffer();
             typeMs = null;
             sizeOfType = (uint)typeBytes.Length;
