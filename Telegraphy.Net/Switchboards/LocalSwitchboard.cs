@@ -324,7 +324,7 @@ namespace Telegraphy.Net
                         actor = GetActorForMessage(msg);
 
                         if (null == actor)
-                            throw new NoActorForMessageTypeException();
+                            throw new NoActorForMessageTypeException(msg.GetType().FullName);
 
                         ProcessIActorMessage(ref actor, msg);
                     }
@@ -354,7 +354,7 @@ namespace Telegraphy.Net
                     actor = GetActorForMessage(msg);
 
                     if (null == actor)
-                        throw new NoActorForMessageTypeException();
+                        throw new NoActorForMessageTypeException(msg.GetType().FullName);
 
                     ProcessIActorMessage(ref actor, msg);
                 }
