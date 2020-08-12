@@ -66,18 +66,28 @@ namespace Telegraphy.Net
             byte[] msgByteArray = null;
             byte[] resultByteArray = null;
             uint sizeOfMessage, sizeOfResult;
-            IFormatter formatter = new BinaryFormatter();
+            IFormatter formatter = new MessageTypeFormatter();
+            IFormatter msgFormatter = new BinaryFormatter();
             Type messageType = ParseOutHeader(msg, messageIDBytes, formatter, out msgByteArray, out resultByteArray, out sizeOfMessage, out sizeOfResult);
 
+            object msgObject = msgFormatter.Deserialize(new MemoryStream(msgByteArray));
+            IActorMessage invokedMessage = null;
+
             if (!_msgTypeToInstatiation.ContainsKey(messageType))
-                throw new Exception(); // todo
+            {
+                if (msgObject is IActorMessage)
+                    invokedMessage = (msgObject as IActorMessage);
+                else
+                    throw new FailedToRegisterActorInvocationForTypeDeserializationException(messageType.FullName);
+            }
+            else
+            {
+                ActorMessageInvocationBase invoker = null;
+                if (!_msgTypeToInstatiation.TryGetValue(messageType, out invoker))
+                    throw new FailedToInvokeMessageTypeException(messageType.FullName);
 
-            ActorMessageInvocationBase invoker = null;
-            if (!_msgTypeToInstatiation.TryGetValue(messageType, out invoker))
-                throw new Exception(); //todo
-
-            object msgObject = formatter.Deserialize(new MemoryStream(msgByteArray));
-            IActorMessage invokedMessage = invoker.Invoke(msgObject);
+                invokedMessage = invoker.Invoke(msgObject);
+            }
 
             if (null != msg.Status)
                 msg.Status.SetResult(invokedMessage);
@@ -92,7 +102,8 @@ namespace Telegraphy.Net
             byte[] msgByteArray = null;
             byte[] resultByteArray = null;
             uint sizeOfMessage, sizeOfResult;
-            IFormatter formatter = new BinaryFormatter();
+            IFormatter formatter = new MessageTypeFormatter();
+            IFormatter msgFormatter = new BinaryFormatter();
             Type messageType = ParseOutHeader(msg, messageIDBytes, formatter, out msgByteArray, out resultByteArray, out sizeOfMessage, out sizeOfResult);
 
             IActorMessage resultMsg = null;
@@ -109,11 +120,11 @@ namespace Telegraphy.Net
 
             object message = null;
             if (0 != sizeOfMessage)
-                message = formatter.Deserialize(new MemoryStream(msgByteArray));
+                message = msgFormatter.Deserialize(new MemoryStream(msgByteArray));
 
             object result = null;
             if (0 != sizeOfResult)
-                result = formatter.Deserialize(new MemoryStream(resultByteArray));
+                result = msgFormatter.Deserialize(new MemoryStream(resultByteArray));
 
             resultMsg.Message = message;
             resultMsg.ProcessingResult = result;
@@ -162,7 +173,7 @@ namespace Telegraphy.Net
             flags = BitConverter.ToUInt32(seralizedMsg, (int)serializationIndex); serializationIndex += sizeof(uint);
 
             // I now know the type of the message I need to instantiate it.
-            return (Type)formatter.Deserialize(new MemoryStream(typeByteArray));
+            return Type.GetType((string)formatter.Deserialize(new MemoryStream(typeByteArray)));
         }
     }
 }
