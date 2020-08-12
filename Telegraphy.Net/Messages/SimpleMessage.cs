@@ -65,7 +65,7 @@ namespace Telegraphy.Net
         #endregion
 
         private Type thisType = null;
-        protected Type ThisType
+        protected virtual Type ThisType
         {
             get { return thisType; }
             set { thisType = value; }
@@ -83,7 +83,7 @@ namespace Telegraphy.Net
         {
             if (null == thisType)
                 thisType = this.Message.GetType();
-            return thisType;
+            return this.ThisType;
         }
     }
 }
