@@ -311,7 +311,15 @@ namespace Telegraphy.Net
                 // TODO MapTypeToOperator<T>(this.MainOperator);
             }
             else
-                throw new FunctionNotSupportedWhenMultipleOperatorsAreRegisteredException();
+            {
+                foreach (IOperator op in this.operators.Values)
+                {
+                    foreach(ILocalSwitchboard sb in op.Switchboards)
+                    {
+                        sb.Register(exceptionType, handler);
+                    }
+                }
+            }
         }
 
         public long Register(IOperator op)
