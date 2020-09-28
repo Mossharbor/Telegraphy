@@ -17,6 +17,11 @@ namespace Telegraphy.Azure
         {
         }
 
+        public SendFileToBlobStorage(string storageConnectionString, string containerName, Func<string, string> blobTransformNameFcn, bool overwrite)
+            : base(storageConnectionString, containerName, blobTransformNameFcn, overwrite)
+        {
+        }
+
         bool IActor.OnMessageRecieved<T>(T msg)
         {
             if (!(msg as IActorMessage).Message.GetType().Name.Equals("String"))
