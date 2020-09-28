@@ -13,31 +13,37 @@ namespace Telegraphy.Azure
 {
     public class SendAndRecieveBlobBase
     {
+        private readonly bool overwrite = true;
         protected CloudBlobContainer container;
         protected Func<string> blobNameFcn;
         protected Func<string, string> blobTransformNameFcn;
         protected Encoding encoding = Encoding.UTF8;
 
-        public SendAndRecieveBlobBase(string storageConnectionString, string containerName, Func<string, string> blobNameFcn)
+        public SendAndRecieveBlobBase(string storageConnectionString, string containerName, Func<string, string> blobNameFcn, bool overwrite = true)
         {
             var acct = CloudStorageAccount.Parse(storageConnectionString);
             var client = acct.CreateCloudBlobClient();
             container = client.GetContainerReference(containerName);
             this.blobTransformNameFcn = blobNameFcn;
+            this.overwrite = overwrite;
         }
 
-        protected SendAndRecieveBlobBase(string storageConnectionString, string containerName, Func<string> blobNameFcn, Encoding encoding)
+        protected SendAndRecieveBlobBase(string storageConnectionString, string containerName, Func<string> blobNameFcn, Encoding encoding, bool overwrite = true)
         {
             var acct = CloudStorageAccount.Parse(storageConnectionString);
             var client = acct.CreateCloudBlobClient();
             container = client.GetContainerReference(containerName);
             this.blobNameFcn = blobNameFcn;
+            this.overwrite = overwrite;
             if (null != encoding)
                 this.encoding = encoding;
         }
 
         protected void SendString(CloudBlockBlob blob, string message)
         {
+            if (!overwrite && blob.Exists())
+                return;
+
             blob.UploadText(message, encoding);
         }
 
@@ -64,6 +70,9 @@ namespace Telegraphy.Azure
             if (!File.Exists(fileNameAndPath))
                 throw new CantSendFileDataWhenFileDoesNotExistException(fileNameAndPath);
 
+            if (!overwrite && blob.ExistsAsync().Result)
+                return;
+
             blob.UploadFromFile(fileNameAndPath);
         }
 
@@ -80,6 +89,9 @@ namespace Telegraphy.Azure
             if (!File.Exists(fileNameAndPath))
                 throw new CantSendFileDataWhenFileDoesNotExistException(fileNameAndPath);
 
+            if (!overwrite && blob.Exists())
+                return;
+
             blob.UploadFromFile(fileNameAndPath);
         }
 
@@ -90,6 +102,9 @@ namespace Telegraphy.Azure
 
         protected void SendStream(CloudBlockBlob blob, Stream stream)
         {
+            if (!overwrite && blob.Exists())
+                return;
+
             blob.UploadFromStream(stream);
         }
 
@@ -100,6 +115,9 @@ namespace Telegraphy.Azure
 
         protected void SendStream(CloudPageBlob blob, Stream stream)
         {
+            if (!overwrite && blob.Exists())
+                return;
+
             blob.UploadFromStream(stream);
         }
 
@@ -110,11 +128,17 @@ namespace Telegraphy.Azure
         
         protected void SendBytes(CloudBlockBlob blob, byte[] msgBytes)
         {
+            if (!overwrite && blob.Exists())
+                return;
+
             blob.UploadFromByteArray(msgBytes, 0, msgBytes.Length);
         }
 
         protected void SendBytes(CloudPageBlob blob, byte[] msgBytes)
         {
+            if (!overwrite && blob.Exists())
+                return;
+
             blob.UploadFromByteArray(msgBytes, 0, msgBytes.Length);
         }
 
