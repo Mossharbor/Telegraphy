@@ -127,7 +127,7 @@ namespace Telegraphy.Net
                         var handlesType = LocalSwitchboard.HandleValueTypeMessage(typeof(T));
 
                         if (!msgTypeToOperator.ContainsKey(handlesType))
-                            throw new NoOperatorRegisteredToSupportTypeException();
+                            throw new NoOperatorRegisteredToSupportTypeException(handlesType.ToString());
 
                         int nextIndex = rand.Next(0, msgTypeToOperator[handlesType].Count-1);
 
@@ -143,7 +143,7 @@ namespace Telegraphy.Net
                         var handlesType = msg.GetType();
 
                         if (!msgTypeToOperator.ContainsKey(handlesType))
-                            throw new NoOperatorRegisteredToSupportTypeException();
+                            throw new NoOperatorRegisteredToSupportTypeException(handlesType.ToString());
                         if (((ConcurrentQueue<IOperator>)msgTypeToOperator[handlesType]).Count == 1)
                         {
                             if (!((ConcurrentQueue<IOperator>)msgTypeToOperator[handlesType]).TryPeek(out op))
@@ -164,7 +164,7 @@ namespace Telegraphy.Net
                         var handlesType = LocalSwitchboard.HandleValueTypeMessage(typeof(T));
 
                         if (!msgTypeToOperator.ContainsKey(handlesType))
-                            throw new NoOperatorRegisteredToSupportTypeException();
+                            throw new NoOperatorRegisteredToSupportTypeException(handlesType.ToString());
 
                         ulong leastCount = ulong.MaxValue;
                         for (int i = msgTypeToOperator[handlesType].Count - 1; i >= 0 && i < msgTypeToOperator[handlesType].Count; --i)
@@ -311,7 +311,15 @@ namespace Telegraphy.Net
                 // TODO MapTypeToOperator<T>(this.MainOperator);
             }
             else
-                throw new FunctionNotSupportedWhenMultipleOperatorsAreRegisteredException();
+            {
+                foreach (IOperator op in this.operators.Values)
+                {
+                    foreach(ILocalSwitchboard sb in op.Switchboards)
+                    {
+                        sb.Register(exceptionType, handler);
+                    }
+                }
+            }
         }
 
         public long Register(IOperator op)

@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net45;net46;net461;net462</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net46;net461;net462</TargetFrameworks>
     <RootNamespace>Telegraphy.Azure</RootNamespace>
     <AssemblyName>Telegraphy.Azure.Storage</AssemblyName>
   </PropertyGroup>
@@ -11,18 +11,13 @@
     <Folder Include="AzureWrappers\" />
     <Folder Include="Messages\" />
   </ItemGroup>
-
+  <ItemGroup Condition="'$(TargetFramework)'=='net40' OR '$(TargetFramework)'=='net45' OR '$(TargetFramework)'=='net46' OR '$(TargetFramework)'=='net461' OR '$(TargetFramework)'=='net462'">
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Mossharbor.AzureWorkArounds.Storage" Version="1.0.1" />
-    <PackageReference Include="WindowsAzure.Storage" Version="9.2.0" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)'=='net40' OR '$(TargetFramework)'=='net45' OR '$(TargetFramework)'=='net46' OR '$(TargetFramework)'=='net461' OR '$(TargetFramework)'=='net462'">
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)'=='net40' OR '$(TargetFramework)'=='net45' OR '$(TargetFramework)'=='net46' OR '$(TargetFramework)'=='net461' OR '$(TargetFramework)'=='net462'">
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
+    <PackageReference Include="Microsoft.Azure.Storage.Blob" Version="11.2.0" />
+    <PackageReference Include="Microsoft.Azure.Storage.Queue" Version="11.2.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Telegraphy.Net\Telegraphy.Net.csproj" />

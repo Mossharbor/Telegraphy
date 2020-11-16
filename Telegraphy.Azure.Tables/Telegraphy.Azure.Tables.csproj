@@ -1,26 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net462</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net46;net461;net462</TargetFrameworks>
     <RootNamespace>Telegraphy.Azure</RootNamespace>
+    <AssemblyName>Telegraphy.Azure.Table</AssemblyName>
   </PropertyGroup>
-
   <ItemGroup>
+    <Folder Include="Actors\" />
     <Folder Include="AzureWrappers\" />
-    <Folder Include="Exceptions\" />
     <Folder Include="Messages\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Azure.ServiceBus" Version="4.1.4" Condition="'$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)'=='net462'" />
-    <PackageReference Include="WindowsAzure.ServiceBus" Version="4.1.10" Condition="'$(TargetFramework)' == 'net46' OR '$(TargetFramework)' == 'net461' OR '$(TargetFramework)' == 'net45'" />
-    <PackageReference Include="Mossharbor.AzureWorkArounds.ServiceBus" Version="1.0.20" />
+    <Folder Include="Exceptions\" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'=='net40' OR '$(TargetFramework)'=='net45' OR '$(TargetFramework)'=='net46' OR '$(TargetFramework)'=='net461' OR '$(TargetFramework)'=='net462'">
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <PackageReference Include="Microsoft.Azure.CosmosDb.Table" Version="2.1.2" />
+  </ItemGroup>
+  <ItemGroup  Condition="'$(TargetFramework)'=='netstandard2.0'">
+    <PackageReference Include="Microsoft.Azure.Cosmos.Table" Version="1.0.7" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Telegraphy.Net\Telegraphy.Net.csproj" />
   </ItemGroup>
+  <PropertyGroup  Condition="'$(TargetFramework)'=='netstandard2.0'">
+    <DefineConstants>NETSTANDARD</DefineConstants>
+  </PropertyGroup>
 </Project>

@@ -1,5 +1,5 @@
-﻿using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Queue;
+﻿using Microsoft.Azure.Storage;
+using Microsoft.Azure.Storage.Queue;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Telegraphy.Net;
-using Microsoft.WindowsAzure.Storage.Queue;
-using Microsoft.WindowsAzure.Storage;
+using Microsoft.Azure.Storage.Queue;
+using Microsoft.Azure.Storage;
 using Telegraphy.Azure.Exceptions;
 using System.Collections.Concurrent;
 using Telegraphy.Net.Exceptions;
-using Mossharbor.AzureWorkArounds.Storage;
+
 
 namespace Telegraphy.Azure
 {
@@ -24,7 +24,7 @@ namespace Telegraphy.Azure
         CloudQueue deadLetterQueue = null;
         TimeSpan? retrieveVisibilityTimeout = null;
         QueueRequestOptions retrievalRequestOptions = null;
-        Microsoft.WindowsAzure.Storage.OperationContext retrievalOperationContext = null;
+        Microsoft.Azure.Storage.OperationContext retrievalOperationContext = null;
         bool recieveMessagesOnly = false;
         ControlMessages.HangUp hangUp = null;
         private int maxDequeueCount = 1;
@@ -38,7 +38,7 @@ namespace Telegraphy.Azure
             int maxDequeueCount = DefaultDequeueMaxCount,
             TimeSpan? retrieveVisibilityTimeout = null, 
             QueueRequestOptions retrievalRequestOptions = null,
-            Microsoft.WindowsAzure.Storage.OperationContext retrievalOperationContext = null)
+            Microsoft.Azure.Storage.OperationContext retrievalOperationContext = null)
             : this (switchBoard,
                   GetQueueFrom(storageConnectionString, queueName, createQueueIfItDoesNotExist),
                   GetDeadLetterQueueFrom(storageConnectionString, queueName),
@@ -58,7 +58,7 @@ namespace Telegraphy.Azure
             int maxDequeueCount = DefaultDequeueMaxCount,
             TimeSpan? retrieveVisibilityTimeout = null,
             QueueRequestOptions retrievalRequestOptions = null,
-            Microsoft.WindowsAzure.Storage.OperationContext retrievalOperationContext = null)
+            Microsoft.Azure.Storage.OperationContext retrievalOperationContext = null)
         {
             this.recieveMessagesOnly = recieve;
             if (null != switchboard)

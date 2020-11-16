@@ -174,7 +174,6 @@ namespace Telegraphy.Azure
         {
             byte[] msgBytes = TempSerialization.GetBytes<MsgType>(msg);
 
-            System.Diagnostics.Debug.WriteLine("Serializing Byte Count:" + msgBytes.Count());
             var message = new Message(msgBytes);
 
             if (msg is IServiceBusMessagePropertiesProvider)

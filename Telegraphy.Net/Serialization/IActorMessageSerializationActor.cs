@@ -97,11 +97,12 @@ namespace Telegraphy.Net
 
             byte[] typeBytes = null;
             uint sizeOfType = 0;
-            IFormatter formatter = new BinaryFormatter();
+            IFormatter formatter = new MessageTypeFormatter();
             MemoryStream typeMs = new MemoryStream();
-            formatter.Serialize(typeMs, toSerialize.GetType());
+            formatter.Serialize(typeMs, toSerialize.GetType().AssemblyQualifiedName.ToString());
             typeBytes = typeMs.GetBuffer();
             typeMs = null;
+            // typeBytes = Encoding.UTF8.GetBytes(toSerialize.GetType().AssemblyQualifiedName);
             sizeOfType = (uint)typeBytes.Length;
 
             uint statusFlags = 0; //TODO:

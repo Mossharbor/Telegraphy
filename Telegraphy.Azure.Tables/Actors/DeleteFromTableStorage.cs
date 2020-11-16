@@ -1,5 +1,9 @@
-﻿using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Table;
+﻿#if NETSTANDARD
+using Microsoft.Azure.Cosmos.Table;
+#else
+using Microsoft.Azure.CosmosDB.Table;
+using Microsoft.Azure.Storage;
+#endif
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegraphy.Azure.Exceptions;
 using Telegraphy.Net;
-using Mossharbor.AzureWorkArounds.Storage;
+
 
 namespace Telegraphy.Azure
 {
