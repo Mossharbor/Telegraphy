@@ -27,15 +27,15 @@ namespace Telegraphy.IO
 
         protected DirectoryQueueBaseOperator(
             ILocalSwitchboard switchBoard,
-            string storageConnectionString, 
+            string queueDirectoryRoot, 
             string queueName, 
             bool createQueueIfItDoesNotExist,
             bool recieveMessagesOnly, 
             int maxDequeueCount = DefaultDequeueMaxCount,
             TimeSpan? retrieveVisibilityTimeout = null)
             : this (switchBoard,
-                  GetQueueFrom(storageConnectionString, queueName, createQueueIfItDoesNotExist),
-                  GetDeadLetterQueueFrom(storageConnectionString, queueName),
+                  GetQueueFrom(queueDirectoryRoot, queueName, createQueueIfItDoesNotExist),
+                  GetDeadLetterQueueFrom(queueDirectoryRoot, queueName),
                   recieveMessagesOnly, 
                   maxDequeueCount,
                   retrieveVisibilityTimeout)

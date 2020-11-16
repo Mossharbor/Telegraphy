@@ -1,3 +1,4 @@
+call dotnet restore
 pushd .
 cd Telegraphy.Net
 call build.bat
@@ -16,5 +17,16 @@ call build.bat
 popd
 pushd .
 cd Telegraphy.Msmq
+call build.bat
+popd
+pushd .
+cd Telegraphy.IO
+call build.bat
+popd
+pushd .
+cd Telegraphy.Office365
+call build.bat
+popd
+cd Telegraphy.Http
 call build.bat
 popd
