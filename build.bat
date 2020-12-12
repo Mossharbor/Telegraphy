@@ -27,6 +27,19 @@ pushd .
 cd Telegraphy.Office365
 call build.bat
 popd
+pushd .
 cd Telegraphy.Http
+call build.bat
+popd
+pushd .
+cd Telegraphy.Azure.Tables
+call build.bat
+popd
+pushd .
+cd Telegraphy.Azure.Relay.wcf
+call build.bat
+popd
+pushd .
+cd Telegraphy.Azure.Relay.Hybrid
 call build.bat
 popd
