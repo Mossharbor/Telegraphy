@@ -478,7 +478,7 @@ function FixPackageReferences
     }
 
     # Remove any unused references
-    $unusedPackages = Invoke-ListUnusedPackageReferences -RootPath $RootPath -VersionPropsPath $versionPropsFile
+    $unusedPackages = ListUnusedPackageReferences -RootPath $RootPath -VersionPropsPath $versionPropsFile
     $unusedPackages | Where-Object { $_ -ne $null } | ForEach-Object {
         $nodeToRemove = $dependencyVersionPropsXml.GetElementsByTagName($_)[0]
         Write-Host "Removing unused package " $nodeToRemove.Name
