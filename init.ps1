@@ -558,6 +558,12 @@ function Invoke-PrintMessage
     Write-Host "*****" | Out-Default
     Write-Host | Out-Default
 }
+function GetPackageVersion
+{
+	[xml]$data0 = Get-Content -Path (${env:ROOT} +  "\Telegraphy.Net\Package.nuspec")
+	$version = $data0.package.metadata.version;
+	Write-Host $version
+}
 
 function UpdatePackageVersion
 {
@@ -566,7 +572,9 @@ function UpdatePackageVersion
         [Parameter(Mandatory = $true)]
         [string] $VersionString
     )
-	$oldVersionString = "<version>3.0.0</version>"
+	[xml]$data0 = Get-Content -Path (${env:ROOT} +  "\Telegraphy.Net\Package.nuspec")
+	$oldversion = $data0.package.metadata.version;
+	$oldVersionString = "<version>"+$oldversion+"</version>"
 	$newVersionSting = "<version>"+$VersionString+"</version>"
     $nuspecFiles = Get-ChildItem $env:Root *.nuspec -Recurse
     foreach($nuspecFile in $nuspecFiles)
@@ -575,8 +583,4 @@ function UpdatePackageVersion
         Foreach-Object { $_ -Replace $oldVersionString, $newVersionSting} |
         Set-Content $nuspecFile.PSPath
     }
-	
-	(Get-Content (${env:ROOT} +  "\init.ps1")) | 
-        Foreach-Object { $_ -Replace $oldVersionString, $newVersionSting} |
-        Set-Content (${env:ROOT} +  "\init.ps1")
 }
