@@ -1,20 +1,17 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net462</TargetFrameworks>
     <RootNamespace>Telegraphy.Azure</RootNamespace>
   </PropertyGroup>
-
   <ItemGroup>
     <Folder Include="AzureWrappers\" />
     <Folder Include="Exceptions\" />
     <Folder Include="Messages\" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.Azure.ServiceBus" Version="4.1.4" Condition="'$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)'=='net462'" />
-    <PackageReference Include="WindowsAzure.ServiceBus" Version="4.1.10" Condition="'$(TargetFramework)' == 'net46' OR '$(TargetFramework)' == 'net461' OR '$(TargetFramework)' == 'net45'" />
-    <PackageReference Include="Mossharbor.AzureWorkArounds.ServiceBus" Version="1.0.20" />
+    <PackageReference Include="Microsoft.Azure.ServiceBus" Version="$(MicrosoftAzureServiceBusVersion)" Condition="'$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)'=='net462'" />
+    <PackageReference Include="WindowsAzure.ServiceBus" Version="$(WindowsAzureServiceBusVersion)" Condition="'$(TargetFramework)' == 'net46' OR '$(TargetFramework)' == 'net461' OR '$(TargetFramework)' == 'net45'" />
+    <PackageReference Include="Mossharbor.AzureWorkArounds.ServiceBus" Version="$(MossharborAzureWorkAroundsServiceBusVersion)" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'=='net40' OR '$(TargetFramework)'=='net45' OR '$(TargetFramework)'=='net46' OR '$(TargetFramework)'=='net461' OR '$(TargetFramework)'=='net462'">
     <Reference Include="System" />

@@ -1,11 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net46;net461;net462</TargetFrameworks>
     <RootNamespace>Telegraphy.Azure</RootNamespace>
     <AssemblyName>Telegraphy.Azure.Storage</AssemblyName>
   </PropertyGroup>
-
   <ItemGroup>
     <Folder Include="Actors\" />
     <Folder Include="AzureWrappers\" />
@@ -16,8 +14,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Azure.Storage.Blob" Version="11.2.0" />
-    <PackageReference Include="Microsoft.Azure.Storage.Queue" Version="11.2.0" />
+    <PackageReference Include="Microsoft.Azure.Storage.Blob" Version="$(MicrosoftAzureStorageBlobVersion)" />
+    <PackageReference Include="Microsoft.Azure.Storage.Queue" Version="$(MicrosoftAzureStorageQueueVersion)" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Telegraphy.Net\Telegraphy.Net.csproj" />

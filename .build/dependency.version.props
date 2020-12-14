@@ -1,5 +1,38 @@
 <Project ToolsVersion="15.0">
   <PropertyGroup>
-    <coverletcollectorVersion>1.2.0</coverletcollectorVersion>
+    <ExchangeWebServicesManagedApiVersion>2.2.1.2</ExchangeWebServicesManagedApiVersion>
+    <MicrosoftAzureAmqpVersion>2.4.5</MicrosoftAzureAmqpVersion>
+    <MicrosoftAzureCosmosDbTableVersion>2.1.2</MicrosoftAzureCosmosDbTableVersion>
+    <MicrosoftAzureCosmosTableVersion>1.0.7</MicrosoftAzureCosmosTableVersion>
+    <MicrosoftAzureEventHubsProcessorVersion>2.0.1</MicrosoftAzureEventHubsProcessorVersion>
+    <MicrosoftAzureEventHubsVersion>4.2.0</MicrosoftAzureEventHubsVersion>
+    <MicrosoftAzureKeyVaultCoreVersion>2.0.4</MicrosoftAzureKeyVaultCoreVersion>
+    <MicrosoftAzureRelayVersion>2.0.1</MicrosoftAzureRelayVersion>
+    <MicrosoftAzureServiceBusVersion>4.1.4</MicrosoftAzureServiceBusVersion>
+    <MicrosoftAzureStorageBlobVersion>11.2.0</MicrosoftAzureStorageBlobVersion>
+    <MicrosoftAzureStorageCommonVersion>11.2.0</MicrosoftAzureStorageCommonVersion>
+    <MicrosoftAzureStorageQueueVersion>11.2.0</MicrosoftAzureStorageQueueVersion>
+    <MicrosoftIdentityModelClientsActiveDirectoryVersion>5.2.4</MicrosoftIdentityModelClientsActiveDirectoryVersion>
+    <MicrosoftIdentityModelLoggingVersion>5.6.0</MicrosoftIdentityModelLoggingVersion>
+    <MicrosoftIdentityModelTokensVersion>5.6.0</MicrosoftIdentityModelTokensVersion>
+    <MicrosoftNETTestSdkVersion>16.4.0</MicrosoftNETTestSdkVersion>
+    <MossharborAzureWorkAroundsServiceBusVersion>1.0.20</MossharborAzureWorkAroundsServiceBusVersion>
+    <MSTestTestAdapterVersion>2.0.0</MSTestTestAdapterVersion>
+    <MSTestTestFrameworkVersion>2.0.0</MSTestTestFrameworkVersion>
+    <NewtonsoftJsonVersion>12.0.3</NewtonsoftJsonVersion>
+    <SystemDiagnosticsDiagnosticSourceVersion>4.6.0</SystemDiagnosticsDiagnosticSourceVersion>
+    <SystemIdentityModelTokensJwtVersion>5.6.0</SystemIdentityModelTokensJwtVersion>
+    <SystemNetHttpVersion>4.3.4</SystemNetHttpVersion>
+    <SystemNetWebSocketsClientVersion>4.3.2</SystemNetWebSocketsClientVersion>
+    <SystemNetWebSocketsVersion>4.3.0</SystemNetWebSocketsVersion>
+    <SystemReflectionTypeExtensionsVersion>4.6.0</SystemReflectionTypeExtensionsVersion>
+    <SystemRuntimeSerializationPrimitivesVersion>4.3.0</SystemRuntimeSerializationPrimitivesVersion>
+    <SystemRuntimeSerializationXmlVersion>4.3.0</SystemRuntimeSerializationXmlVersion>
+    <SystemSecurityCryptographyAlgorithmsVersion>4.3.1</SystemSecurityCryptographyAlgorithmsVersion>
+    <SystemSecurityCryptographyEncodingVersion>4.3.0</SystemSecurityCryptographyEncodingVersion>
+    <SystemSecurityCryptographyPrimitivesVersion>4.3.0</SystemSecurityCryptographyPrimitivesVersion>
+    <SystemSecurityCryptographyX509CertificatesVersion>4.3.2</SystemSecurityCryptographyX509CertificatesVersion>
+    <WindowsAzureServiceBusVersion>4.1.10</WindowsAzureServiceBusVersion>
+    <WindowsAzureStorageVersion>9.2.0</WindowsAzureStorageVersion>
   </PropertyGroup>
 </Project>

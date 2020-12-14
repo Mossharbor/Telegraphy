@@ -1,28 +1,22 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461;net462</TargetFrameworks>
     <RootNamespace>Telegraphy.Azure</RootNamespace>
   </PropertyGroup>
-
   <ItemGroup>
     <Folder Include="Actors\" />
     <Folder Include="Exceptions\" />
     <Folder Include="Messages\" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.Azure.EventHubs" Version="4.2.0" />
-    <PackageReference Include="Mossharbor.AzureWorkArounds.ServiceBus" Version="1.0.20" />
+    <PackageReference Include="Microsoft.Azure.EventHubs" Version="$(MicrosoftAzureEventHubsVersion)" />
+    <PackageReference Include="Mossharbor.AzureWorkArounds.ServiceBus" Version="$(MossharborAzureWorkAroundsServiceBusVersion)" />
   </ItemGroup>
-  
   <ItemGroup Condition="'$(TargetFramework)'=='net40' OR '$(TargetFramework)'=='net45' OR '$(TargetFramework)'=='net46' OR '$(TargetFramework)'=='net461' OR '$(TargetFramework)'=='net462'">
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
-  
   <ItemGroup>
     <ProjectReference Include="..\Telegraphy.Net\Telegraphy.Net.csproj" />
   </ItemGroup>
-
 </Project>

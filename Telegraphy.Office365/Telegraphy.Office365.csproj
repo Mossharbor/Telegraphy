@@ -1,15 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Exchange.WebServices.Managed.Api" Version="2.2.1.2" />
+    <PackageReference Include="Exchange.WebServices.Managed.Api" Version="$(ExchangeWebServicesManagedApiVersion)" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Telegraphy.Net\Telegraphy.Net.csproj" />
   </ItemGroup>
-
 </Project>
