@@ -544,9 +544,6 @@ function ListUnusedPackageReferences
     return $unusedPackages
 }
 
-#
-# Invoke-PrintMessage
-#
 function Invoke-PrintMessage
 {
     [CmdletBinding()]
@@ -560,4 +557,26 @@ function Invoke-PrintMessage
     Write-Host "***** $Message" | Out-Default
     Write-Host "*****" | Out-Default
     Write-Host | Out-Default
+}
+
+function UpdatePackageVersion
+{
+	[CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string] $VersionString
+    )
+	$oldVersionString = "<version>3.0.0</version>"
+	$newVersionSting = "<version>"+$VersionString+"</version>"
+    $nuspecFiles = Get-ChildItem $env:Root *.nuspec -Recurse
+    foreach($nuspecFile in $nuspecFiles)
+    {
+        (Get-Content $nuspecFile.PSPath) | 
+        Foreach-Object { $_ -Replace $oldVersionString, $newVersionSting} |
+        Set-Content $nuspecFile.PSPath
+    }
+	
+	(Get-Content (${env:ROOT} +  "\init.ps1")) | 
+        Foreach-Object { $_ -Replace $oldVersionString, $newVersionSting} |
+        Set-Content (${env:ROOT} +  "\init.ps1")
 }
