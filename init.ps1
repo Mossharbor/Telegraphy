@@ -6,6 +6,8 @@ $env:TARGET_ENVIRONMENT_REGION = "westus" # tests are be pointed to local servic
 $env:ROOT = Split-Path $MyInvocation.MyCommand.Path
 $env:SLN_NAME = "Telegraphy.sln"
 $env:SLN_RUNSETTINGS_NAME = "Telegraphy.runsettings"
+$env:NUGETVERSIONPROPSPATH = $env:Root
+$env:NUGETVERSIONPROPSPATH += "\.build\dependency.version.props"
  
 if (-not [Environment]::Is64BitProcess) {
     write-host "Please run this command window in AMD64 processor architecture.`r`n"
@@ -373,4 +375,189 @@ function validate {
     finally {
         Pop-Location
     }
+}
+
+function VerifyPackageReferences
+{
+	$VersionPropsPath = ${env:NUGETVERSIONPROPSPATH};
+    $RootPath = (Resolve-Path -Path ${env:ROOT}).Path
+    Invoke-PrintMessage "Checking PackageReferences"
+
+    $count = 0
+    Get-ChildItem -Path $RootPath -Recurse -Include *.csproj | ForEach-Object {
+        $project = $_
+        
+        Write-Host
+        Write-Host "Checking" $project.Name
+
+        # get content of each project into an object 
+        [xml]$data = Get-Content -Path $project.FullName
+
+        # Issue 1: ensure that packages.config is not being used by the given project
+        if ((Test-Path ($project.DirectoryName + "\packages.config")) -eq 1)
+        {   
+            $count++     
+            Write-Host "##vso[task.logissue type=error] Found 'packages.config'!"
+            Write-Error "**** Please convert project to use <PackageReferences>!" 
+        }
+
+        # Issue 3: ensure projects do not use hard-coded dependencies (versions) and match a format of '$(*Version)' from 'dependency.version.props'
+        $data.Project.ItemGroup.PackageReference | Where-Object { $_ -ne $null } | ForEach-Object {
+            $reference = $_
+
+            if ($reference.Version -notmatch "\$\([A-Za-z0-9-_]+Version\)")
+            {
+                $count++ 
+                Write-Host "##vso[task.logissue type=error] Found project using hard-coded or malformed version dependency macro '$($reference.Version)'!"
+                Write-Error "**** Please update dependency to use a version from 'dependency.version.props' and ensure that is has the following format '`$`(xxxVersion`)'!"
+            }
+        }
+    }
+
+    return $count
+}
+
+#
+# Invoke-FixPackageReferences
+#
+function FixPackageReferences
+{
+    Invoke-PrintMessage "Checking PackageReferences for Hard-coded Versions"
+
+	$VersionPropsPath = ${env:NUGETVERSIONPROPSPATH};
+    $versionPropsFile = (Resolve-Path -Path $VersionPropsPath).Path
+    $RootPath = (Resolve-Path -Path ${env:ROOT}).Path
+    Write-Host $versionPropsFile
+    Write-Host $
+    [xml]$dependencyVersionPropsXml = Get-Content -Path $versionPropsFile
+
+    Get-ChildItem -Path $RootPath -Recurse -Include *.csproj | ForEach-Object {
+        $project = $_
+
+        Write-Host "Checking" $project.Name
+
+        # get content of each project into an object 
+        [xml]$data = Get-Content -Path $project.FullName
+
+        # Ensure projects do not use hard-coded dependencies (versions) and match a format of '$(*Version)' from 'dependency.version.props'
+        $updateProject = $false
+        $data.Project.ItemGroup.PackageReference | Where-Object { $_ -ne $null } | ForEach-Object {
+            $reference = $_
+            $id = $reference.Include
+
+            $versionString = $id.Replace('.','').Trim() + 'Version'
+            $version = $reference.Version
+            if ($version -notmatch "\$\([A-Za-z0-9-_]+Version\)")
+            {
+                Write-Host "$id does not have version set with the correct format."
+
+                $updateProject = $true
+                $updatePackageRefEntry = $false
+
+                $reference.Version = '$(' + $versionString + ')'
+                $dependencyVersionPropsXml.GetElementsByTagName($versionString) | Where-Object { $_ -ne $null } | ForEach-Object {
+                    $updatePackageRefEntry = $true
+                    $_.InnerXml = $version
+                }
+
+                if (-not $updatePackageRefEntry)
+                {
+                    $element = $dependencyVersionPropsXml.CreateElement($versionString)
+                    $element.InnerXml = $version
+                    $dependencyVersionPropsXml.Project.FirstChild.AppendChild($element)
+                    $updatePackageRefEntry = $true
+                }
+            }
+        }
+
+        if ($updateProject -eq $true)
+        {
+            $data.Save($project.FullName)
+            $dependencyVersionPropsXml.Save($versionPropsFile)
+        }
+    }
+
+    # Remove any unused references
+    $unusedPackages = Invoke-ListUnusedPackageReferences -RootPath $RootPath -VersionPropsPath $versionPropsFile
+    $unusedPackages | Where-Object { $_ -ne $null } | ForEach-Object {
+        $nodeToRemove = $dependencyVersionPropsXml.GetElementsByTagName($_)[0]
+        Write-Host "Removing unused package " $nodeToRemove.Name
+        $dependencyVersionPropsXml.Project.FirstChild.RemoveChild($nodeToRemove)    
+    }
+
+    # Sort the elements in dependency.version.props file
+    $propertyGroup = $dependencyVersionPropsXml.Project.FirstChild
+    $packageCollection = $propertyGroup.ChildNodes | Sort-Object Name
+    $propertyGroup.RemoveAll()
+
+    $packageCollection | ForEach-Object { $propertyGroup.AppendChild($_) } | Out-Null
+    $dependencyVersionPropsXml.Save($versionPropsFile)
+}
+
+function ListUnusedPackageReferences
+{
+	$VersionPropsPath = ${env:NUGETVERSIONPROPSPATH};
+    Invoke-PrintMessage "Checking for Unused PackageReferences"
+
+    #list of unused packages to return
+    $unusedPackages = @()
+
+    # collection of central packages
+    $versionPropsFile = (Resolve-Path -Path $VersionPropsPath).Path
+    [xml]$data0 = Get-Content -Path $versionPropsFile
+
+    # collection of csproj projects from root path
+    $projects = Get-ChildItem -Path ${env:ROOT} -Recurse -Include *.csproj
+
+    # search projects existence of each central package
+    $data0.Project.FirstChild.ChildNodes | Where-Object { $_ -ne $null } | ForEach-Object {
+        $package = "`$(" + $_.Name + ")"
+
+        $found = $false
+        foreach ($project in $projects)
+        {
+            [xml]$data1 = Get-Content -Path $project.FullName
+
+            $references = $data1.Project.ItemGroup.PackageReference | Where-Object { $_ -ne $null }
+            foreach ($reference in $references)
+            {
+                if ($package -eq $reference.Version)
+                {
+                    $found = $true
+                    break
+                }
+            }
+
+            if ($found -eq $true)
+            {
+                break
+            }
+        }
+
+        if ($found -eq $false)
+        {
+            Write-Warning "The package '$package' is not used!"
+            $unusedPackages += $_.Name
+        }
+    }
+
+    return $unusedPackages
+}
+
+#
+# Invoke-PrintMessage
+#
+function Invoke-PrintMessage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string] $Message
+    )
+
+    Write-Host | Out-Default
+    Write-Host "*****" | Out-Default
+    Write-Host "***** $Message" | Out-Default
+    Write-Host "*****" | Out-Default
+    Write-Host | Out-Default
 }
