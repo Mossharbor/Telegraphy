@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Mossharbor.Telegraphy.Azure.ServiceBus</id>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
     <authors>M@ J.</authors>
     <owners>M@ J.</owners>
     <licenseUrl>https://raw.githubusercontent.com/Mossharbor/Telegraphy/master/LICENSE</licenseUrl>

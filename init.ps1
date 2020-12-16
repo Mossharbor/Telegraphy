@@ -8,6 +8,8 @@ $env:SLN_NAME = "Telegraphy.sln"
 $env:SLN_RUNSETTINGS_NAME = "Telegraphy.runsettings"
 $env:NUGETVERSIONPROPSPATH = $env:Root
 $env:NUGETVERSIONPROPSPATH += "\.build\dependency.version.props"
+$env:VERSIONFILE = ${env:ROOT}
+$env:VERSIONFILE +=  "\Telegraphy.Net\Package.nuspec"
  
 if (-not [Environment]::Is64BitProcess) {
     write-host "Please run this command window in AMD64 processor architecture.`r`n"
@@ -22,6 +24,18 @@ Write-Host "";
 Write-Host (Get-Content -Raw "${env:ROOT}\.build\welcome.txt")
 Write-Host "";
 Write-Host "Please use the" -NoNewline; Write-Host " validate" -ForegroundColor Yellow -NoNewline; Write-Host " command to run tests before pushing a pull requests"
+Write-Host "";
+Write-Host "Commands:";
+Write-Host "   opensln";
+Write-Host "   runtests";
+Write-Host "   rerunfailedtests"; 
+Write-Host "   validate";
+Write-Host "   verifypackagereferences";
+Write-Host "   fixpackagereferences";
+Write-Host "   listunusedpackagereferences";
+Write-Host "   getpackageversion";
+Write-Host "   updatepackageversion";
+Write-Host "   publishnugetpackages";
  
 #############################################################################################
 #
@@ -558,9 +572,10 @@ function Invoke-PrintMessage
     Write-Host "*****" | Out-Default
     Write-Host | Out-Default
 }
+
 function GetPackageVersion
 {
-	[xml]$data0 = Get-Content -Path (${env:ROOT} +  "\Telegraphy.Net\Package.nuspec")
+	[xml]$data0 = Get-Content -Path $env:VERSIONFILE
 	$version = $data0.package.metadata.version;
 	Write-Host $version
 }
@@ -572,7 +587,7 @@ function UpdatePackageVersion
         [Parameter(Mandatory = $true)]
         [string] $VersionString
     )
-	[xml]$data0 = Get-Content -Path (${env:ROOT} +  "\Telegraphy.Net\Package.nuspec")
+	[xml]$data0 = Get-Content -Path $env:VERSIONFILE
 	$oldversion = $data0.package.metadata.version;
 	$oldVersionString = "<version>"+$oldversion+"</version>"
 	$newVersionSting = "<version>"+$VersionString+"</version>"
@@ -583,4 +598,24 @@ function UpdatePackageVersion
         Foreach-Object { $_ -Replace $oldVersionString, $newVersionSting} |
         Set-Content $nuspecFile.PSPath
     }
+}
+
+function PublishNugetPackages
+{
+	[CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string] $nugetApiKey
+    )
+	
+	[xml]$data0 = Get-Content -Path $env:VERSIONFILE
+	$currentVersion = $data0.package.metadata.version;
+	
+    $nuspecFiles = Get-ChildItem $env:Root -recurse ("*"+$currentVersion + ".nupkg")
+	foreach($nupkgFile in $nuspecFiles)
+    {
+		$localPath = Convert-Path $nupkgFile.PSPath
+		Write-Host $localPath
+		dotnet nuget push $localPath --api-key $nugetApiKey --source https://api.nuget.org/v3/index.json
+	}
 }
