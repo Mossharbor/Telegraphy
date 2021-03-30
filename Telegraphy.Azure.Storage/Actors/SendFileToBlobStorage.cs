@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using System.IO;
 using Telegraphy.Azure.Exceptions;
 using Telegraphy.Net;
-using Microsoft.Azure.Storage;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Specialized;
 
 namespace Telegraphy.Azure
 {
@@ -29,7 +30,7 @@ namespace Telegraphy.Azure
 
             string fileName = (string)msg.Message;
             string blobFileName = blobTransformNameFcn(fileName);
-            var blob = container.GetBlockBlobReference(blobTransformNameFcn(fileName));
+            var blob = container.GetBlockBlobClient(blobTransformNameFcn(fileName));
             SendFile(blob, fileName);
             msg.ProcessingResult = blobFileName;
             return true;

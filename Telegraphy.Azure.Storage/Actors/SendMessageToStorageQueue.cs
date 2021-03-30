@@ -1,4 +1,4 @@
-﻿using Microsoft.Azure.Storage.Queue;
+﻿using Azure.Storage.Queues;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ namespace Telegraphy.Azure
 {
     public class SendMessageToStorageQueue : IActor
     {
-        CloudQueue queue = null;
+        QueueClient queue = null;
 
         public SendMessageToStorageQueue(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true)
         {

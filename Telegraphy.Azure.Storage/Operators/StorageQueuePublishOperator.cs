@@ -1,4 +1,4 @@
-﻿using Microsoft.Azure.Storage.Queue;
+﻿using Azure.Storage.Queues;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,12 +8,12 @@ namespace Telegraphy.Azure
     public class StorageQueuePublishOperator<T> : StorageQueueBaseOperator<T> where T:class
     {
         public StorageQueuePublishOperator(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true)
-            : base(null, storageConnectionString, queueName, createQueueIfItDoesNotExist, false, DefaultDequeueMaxCount, null, null, null)
+            : base(null, storageConnectionString, queueName, createQueueIfItDoesNotExist, false, DefaultDequeueMaxCount, null)
         {
         }
 
-        public StorageQueuePublishOperator(CloudQueue queue, CloudQueue deadLetterQueue)
-            : base(null, queue, deadLetterQueue, false, DefaultDequeueMaxCount, null, null, null)
+        public StorageQueuePublishOperator(QueueClient queue, QueueClient deadLetterQueue)
+            : base(null, queue, deadLetterQueue, false, DefaultDequeueMaxCount, null)
         {
         }
 

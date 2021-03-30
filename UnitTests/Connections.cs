@@ -9,7 +9,7 @@ namespace UnitTests
     public class Connections
     {
         public static string EventHubConnectionString { get { return @""; } }
-        public static string StorageConnectionString { get { return @""; } }
+        public static string StorageConnectionString { get { return ""; } }
         public static string ServiceBusConnectionString { get { return @""; } }
         public static string RelayConnectionString { get { return @""; } }
         public static string EmailAccount { get { return @""; } }

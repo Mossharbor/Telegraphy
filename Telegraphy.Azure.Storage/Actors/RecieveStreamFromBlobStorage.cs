@@ -31,7 +31,7 @@ namespace Telegraphy.Azure
                 throw new MessageTypeWasNotAFileNameCannotDownloadBlobDataException();
 
             string blobName = (msg.Message as string);
-            var blob = container.GetBlobReference(blobName);
+            var blob = container.GetBlobClient(blobName);
             msg.ProcessingResult = getStreamFunc();
             base.RecieveStream(blob, (System.IO.Stream)msg.ProcessingResult);
             (msg.ProcessingResult as System.IO.Stream).Position = 0;

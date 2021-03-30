@@ -1,6 +1,4 @@
-﻿using Microsoft.Azure.Storage;
-using Microsoft.Azure.Storage.Queue;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +10,5 @@ namespace Telegraphy.Azure
     {
         TimeSpan? TimeToLive { get; set; }
         TimeSpan? InitialVisibilityDelay { get; set; }
-        QueueRequestOptions Options { get; set; }
-        OperationContext OperationContext { get; set; }
     }
 }

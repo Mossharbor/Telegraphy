@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Telegraphy.Azure
 {
-    using Microsoft.Azure.Storage.Queue;
+    using global::Azure.Storage.Queues;
     using Telegraphy.Azure.Exceptions;
     using Telegraphy.Net;
 
     public class SendStringToStorageQueue : IActor
     {
-        CloudQueue queue = null;
+        QueueClient queue = null;
 
         public SendStringToStorageQueue(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist = true)
         {

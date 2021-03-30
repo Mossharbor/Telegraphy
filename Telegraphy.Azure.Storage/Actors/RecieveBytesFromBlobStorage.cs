@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegraphy.Azure.Exceptions;
 using Telegraphy.Net;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Specialized;
 
 namespace Telegraphy.Azure
 {
@@ -21,8 +23,8 @@ namespace Telegraphy.Azure
                 throw new MessageTypeWasNotAFileNameCannotDownloadBlobDataException();
 
             string blobName = (msg.Message as string);
-            var blob = container.GetBlobReference(blobName);
-            int size = 0;
+            var blob = container.GetBlobClient(blobName);
+            long size = 0;
             msg.ProcessingResult = base.RecieveBytes(blob, out size);
             return true;
         }

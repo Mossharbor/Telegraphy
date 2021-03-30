@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <Configurations>Debug;Release</Configurations>
@@ -65,6 +65,8 @@
     <ProjectReference Include="..\Telegraphy.Office365\Telegraphy.Office365.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Azure.Storage.Blobs" Version="$(AzureStorageBlobsVersion)" />
+    <PackageReference Include="Azure.Storage.Queues" Version="$(AzureStorageQueuesVersion)" />
     <PackageReference Include="Exchange.WebServices.Managed.Api" Version="$(ExchangeWebServicesManagedApiVersion)" />
     <PackageReference Include="Microsoft.Azure.Amqp" Version="$(MicrosoftAzureAmqpVersion)" />
     <PackageReference Include="Microsoft.Azure.EventHubs" Version="$(MicrosoftAzureEventHubsVersion)" />
@@ -72,7 +74,6 @@
     <PackageReference Include="Microsoft.Azure.KeyVault.Core" Version="$(MicrosoftAzureKeyVaultCoreVersion)" />
     <PackageReference Include="Microsoft.Azure.Relay" Version="$(MicrosoftAzureRelayVersion)" />
     <PackageReference Include="Microsoft.Azure.ServiceBus" Version="$(MicrosoftAzureServiceBusVersion)" />
-    <PackageReference Include="Microsoft.Azure.Storage.Common" Version="$(MicrosoftAzureStorageCommonVersion)" />
     <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="$(MicrosoftIdentityModelClientsActiveDirectoryVersion)" />
     <PackageReference Include="Microsoft.IdentityModel.Logging" Version="$(MicrosoftIdentityModelLoggingVersion)" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="$(MicrosoftIdentityModelTokensVersion)" />

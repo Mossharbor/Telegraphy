@@ -1,6 +1,8 @@
 ﻿using System;
 using Telegraphy.Azure.Exceptions;
 using Telegraphy.Net;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Specialized;
 
 
 namespace Telegraphy.Azure
@@ -21,9 +23,9 @@ namespace Telegraphy.Azure
                 throw new CannotSendNonStringMessagesToBlobStorageException();
 
             string fileName = (string)msg.Message;
-            var blob = container.GetAppendBlobReference(blobTransformNameFcn(fileName));
-            if (checkExistsAndCreate && !blob.Exists())
-                blob.CreateOrReplace();
+            var blob = container.GetAppendBlobClient(blobTransformNameFcn(fileName));
+            if (checkExistsAndCreate)
+                blob.CreateIfNotExists();
             SendFile(blob, fileName);
             return true;
         }

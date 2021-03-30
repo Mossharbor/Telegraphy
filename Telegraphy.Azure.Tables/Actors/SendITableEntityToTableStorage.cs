@@ -26,6 +26,7 @@ namespace Telegraphy.Azure
             var acct = CloudStorageAccount.Parse(storageConnectionString);
             CloudTableClient tableClient = acct.CreateCloudTableClient();
             table = tableClient.GetTableReference(tableName);
+            table.CreateIfNotExists();
             this.operation = operation;
 
         }
