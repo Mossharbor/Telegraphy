@@ -44,7 +44,9 @@ namespace Telegraphy.Azure
             if (!overwrite && blob.Exists())
                 return;
 
-            blob.UploadText(message, encoding);
+            BlobRequestOptions optionsWithStoreBlobContentMD5 = new BlobRequestOptions() { StoreBlobContentMD5 = true };
+
+            blob.UploadText(message, encoding, options: optionsWithStoreBlobContentMD5);
         }
 
         protected void SendString(CloudAppendBlob blob, string message)
@@ -55,7 +57,10 @@ namespace Telegraphy.Azure
         protected void SendString(CloudPageBlob blob, string message)
         {
             byte[] msgBytes = encoding.GetBytes(message);
-            blob.UploadFromByteArray(msgBytes, 0, msgBytes.Length);
+
+            BlobRequestOptions optionsWithStoreBlobContentMD5 = new BlobRequestOptions() { StoreBlobContentMD5 = true };
+
+            blob.UploadFromByteArray(msgBytes, 0, msgBytes.Length, options: optionsWithStoreBlobContentMD5);
         }
 
         protected string RecieveString(CloudBlob blob)
@@ -73,7 +78,9 @@ namespace Telegraphy.Azure
             if (!overwrite && blob.ExistsAsync().Result)
                 return;
 
-            blob.UploadFromFile(fileNameAndPath);
+            BlobRequestOptions optionsWithStoreBlobContentMD5 = new BlobRequestOptions() { StoreBlobContentMD5 = true };
+
+            blob.UploadFromFile(fileNameAndPath, options: optionsWithStoreBlobContentMD5);
         }
 
         protected void SendFile(CloudAppendBlob blob, string fileNameAndPath)
@@ -92,7 +99,9 @@ namespace Telegraphy.Azure
             if (!overwrite && blob.Exists())
                 return;
 
-            blob.UploadFromFile(fileNameAndPath);
+            BlobRequestOptions optionsWithStoreBlobContentMD5 = new BlobRequestOptions() { StoreBlobContentMD5 = true };
+
+            blob.UploadFromFile(fileNameAndPath, options: optionsWithStoreBlobContentMD5);
         }
 
         protected void RecieveFile(CloudBlob blob, string fileNameAndPath, FileMode mode)
@@ -105,7 +114,9 @@ namespace Telegraphy.Azure
             if (!overwrite && blob.Exists())
                 return;
 
-            blob.UploadFromStream(stream);
+            BlobRequestOptions optionsWithStoreBlobContentMD5 = new BlobRequestOptions() { StoreBlobContentMD5 = true };
+
+            blob.UploadFromStream(stream, options: optionsWithStoreBlobContentMD5);
         }
 
         protected void SendStream(CloudAppendBlob blob, Stream stream)
@@ -118,7 +129,9 @@ namespace Telegraphy.Azure
             if (!overwrite && blob.Exists())
                 return;
 
-            blob.UploadFromStream(stream);
+            BlobRequestOptions optionsWithStoreBlobContentMD5 = new BlobRequestOptions() { StoreBlobContentMD5 = true };
+
+            blob.UploadFromStream(stream, options: optionsWithStoreBlobContentMD5);
         }
 
         protected void RecieveStream(CloudBlob blob, Stream stream)
@@ -131,7 +144,9 @@ namespace Telegraphy.Azure
             if (!overwrite && blob.Exists())
                 return;
 
-            blob.UploadFromByteArray(msgBytes, 0, msgBytes.Length);
+            BlobRequestOptions optionsWithStoreBlobContentMD5 = new BlobRequestOptions() { StoreBlobContentMD5 = true };
+
+            blob.UploadFromByteArray(msgBytes, 0, msgBytes.Length, options: optionsWithStoreBlobContentMD5);
         }
 
         protected void SendBytes(CloudPageBlob blob, byte[] msgBytes)
@@ -139,7 +154,9 @@ namespace Telegraphy.Azure
             if (!overwrite && blob.Exists())
                 return;
 
-            blob.UploadFromByteArray(msgBytes, 0, msgBytes.Length);
+            BlobRequestOptions optionsWithStoreBlobContentMD5 = new BlobRequestOptions() { StoreBlobContentMD5 = true };
+
+            blob.UploadFromByteArray(msgBytes, 0, msgBytes.Length, options: optionsWithStoreBlobContentMD5);
         }
 
         protected void SendBytes(CloudAppendBlob blob, byte[] msgBytes)
