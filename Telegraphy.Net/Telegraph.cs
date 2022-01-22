@@ -154,7 +154,7 @@ namespace Telegraphy.Net
                             if (!((ConcurrentQueue<IOperator>)msgTypeToOperator[handlesType]).TryDequeue(out op))
                                 throw new CouldNotRetrieveNextOperatorFromQueueException();
 
-                            //Re-Add the operator to the top of the queue.
+                            //Re-Add the operator to the bottom of the queue.
                             ((ConcurrentQueue<IOperator>)msgTypeToOperator[handlesType]).Enqueue(op);
                         }
                     }
@@ -431,25 +431,27 @@ namespace Telegraphy.Net
             this.Register<T>(op, actor);
         }
 
-        public long Register<T>(IOperator op, Action<T> action) where T : class
+        public long Register<T>(IOperator op, Action<T> action, bool registerType = true) where T : class
         {
             if (0 == op.Switchboards.Count)
                 throw new CannotRegisterActionSinceOperatorHasNoSwitchBoardsException();
             long nextID = Register(op);
             foreach(var switchBoard in op.Switchboards)
                 switchBoard.Register<T>(action);
-            Register<T>(op, false);
+            if (registerType)
+                Register<T>(op, false);
             return nextID;
         }
 
-        public long Register<T>(IOperator op, IActor actor) where T : class, IActorMessage
+        public long Register<T>(IOperator op, IActor actor, bool registerType = true) where T : class, IActorMessage
         {
             if (0 == op.Switchboards.Count)
                 throw new CannotRegisterActionSinceOperatorHasNoSwitchBoardsException();
             long nextID = Register(op);
             foreach (var switchBoard in op.Switchboards)
                 switchBoard.Register<T>(actor);
-            Register<T>(op, false);
+            if (registerType)
+                Register<T>(op, false);
             return nextID;
         }
 
@@ -464,7 +466,7 @@ namespace Telegraphy.Net
             Register<T, K>(op, factory);
         }
 
-        public long Register<T, K>(IOperator op, System.Linq.Expressions.Expression<Func<K>> factory)
+        public long Register<T, K>(IOperator op, System.Linq.Expressions.Expression<Func<K>> factory, bool registerType = true)
             where T : class
             where K : IActor
         {
@@ -475,7 +477,8 @@ namespace Telegraphy.Net
 
             foreach (var switchboard in op.Switchboards)
                 switchboard.Register<T, K>(factory);
-            Register<T>(op, false);
+            if (registerType)
+                Register<T>(op, false);
             return nextID;
         }
 
