@@ -8,7 +8,7 @@ using Telegraphy.Net;
 
 namespace Telegraphy.Azure
 {
-    public class SendMessageToStorageQueue : IActor
+    public class SendMessageToStorageQueue<MsgType> : IActor
     {
         CloudQueue queue = null;
 
