@@ -6,12 +6,16 @@ using System.Threading.Tasks;
 
 namespace Telegraphy.Azure
 {
-    using Microsoft.Azure.Storage.Queue;
+    using global::Azure.Storage.Queues.Models;
     using Telegraphy.Net;
 
-    internal class QueuedCloudMessage : SimpleMessage<CloudQueueMessage>
+    internal class QueuedCloudMessage : SimpleMessage<BinaryData>
     {
-        public QueuedCloudMessage(CloudQueueMessage message) : base(message)
+        public QueuedCloudMessage(string message, SendReceipt reciept) : base(new BinaryData(message))
+        {
+        }
+
+        public QueuedCloudMessage(BinaryData message, SendReceipt reciept) : base(message)
         {
         }
     }

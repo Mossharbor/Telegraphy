@@ -1,5 +1,5 @@
-﻿using Microsoft.Azure.Storage;
-using Microsoft.Azure.Storage.Blob;
+﻿using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,51 +13,45 @@ namespace Telegraphy.Azure
 {
     public class DeleteAllBlobsInContainer : IActor
     {
-        CloudBlobClient client = null;
+        BlobServiceClient client = null;
         string prefix = null;
-        BlobListingDetails details;
+        BlobStates blobStates;
         public DeleteAllBlobsInContainer(string storageConnectionString) :
             this(storageConnectionString, null)
         {
         }
 
         public DeleteAllBlobsInContainer(string storageConnectionString, string prefix) :
-            this(storageConnectionString, prefix, BlobListingDetails.None)
+            this(storageConnectionString, prefix, BlobStates.None)
         {
         }
 
-        public DeleteAllBlobsInContainer(string storageConnectionString, string prefix = null, BlobListingDetails details = BlobListingDetails.None)
+        public DeleteAllBlobsInContainer(string storageConnectionString, string prefix = null, BlobStates details = BlobStates.None)
         {
-            var acct = CloudStorageAccount.Parse(storageConnectionString);
-            client = acct.CreateCloudBlobClient();
+            client = new BlobServiceClient(storageConnectionString);
             this.prefix = prefix;
-            this.details = details;
+            this.blobStates = details;
         }
 
-        void DeleteAllBlobs(IEnumerable<IListBlobItem> items)
+        IEnumerable<BlobClient> GetAllBlobs(BlobContainerClient container, BlobTraits traits, string prefix)
+        {
+            foreach (BlobItem blob in container.GetBlobs(traits, this.blobStates, prefix))
+            {
+                yield return container.GetBlobClient(blob.Name);
+            }
+        }
+
+        void DeleteAllBlobs(IEnumerable<BlobClient> items)
         {
             foreach (var blobItem in items)
             {
-                if (blobItem.GetType() == typeof(CloudBlockBlob))
-                {
-                    CloudBlockBlob blob = (CloudBlockBlob)blobItem;
-                    blob.Delete();
-                }
-                else if (blobItem.GetType() == typeof(CloudAppendBlob))
-                {
-                    CloudAppendBlob blob = (CloudAppendBlob)blobItem;
-                    blob.Delete();
-                }
-                else if (blobItem.GetType() == typeof(CloudPageBlob))
-                {
-                    CloudPageBlob blob = (CloudPageBlob)blobItem;
-                    blob.Delete();
-                }
-                else if (blobItem.GetType() == typeof(CloudBlobDirectory))
+                blobItem.Delete(DeleteSnapshotsOption.IncludeSnapshots);
+
+                /* if (blobItem.GetType() == typeof(CloudBlobDirectory))
                 {
                     CloudBlobDirectory blob = (CloudBlobDirectory)blobItem;
-                    DeleteAllBlobs(blob.ListBlobs(false, details));
-                }
+                    DeleteAllBlobs(blob.ListBlobs(false, blobStates));
+                }*/
             }
         }
 
@@ -67,8 +61,8 @@ namespace Telegraphy.Azure
                 throw new CannotDeleteBlobsInContainerContainerNameIsNotAStringException();
 
             string containername = (string)(msg as IActorMessage).Message;
-            var container = client.GetContainerReference(containername);
-            DeleteAllBlobs(container.ListBlobs(prefix, false, details));
+            var container = client.GetBlobContainerClient(containername);
+            DeleteAllBlobs(this.GetAllBlobs(container, BlobTraits.All, prefix));
             return true;
         }
     }

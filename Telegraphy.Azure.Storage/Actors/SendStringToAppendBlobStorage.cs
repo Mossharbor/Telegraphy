@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegraphy.Azure.Exceptions;
 using Telegraphy.Net;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Specialized;
 
 
 namespace Telegraphy.Azure
@@ -29,9 +31,10 @@ namespace Telegraphy.Azure
             if (!(msg as IActorMessage).Message.GetType().Name.Equals("String"))
                 throw new CannotSendNonStringMessagesToBlobStorageException();
 
-            var blob = container.GetAppendBlobReference(blobNameFcn());
-            if (checkExistsAndCreate && !blob.Exists())
-                blob.CreateOrReplace();
+            var blob = container.GetAppendBlobClient(blobNameFcn());
+
+            if (checkExistsAndCreate)
+                blob.CreateIfNotExists();
             string msgString = (string)msg.Message;
             SendString(blob, msgString);
             return true;

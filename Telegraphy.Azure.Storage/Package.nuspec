@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Mossharbor.Telegraphy.Azure.Storage</id>
-    <version>3.0.1</version>
+    <version>3.1.0</version>
     <authors>M@ J.</authors>
     <owners>M@ J.</owners>
     <licenseUrl>https://raw.githubusercontent.com/Mossharbor/Telegraphy/master/LICENSE</licenseUrl>

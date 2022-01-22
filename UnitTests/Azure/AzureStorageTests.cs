@@ -9,8 +9,9 @@ namespace UnitTests.Azure.Storage
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Telegraphy.Net;
     using Telegraphy.Azure;
-    using Microsoft.WindowsAzure.Storage;
-    using Microsoft.WindowsAzure.Storage.Queue;
+    using global::Azure.Storage.Blobs;
+    using global::Azure.Storage.Queues;
+    using global::Azure.Storage.Blobs.Specialized;
     using Microsoft.Azure.ServiceBus;
     using Mossharbor.AzureWorkArounds.ServiceBus;
     using Microsoft.Azure.EventHubs.Processor;
@@ -23,18 +24,16 @@ namespace UnitTests.Azure.Storage
     [TestClass]
     public class AzureStorageTests
     {
-        private string StorageContainerName = "telagraphytesteventhub";
+        private string StorageContainerName = "telegraphytest";
         private string TableStorageName = "telegraphytesttable";
 
-        private CloudQueue GetStorageQueue(string queueName)
+        private global::Azure.Storage.Queues.QueueClient GetStorageQueue(string queueName)
         {
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Connections.StorageConnectionString);
-            CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
-            CloudQueue queue = queueClient.GetQueueReference(queueName.ToLower());
+            var queue = new global::Azure.Storage.Queues.QueueClient(Connections.StorageConnectionString, queueName.ToLower());
+
             queue.CreateIfNotExists();
             return queue;
         }
-
 
         #region Storage Queue
         [TestMethod]
@@ -50,12 +49,14 @@ namespace UnitTests.Azure.Storage
                 Telegraph.Instance.Register<PingPong.Ping, SendMessageToStorageQueue>(() => new SendMessageToStorageQueue(Connections.StorageConnectionString, queueName, true));
                 Telegraph.Instance.Register<SerializeMessage<IActorMessage>, IActorMessageSerializationActor>(() => serializer);
 
-                if (!Telegraph.Instance.Ask(aMsg).Wait(new TimeSpan(0, 0, 10)))
+                if (!Telegraph.Instance.Ask(aMsg).Wait(new TimeSpan(0, 10, 0)))
                     Assert.Fail("Waited too long to send a message");
 
                 IActorMessageDeserializationActor deserializer = new IActorMessageDeserializationActor();
                 deserializer.Register<PingPong.Ping>((object msg) => (PingPong.Ping)msg);
-                DeserializeMessage<IActorMessage> dMsg = new DeserializeMessage<IActorMessage>(queue.GetMessage().AsBytes);
+                var base64String = queue.ReceiveMessage().Value.Body.ToString();
+                var messageBytes = Convert.FromBase64String(base64String);
+                DeserializeMessage<IActorMessage> dMsg = new DeserializeMessage<IActorMessage>(messageBytes);
                 deserializer.Ask(dMsg);
                 var retMsgs = (PingPong.Ping)dMsg.ProcessingResult;
                 Assert.IsTrue(((string)retMsgs.Message).Equals(message));
@@ -82,8 +83,11 @@ namespace UnitTests.Azure.Storage
                 IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
                 serializer.OnMessageRecieved(sMsg);
                 byte[] msgBytes = (byte[])sMsg.ProcessingResult;
-                queue.AddMessage(new CloudQueueMessage(msgBytes));
+                string base64MsgBytes = Convert.ToBase64String(msgBytes);
+                queue.SendMessage(new BinaryData(base64MsgBytes));
                 ManualResetEvent received = new ManualResetEvent(false);
+
+                Telegraph.Instance.Register<DeserializeMessage<IActorMessage>, IActorMessageDeserializationActor>(() => new IActorMessageDeserializationActor());
 
                 long azureOperatorID = Telegraph.Instance.Register(
                     new StorageQueueSubscriptionOperator<IActorMessage>(LocalConcurrencyType.DedicatedThreadCount, Connections.StorageConnectionString, queueName, false, 2),
@@ -93,7 +97,7 @@ namespace UnitTests.Azure.Storage
                         received.Set();
                     });
 
-                Assert.IsTrue(received.WaitOne(TimeSpan.FromSeconds(3), true), "We did not receive the message");
+                Assert.IsTrue(received.WaitOne(TimeSpan.FromSeconds(13), true), "We did not receive the message");
             }
             finally
             {
@@ -106,7 +110,7 @@ namespace UnitTests.Azure.Storage
         [TestMethod]
         public void RecieveActorMessageFromStorageQueuePostRegister()
         {
-            string queueName = "test-" + "RecieveActorMessageFromStorageQueue".ToLower();
+            string queueName = "test-" + "RecieveActorMessageFromStorageQueuePostRegister".ToLower();
             var queue = GetStorageQueue(queueName);
             queue.CreateIfNotExists();
             try
@@ -117,7 +121,10 @@ namespace UnitTests.Azure.Storage
                 IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
                 serializer.OnMessageRecieved(sMsg);
                 byte[] msgBytes = (byte[])sMsg.ProcessingResult;
+                string base64MsgBytes = Convert.ToBase64String(msgBytes);
                 ManualResetEvent received = new ManualResetEvent(false);
+
+                Telegraph.Instance.Register<DeserializeMessage<IActorMessage>, IActorMessageDeserializationActor>(() => new IActorMessageDeserializationActor());
 
                 long azureOperatorID = Telegraph.Instance.Register(
                     new StorageQueueSubscriptionOperator<IActorMessage>(LocalConcurrencyType.DedicatedThreadCount, Connections.StorageConnectionString, queueName, false, 2),
@@ -127,7 +134,7 @@ namespace UnitTests.Azure.Storage
                         received.Set();
                     });
 
-                queue.AddMessage(new CloudQueueMessage(msgBytes));
+                queue.SendMessage(new BinaryData(base64MsgBytes));
 
                 Assert.IsTrue(received.WaitOne(TimeSpan.FromSeconds(3), true), "We did not receive the message");
             }
@@ -149,7 +156,8 @@ namespace UnitTests.Azure.Storage
                 string message = "HelloWorld";
                 Telegraph.Instance.Register<string, SendStringToStorageQueue>(() => new SendStringToStorageQueue(Connections.StorageConnectionString, queueName, true));
                 Telegraph.Instance.Ask(message).Wait();
-                Assert.IsTrue(queue.GetMessage().AsString.Equals(message));
+                string queuedMessage = queue.ReceiveMessage().Value.Body.ToString();
+                Assert.IsTrue(queuedMessage.Equals(message));
             }
             finally
             {
@@ -168,7 +176,7 @@ namespace UnitTests.Azure.Storage
             try
             {
                 string message = "HelloWorld";
-                queue.AddMessage(new CloudQueueMessage(message));
+                queue.SendMessage(message);
 
                 long azureOperatorID = Telegraph.Instance.Register(
                     new StorageQueueSubscriptionOperator<string>(LocalConcurrencyType.DedicatedThreadCount, Connections.StorageConnectionString, queueName, false, 2),
@@ -192,9 +200,13 @@ namespace UnitTests.Azure.Storage
                 string message = "HelloWorld";
                 byte[] messageBytes = Encoding.UTF8.GetBytes(message);
 
-                Telegraph.Instance.Register<ValueTypeMessage<byte>, SendBytesToStorageQueue>(() => new SendBytesToStorageQueue(Connections.StorageConnectionString, queueName, true));
+                Telegraph.Instance.Register<ValueArrayTypeMessage<byte>, SendBytesToStorageQueue>(() => new SendBytesToStorageQueue(Connections.StorageConnectionString, queueName, true));
                 Telegraph.Instance.Ask(messageBytes.ToActorMessage()).Wait();
-                Assert.IsTrue(Encoding.UTF8.GetString(queue.GetMessage().AsBytes).Equals(message));
+
+                var base64String = queue.ReceiveMessage().Value.Body.ToString();
+                var recievedMessageBytes = Convert.FromBase64String(base64String);
+
+                Assert.IsTrue(Encoding.UTF8.GetString(recievedMessageBytes).Equals(message));
             }
             finally
             {
@@ -213,7 +225,7 @@ namespace UnitTests.Azure.Storage
             try
             {
                 string message = "HelloWorld";
-                queue.AddMessage(new CloudQueueMessage(message));
+                queue.SendMessage(message);
 
                 long azureOperatorID = Telegraph.Instance.Register(
                     new StorageQueueSubscriptionOperator<byte[]>(LocalConcurrencyType.DedicatedThreadCount, Connections.StorageConnectionString, queueName, false, 2),
@@ -239,10 +251,9 @@ namespace UnitTests.Azure.Storage
 
                 Telegraph.Instance.Ask((System.IO.Stream)System.IO.File.OpenRead(firstFile)).Wait();
 
-                var acct = CloudStorageAccount.Parse(Connections.StorageConnectionString);
-                var client = acct.CreateCloudBlobClient();
-                var container = client.GetContainerReference(StorageContainerName);
-                var blob = container.GetBlobReference(System.IO.Path.GetFileName(firstFile));
+                var acct = new BlobServiceClient(Connections.StorageConnectionString);
+                var container = acct.GetBlobContainerClient(StorageContainerName);
+                var blob = container.GetBlobClient(System.IO.Path.GetFileName(firstFile));
 
                 Assert.IsTrue(blob.Exists());
                 blob.Delete();
@@ -265,10 +276,9 @@ namespace UnitTests.Azure.Storage
 
                 Telegraph.Instance.Ask(firstFile).Wait();
 
-                var acct = CloudStorageAccount.Parse(Connections.StorageConnectionString);
-                var client = acct.CreateCloudBlobClient();
-                var container = client.GetContainerReference(StorageContainerName);
-                var blob = container.GetBlobReference(System.IO.Path.GetFileName(firstFile));
+                var acct = new BlobServiceClient(Connections.StorageConnectionString);
+                var container = acct.GetBlobContainerClient(StorageContainerName);
+                var blob = container.GetBlobClient(System.IO.Path.GetFileName(firstFile));
 
                 Assert.IsTrue(blob.Exists());
                 blob.Delete();
@@ -291,10 +301,9 @@ namespace UnitTests.Azure.Storage
 
                 Telegraph.Instance.Ask(msgBytes.ToActorMessage()).Wait();
 
-                var acct = CloudStorageAccount.Parse(Connections.StorageConnectionString);
-                var client = acct.CreateCloudBlobClient();
-                var container = client.GetContainerReference(StorageContainerName);
-                var blob = container.GetBlobReference("0.txt");
+                var acct = new BlobServiceClient(Connections.StorageConnectionString);
+                var container = acct.GetBlobContainerClient(StorageContainerName);
+                var blob = container.GetBlobClient("0.txt");
 
                 Assert.IsTrue(blob.Exists());
                 blob.Delete();
@@ -314,10 +323,9 @@ namespace UnitTests.Azure.Storage
 
                 Telegraph.Instance.Ask(stringToSend).Wait();
 
-                var acct = CloudStorageAccount.Parse(Connections.StorageConnectionString);
-                var client = acct.CreateCloudBlobClient();
-                var container = client.GetContainerReference(StorageContainerName);
-                var blob = container.GetBlobReference("0.txt");
+                var acct = new BlobServiceClient(Connections.StorageConnectionString);
+                var container = acct.GetBlobContainerClient(StorageContainerName);
+                var blob = container.GetBlockBlobClient("0.txt");
 
                 Assert.IsTrue(blob.Exists());
                 blob.Delete();
@@ -373,6 +381,8 @@ namespace UnitTests.Azure.Storage
             () => new Telegraphy.Azure.SendStreamToPageBlobStorage(
                 Connections.StorageConnectionString,
                 StorageContainerName,
+                true,
+                512,
                 () => System.IO.Path.GetFileName(firstFile)));
 
 
@@ -383,10 +393,9 @@ namespace UnitTests.Azure.Storage
             byte[] buffer = Encoding.UTF8.GetBytes(stringToSend);
             Telegraph.Instance.Ask(new System.IO.MemoryStream(buffer)).Wait();
 
-            var acct = CloudStorageAccount.Parse(Connections.StorageConnectionString);
-            var client = acct.CreateCloudBlobClient();
-            var container = client.GetContainerReference(StorageContainerName);
-            var blob = container.GetBlobReference(System.IO.Path.GetFileName(firstFile));
+            var acct = new BlobServiceClient(Connections.StorageConnectionString);
+            var container = acct.GetBlobContainerClient(StorageContainerName);
+            var blob = container.GetBlockBlobClient(System.IO.Path.GetFileName(firstFile));
 
             Assert.IsTrue(blob.Exists());
             blob.Delete();
@@ -450,6 +459,8 @@ namespace UnitTests.Azure.Storage
                     () => new Telegraphy.Azure.SendStringToPageBlobStorage(
                         Connections.StorageConnectionString,
                         StorageContainerName,
+                        true,
+                        512,
                         () => index.ToString() + ".txt"));
             },
              stringToSend);
@@ -479,7 +490,7 @@ namespace UnitTests.Azure.Storage
             int index = 0;
             TestSendBytesToStorage(() =>
             {
-                Telegraph.Instance.Register<ValueTypeMessage<byte>, SendBytesToBlobStorage>(
+                Telegraph.Instance.Register<ValueArrayTypeMessage<byte>, SendBytesToBlobStorage>(
                () => new Telegraphy.Azure.SendBytesToBlobStorage(
                    Connections.StorageConnectionString,
                    StorageContainerName,
@@ -493,7 +504,7 @@ namespace UnitTests.Azure.Storage
             int index = 0;
             TestSendBytesToStorage(() =>
             {
-                Telegraph.Instance.Register<ValueTypeMessage<byte>, SendBytesToAppendBlobStorage>(
+                Telegraph.Instance.Register<ValueArrayTypeMessage<byte>, SendBytesToAppendBlobStorage>(
                () => new Telegraphy.Azure.SendBytesToAppendBlobStorage(
                    Connections.StorageConnectionString,
                    StorageContainerName,
@@ -508,10 +519,12 @@ namespace UnitTests.Azure.Storage
             int index = 0;
             TestSendBytesToStorage(() =>
             {
-                Telegraph.Instance.Register<ValueTypeMessage<byte>, SendBytesToPageBlobStorage>(
+                Telegraph.Instance.Register<ValueArrayTypeMessage<byte>, SendBytesToPageBlobStorage>(
                () => new Telegraphy.Azure.SendBytesToPageBlobStorage(
                    Connections.StorageConnectionString,
                    StorageContainerName,
+                   true,
+                   512,
                    () => index.ToString() + ".txt"));
             },
             new byte[512]); // page blob bytes must be in multiples of 512
@@ -530,10 +543,9 @@ namespace UnitTests.Azure.Storage
 
             Telegraph.Instance.Ask(stringToSend).Wait();
 
-            var acct = CloudStorageAccount.Parse(Connections.StorageConnectionString);
-            var client = acct.CreateCloudBlobClient();
-            var container = client.GetContainerReference(StorageContainerName);
-            var blob = container.GetBlobReference("RecieveBytesFromBlobStorage.txt");
+            var acct = new BlobServiceClient(Connections.StorageConnectionString);
+            var container = acct.GetBlobContainerClient(StorageContainerName);
+            var blob = container.GetBlockBlobClient("RecieveBytesFromBlobStorage.txt");
 
             Assert.IsTrue(blob.Exists());
 
@@ -547,7 +559,8 @@ namespace UnitTests.Azure.Storage
             byte[] sentBytes = (byte[])Telegraph.Instance.Ask("RecieveBytesFromBlobStorage.txt").Result.ProcessingResult;
             string sentString = Encoding.UTF8.GetString(sentBytes);
 
-            blob.Delete();
+            if (null != blob && blob.Exists())
+                blob.Delete();
             Assert.IsTrue(sentString.Equals(stringToSend));
             Telegraph.Instance.UnRegisterAll();
         }
@@ -565,10 +578,9 @@ namespace UnitTests.Azure.Storage
 
             Telegraph.Instance.Ask(stringToSend).Wait();
 
-            var acct = CloudStorageAccount.Parse(Connections.StorageConnectionString);
-            var client = acct.CreateCloudBlobClient();
-            var container = client.GetContainerReference(StorageContainerName);
-            var blob = container.GetBlobReference("RecieveStringFromBlobStorage.txt");
+            var acct = new BlobServiceClient(Connections.StorageConnectionString);
+            var container = acct.GetBlobContainerClient(StorageContainerName);
+            var blob = container.GetBlockBlobClient("RecieveStringFromBlobStorage.txt");
 
             Assert.IsTrue(blob.Exists());
 
@@ -581,7 +593,8 @@ namespace UnitTests.Azure.Storage
 
             string sentString = (string)Telegraph.Instance.Ask("RecieveStringFromBlobStorage.txt").Result.ProcessingResult;
 
-            blob.Delete();
+            if (null != blob && blob.Exists())
+                blob.Delete();
             Assert.IsTrue(sentString.Equals(stringToSend));
             Telegraph.Instance.UnRegisterAll();
         }
@@ -599,10 +612,9 @@ namespace UnitTests.Azure.Storage
 
             Telegraph.Instance.Ask(stringToSend).Wait();
 
-            var acct = CloudStorageAccount.Parse(Connections.StorageConnectionString);
-            var client = acct.CreateCloudBlobClient();
-            var container = client.GetContainerReference(StorageContainerName);
-            var blob = container.GetBlobReference("RecieveStreamFromBlobStorage.txt");
+            var acct = new BlobServiceClient(Connections.StorageConnectionString);
+            var container = acct.GetBlobContainerClient(StorageContainerName);
+            var blob = container.GetBlockBlobClient("RecieveStreamFromBlobStorage.txt");
 
             Assert.IsTrue(blob.Exists());
 
@@ -618,7 +630,8 @@ namespace UnitTests.Azure.Storage
             StreamReader sr = new StreamReader(sentStream);
             string sentString = sr.ReadLine();
 
-            blob.Delete();
+            if (null != blob && blob.Exists())
+                blob.Delete();
             Assert.IsTrue(sentString.Equals(stringToSend));
             Telegraph.Instance.UnRegisterAll();
         }
@@ -633,26 +646,34 @@ namespace UnitTests.Azure.Storage
             if (File.Exists(dest))
                 File.Delete(dest);
 
-            var acct = CloudStorageAccount.Parse(Connections.StorageConnectionString);
-            var client = acct.CreateCloudBlobClient();
-            var container = client.GetContainerReference(StorageContainerName);
-            var blob = container.GetBlockBlobReference(System.IO.Path.GetFileName(firstFile));
+            var acct = new BlobServiceClient(Connections.StorageConnectionString);
+            var container = acct.GetBlobContainerClient(StorageContainerName);
+            var blob = container.GetBlockBlobClient(System.IO.Path.GetFileName(firstFile));
 
-            blob.UploadFromFile(firstFile);
+            try
+            {
+                using (StreamReader sr = new StreamReader(firstFile))
+                {
+                    blob.Upload(sr.BaseStream);
+                }
 
-            Telegraph.Instance.Register<string, RecieveFileFromBlobStorage>(
-                () => new Telegraphy.Azure.RecieveFileFromBlobStorage(
-                    Connections.StorageConnectionString,
-                    StorageContainerName,
-                    true,
-                    (string blobName) => Path.Combine(Directory.GetCurrentDirectory(), System.IO.Path.GetFileName(firstFile + ".new"))));
+                Telegraph.Instance.Register<string, RecieveFileFromBlobStorage>(
+                    () => new Telegraphy.Azure.RecieveFileFromBlobStorage(
+                        Connections.StorageConnectionString,
+                        StorageContainerName,
+                        true,
+                        (string blobName) => Path.Combine(Directory.GetCurrentDirectory(), System.IO.Path.GetFileName(firstFile + ".new"))));
 
-            Telegraph.Instance.Ask(Path.GetFileName(firstFile)).Wait();
-
-            blob.Delete();
-            Assert.IsTrue(File.Exists(dest));
-            File.Delete(dest);
-            Telegraph.Instance.UnRegisterAll();
+                Telegraph.Instance.Ask(Path.GetFileName(firstFile)).Wait();
+                Assert.IsTrue(File.Exists(dest));
+            }
+            finally
+            {
+                if (null != blob && blob.Exists())
+                    blob.Delete();
+                File.Delete(dest);
+                Telegraph.Instance.UnRegisterAll();
+            }
         }
 
         [TestMethod]
@@ -665,26 +686,35 @@ namespace UnitTests.Azure.Storage
             if (File.Exists(dest))
                 File.Delete(dest);
 
-            var acct = CloudStorageAccount.Parse(Connections.StorageConnectionString);
-            var client = acct.CreateCloudBlobClient();
-            var container = client.GetContainerReference(StorageContainerName);
-            var blob = container.GetAppendBlobReference(System.IO.Path.GetFileName(firstFile));
+            var acct = new BlobServiceClient(Connections.StorageConnectionString);
+            var container = acct.GetBlobContainerClient(StorageContainerName);
+            var blob = container.GetAppendBlobClient(System.IO.Path.GetFileName(firstFile));
+            blob.CreateIfNotExists();
 
-            blob.UploadFromFile(firstFile);
+            try
+            {
+                using (StreamReader sr = new StreamReader(firstFile))
+                {
+                    blob.AppendBlock(sr.BaseStream);
+                }
 
-            Telegraph.Instance.Register<string, RecieveFileFromBlobStorage>(
-                () => new Telegraphy.Azure.RecieveFileFromBlobStorage(
-                    Connections.StorageConnectionString,
-                    StorageContainerName,
-                    true,
-                    (string blobName) => Path.Combine(Directory.GetCurrentDirectory(), System.IO.Path.GetFileName(firstFile + ".new"))));
+                Telegraph.Instance.Register<string, RecieveFileFromBlobStorage>(
+                    () => new Telegraphy.Azure.RecieveFileFromBlobStorage(
+                        Connections.StorageConnectionString,
+                        StorageContainerName,
+                        true,
+                        (string blobName) => Path.Combine(Directory.GetCurrentDirectory(), System.IO.Path.GetFileName(firstFile + ".new"))));
 
-            Telegraph.Instance.Ask(Path.GetFileName(firstFile)).Wait();
-
-            blob.Delete();
-            Assert.IsTrue(File.Exists(dest));
-            File.Delete(dest);
-            Telegraph.Instance.UnRegisterAll();
+                Telegraph.Instance.Ask(Path.GetFileName(firstFile)).Wait();
+                Assert.IsTrue(File.Exists(dest));
+            }
+            finally
+            {
+                if (null != blob && blob.Exists())
+                    blob.Delete();
+                File.Delete(dest);
+                Telegraph.Instance.UnRegisterAll();
+            }
         }
 
         [TestMethod]
@@ -697,30 +727,38 @@ namespace UnitTests.Azure.Storage
             if (File.Exists(dest))
                 File.Delete(dest);
 
-            var acct = CloudStorageAccount.Parse(Connections.StorageConnectionString);
-            var client = acct.CreateCloudBlobClient();
-            var container = client.GetContainerReference(StorageContainerName);
-            var blob = container.GetPageBlobReference(System.IO.Path.GetFileName(firstFile));
+            var acct = new BlobServiceClient(Connections.StorageConnectionString);
+            var container = acct.GetBlobContainerClient(StorageContainerName);
+            var blob = container.GetPageBlobClient(System.IO.Path.GetFileName(firstFile));
+            blob.Create(512);
 
             string stringToSend = "";
             for (int i = 0; i < 512; ++i)
                 stringToSend += 'a';
+            try
+            {
+                using (MemoryStream sr = new MemoryStream(Encoding.UTF8.GetBytes(stringToSend)))
+                {
+                    blob.UploadPages(sr, 0);
+                }
 
-            blob.UploadFromByteArray(Encoding.UTF8.GetBytes(stringToSend), 0, 512);
+                Telegraph.Instance.Register<string, RecieveFileFromBlobStorage>(
+                    () => new Telegraphy.Azure.RecieveFileFromBlobStorage(
+                        Connections.StorageConnectionString,
+                        StorageContainerName,
+                        true,
+                        (string blobName) => Path.Combine(Directory.GetCurrentDirectory(), System.IO.Path.GetFileName(firstFile + ".new"))));
 
-            Telegraph.Instance.Register<string, RecieveFileFromBlobStorage>(
-                () => new Telegraphy.Azure.RecieveFileFromBlobStorage(
-                    Connections.StorageConnectionString,
-                    StorageContainerName,
-                    true,
-                    (string blobName) => Path.Combine(Directory.GetCurrentDirectory(), System.IO.Path.GetFileName(firstFile + ".new"))));
-
-            Telegraph.Instance.Ask(Path.GetFileName(firstFile)).Wait();
-
-            blob.Delete();
-            Assert.IsTrue(File.Exists(dest));
-            File.Delete(dest);
-            Telegraph.Instance.UnRegisterAll();
+                Telegraph.Instance.Ask(Path.GetFileName(firstFile)).Wait();
+                Assert.IsTrue(File.Exists(dest));
+            }
+            finally
+            {
+                if (null != blob && blob.Exists())
+                    blob.Delete();
+                File.Delete(dest);
+                Telegraph.Instance.UnRegisterAll();
+            }
         }
 
         [TestMethod]

@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegraphy.Azure.Exceptions;
 using Telegraphy.Net;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Specialized;
 
 namespace Telegraphy.Azure
 {
@@ -21,7 +23,7 @@ namespace Telegraphy.Azure
                 throw new CannotSendNonStringMessagesToBlobStorageException();
 
             string fileName = (string)msg.Message;
-            var blob = container.GetPageBlobReference(blobTransformNameFcn(fileName));
+            var blob = container.GetPageBlobClient(blobTransformNameFcn(fileName));
             SendFile(blob, fileName);
             return true;
         }

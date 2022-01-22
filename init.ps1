@@ -28,6 +28,7 @@ Write-Host "";
 Write-Host "Commands:";
 Write-Host "   opensln";
 Write-Host "   runtests";
+Write-Host "   setuptestenv";
 Write-Host "   rerunfailedtests"; 
 Write-Host "   validate";
 Write-Host "   verifypackagereferences";
@@ -286,6 +287,43 @@ function __getcodecoveragesummary {
         }
         return , $Result;
     }
+}
+
+function setuptestenv {
+	param(
+	    [Parameter(Mandatory = $true)]
+        [String] $resourceGroup
+    )
+	
+	$location = "East US"
+	$eventHubName = $env:USERNAME+$resourceGroup+"eventhub";
+	$storageAccountName = $env:USERNAME+$resourceGroup+"storage";
+	$serviceBusNamespaceName = $env:USERNAME+$resourceGroup+"servicebus";
+	$serviceBusQueueName = $env:USERNAME+$resourceGroup+"servicebusqueue";
+	$resourceGroupName =$env:USERNAME+"-"+$resourceGroup
+	
+	New-AzResourceGroup -Name $resourceGroupName -Location $location
+	
+	# New-AzEventHubNamespace -ResourceGroupName $resourceGroupName -NamespaceName $eventHubName -Location $location
+	# New-AzEventHub -ResourceGroupName $resourceGroupName -NamespaceName $eventHubName -EventHubName $eventHubName -MessageRetentionInDays 3
+	# New-AzEventHub -ResourceGroupName $resourceGroupName -NamespaceName $eventHubName -EventHubName $eventHubName -MessageRetentionInDays 3
+	# Get-AzEventHubKey -ResourceGroupName $resourceGroupName -NamespaceName $eventHubName -AuthorizationRuleName RootManageSharedAccessKey
+	
+	#DefaultEndpointsProtocol=[http|https];AccountName=myAccountName;AccountKey=myAccountKey
+	Write-Host "Creating resources for azure storage testing"
+	New-AzStorageAccount -ResourceGroupName $resourceGroupName -Name $storageAccountName -Location $location -SkuName Standard_RAGRS -Kind StorageV2
+	$sa = Get-AzStorageAccountKey -ResourceGroupName $resourceGroupName -AccountName $storageAccountName
+	$saKey = (Get-AzStorageAccountKey -ResourceGroupName $resourceGroupName -Name $storageAccountName)[0].Value 
+	$storageConnectionString='DefaultEndpointsProtocol=https;AccountName=' + $storageAccountName + ';AccountKey=' + $saKey + ';EndpointSuffix=core.windows.net'
+	
+	# TODO create the telegraphytest container
+	# todo create table telegraphytesttable
+	
+	# New-AzServiceBusNamespace -ResourceGroupName $resourceGroupName -Name $serviceBusNamespaceName -Location $location
+	# New-AzServiceBusQueue -ResourceGroupName $resourceGroupName  -NamespaceName $serviceBusNamespaceName -Name $serviceBusQueueName 
+	# $sbKey = Get-AzServiceBusKey -ResourceGroup $resourceGroupName -Namespace $serviceBusNamespaceName -Name $serviceBusQueueName
+	
+	Write-Host $storageConnectionString
 }
  
 function runtests {

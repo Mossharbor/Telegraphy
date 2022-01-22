@@ -1,4 +1,6 @@
-﻿using Microsoft.Azure.Storage;
+﻿using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Specialized;
+using Azure.Storage.Blobs.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,70 +9,75 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegraphy.Azure.Exceptions;
 using Telegraphy.Net.Exceptions;
-using Microsoft.Azure.Storage.Blob;
+using System.Security.Cryptography;
 
 namespace Telegraphy.Azure
 {
     public class SendAndRecieveBlobBase
     {
         private readonly bool overwrite = true;
-        protected CloudBlobContainer container;
+        protected BlobContainerClient container;
         protected Func<string> blobNameFcn;
         protected Func<string, string> blobTransformNameFcn;
         protected Encoding encoding = Encoding.UTF8;
 
         public SendAndRecieveBlobBase(string storageConnectionString, string containerName, Func<string, string> blobNameFcn, bool overwrite = true)
         {
-            var acct = CloudStorageAccount.Parse(storageConnectionString);
-            var client = acct.CreateCloudBlobClient();
-            container = client.GetContainerReference(containerName);
+            var acct = new BlobServiceClient(storageConnectionString);
+            container = acct.GetBlobContainerClient(containerName);
             this.blobTransformNameFcn = blobNameFcn;
             this.overwrite = overwrite;
         }
 
         protected SendAndRecieveBlobBase(string storageConnectionString, string containerName, Func<string> blobNameFcn, Encoding encoding, bool overwrite = true)
         {
-            var acct = CloudStorageAccount.Parse(storageConnectionString);
-            var client = acct.CreateCloudBlobClient();
-            container = client.GetContainerReference(containerName);
+            var acct = new BlobServiceClient(storageConnectionString);
+            container = acct.GetBlobContainerClient(containerName);
             this.blobNameFcn = blobNameFcn;
             this.overwrite = overwrite;
             if (null != encoding)
                 this.encoding = encoding;
+            else
+                this.encoding = Encoding.UTF8;
         }
 
-        protected void SendString(CloudBlockBlob blob, string message)
+        protected void SendString(BlockBlobClient blob, string message)
         {
             if (!overwrite && blob.Exists())
                 return;
-
-            BlobRequestOptions optionsWithStoreBlobContentMD5 = new BlobRequestOptions() { StoreBlobContentMD5 = true };
-
-            blob.UploadText(message, encoding, options: optionsWithStoreBlobContentMD5);
+            
+            using (MemoryStream ms = new MemoryStream(encoding.GetBytes(message)))
+            {
+                blob.Upload(ms, new BlobUploadOptions());
+            }
         }
 
-        protected void SendString(CloudAppendBlob blob, string message)
+        protected void SendString(AppendBlobClient blob, string message)
         {
-            blob.AppendText(message);
+            using (MemoryStream ms = new MemoryStream(encoding.GetBytes(message)))
+            {
+                blob.AppendBlock(ms);
+            }
         }
 
-        protected void SendString(CloudPageBlob blob, string message)
+        protected void SendString(PageBlobClient blob, string message)
         {
             byte[] msgBytes = encoding.GetBytes(message);
 
-            BlobRequestOptions optionsWithStoreBlobContentMD5 = new BlobRequestOptions() { StoreBlobContentMD5 = true };
-
-            blob.UploadFromByteArray(msgBytes, 0, msgBytes.Length, options: optionsWithStoreBlobContentMD5);
+            using (MemoryStream ms = new MemoryStream(msgBytes))
+            {
+                blob.UploadPages(ms,0);
+            }
         }
 
-        protected string RecieveString(CloudBlob blob)
+        protected string RecieveString(BlobClient blob)
         {
-            int size;
+            long size;
             byte[] msgBytes = RecieveBytes(blob, out size);
             return encoding.GetString(msgBytes);
         }
-        
-        protected void SendFile(CloudBlockBlob blob,string fileNameAndPath)
+
+        protected void SendFile(BlobClient blob,string fileNameAndPath)
         {
             if (!File.Exists(fileNameAndPath))
                 throw new CantSendFileDataWhenFileDoesNotExistException(fileNameAndPath);
@@ -78,20 +85,62 @@ namespace Telegraphy.Azure
             if (!overwrite && blob.ExistsAsync().Result)
                 return;
 
-            BlobRequestOptions optionsWithStoreBlobContentMD5 = new BlobRequestOptions() { StoreBlobContentMD5 = true };
-
-            blob.UploadFromFile(fileNameAndPath, options: optionsWithStoreBlobContentMD5);
+            using (StreamReader sr = new StreamReader(fileNameAndPath))
+            {
+                var uploadOptions = new BlobUploadOptions()
+                { 
+                    HttpHeaders = new BlobHttpHeaders(){ContentHash = ComputeHash(fileNameAndPath)},
+                    TransferOptions = new global::Azure.Storage.StorageTransferOptions(){InitialTransferSize=50000000 }
+                };
+				
+                blob.Upload(sr.BaseStream, uploadOptions);
+            }
         }
 
-        protected void SendFile(CloudAppendBlob blob, string fileNameAndPath)
+        protected void SendFile(BlockBlobClient blob,string fileNameAndPath)
         {
             if (!File.Exists(fileNameAndPath))
                 throw new CantSendFileDataWhenFileDoesNotExistException(fileNameAndPath);
 
-            blob.AppendFromFile(fileNameAndPath);
+            if (!overwrite && blob.ExistsAsync().Result)
+                return;
+
+            using (StreamReader sr = new StreamReader(fileNameAndPath))
+            {
+                var uploadOptions = new BlobUploadOptions()
+                { 
+                    HttpHeaders = new BlobHttpHeaders(){ContentHash = ComputeHash(fileNameAndPath)},
+                    TransferOptions = new global::Azure.Storage.StorageTransferOptions(){InitialTransferSize=50000000 }
+                };
+
+                blob.Upload(sr.BaseStream, uploadOptions);
+            }
         }
 
-        protected void SendFile(CloudPageBlob blob, string fileNameAndPath)
+        private static byte[] ComputeHash(string file)
+        {
+            using (var fileStream = File.OpenRead(file))
+            {
+                using (var md5 = MD5.Create())
+                {
+                    var md5hash = md5.ComputeHash(fileStream);
+                    return md5hash;
+                }
+            }
+        }
+
+        protected void SendFile(AppendBlobClient blob, string fileNameAndPath)
+        {
+            if (!File.Exists(fileNameAndPath))
+                throw new CantSendFileDataWhenFileDoesNotExistException(fileNameAndPath);
+
+            using (StreamReader sr = new StreamReader(fileNameAndPath))
+            {
+                blob.AppendBlock(sr.BaseStream);
+            }
+        }
+
+        protected void SendFile(PageBlobClient blob, string fileNameAndPath)
         {
             if (!File.Exists(fileNameAndPath))
                 throw new CantSendFileDataWhenFileDoesNotExistException(fileNameAndPath);
@@ -99,77 +148,97 @@ namespace Telegraphy.Azure
             if (!overwrite && blob.Exists())
                 return;
 
-            BlobRequestOptions optionsWithStoreBlobContentMD5 = new BlobRequestOptions() { StoreBlobContentMD5 = true };
-
-            blob.UploadFromFile(fileNameAndPath, options: optionsWithStoreBlobContentMD5);
+            using (StreamReader sr = new StreamReader(fileNameAndPath))
+            {
+                blob.UploadPages(sr.BaseStream,0);
+            }
         }
 
-        protected void RecieveFile(CloudBlob blob, string fileNameAndPath, FileMode mode)
+        protected void RecieveFile(BlobClient blob, string fileNameAndPath, FileMode mode)
         {
-            blob.DownloadToFile(fileNameAndPath,  mode);
+            using (StreamWriter sw = new StreamWriter(File.Open(fileNameAndPath, mode)))
+            {
+                blob.DownloadTo(sw.BaseStream);
+            }
         }
 
-        protected void SendStream(CloudBlockBlob blob, Stream stream)
-        {
-            if (!overwrite && blob.Exists())
-                return;
-
-            BlobRequestOptions optionsWithStoreBlobContentMD5 = new BlobRequestOptions() { StoreBlobContentMD5 = true };
-
-            blob.UploadFromStream(stream, options: optionsWithStoreBlobContentMD5);
-        }
-
-        protected void SendStream(CloudAppendBlob blob, Stream stream)
-        {
-            blob.AppendFromStream(stream);
-        }
-
-        protected void SendStream(CloudPageBlob blob, Stream stream)
+        protected void SendStream(BlockBlobClient blob, Stream stream)
         {
             if (!overwrite && blob.Exists())
                 return;
 
-            BlobRequestOptions optionsWithStoreBlobContentMD5 = new BlobRequestOptions() { StoreBlobContentMD5 = true };
-
-            blob.UploadFromStream(stream, options: optionsWithStoreBlobContentMD5);
+            blob.Upload(stream, new BlobUploadOptions());
         }
 
-        protected void RecieveStream(CloudBlob blob, Stream stream)
+        protected void SendStream(AppendBlobClient blob, Stream stream)
         {
-            blob.DownloadToStream(stream);
+            blob.AppendBlock(stream);
         }
-        
-        protected void SendBytes(CloudBlockBlob blob, byte[] msgBytes)
+
+        protected void SendStream(PageBlobClient blob, Stream stream)
         {
             if (!overwrite && blob.Exists())
                 return;
 
-            BlobRequestOptions optionsWithStoreBlobContentMD5 = new BlobRequestOptions() { StoreBlobContentMD5 = true };
-
-            blob.UploadFromByteArray(msgBytes, 0, msgBytes.Length, options: optionsWithStoreBlobContentMD5);
+            blob.UploadPages(stream, 0);
         }
 
-        protected void SendBytes(CloudPageBlob blob, byte[] msgBytes)
+        protected void RecieveStream(BlobClient blob, Stream stream)
+        {
+            blob.DownloadTo(stream);
+        }
+        protected void SendBytes(BlobClient blob, byte[] msgBytes)
         {
             if (!overwrite && blob.Exists())
                 return;
 
-            BlobRequestOptions optionsWithStoreBlobContentMD5 = new BlobRequestOptions() { StoreBlobContentMD5 = true };
-
-            blob.UploadFromByteArray(msgBytes, 0, msgBytes.Length, options: optionsWithStoreBlobContentMD5);
+            using (MemoryStream ms = new MemoryStream(msgBytes))
+            {
+                blob.Upload(ms, new BlobUploadOptions());
+            }
         }
 
-        protected void SendBytes(CloudAppendBlob blob, byte[] msgBytes)
+        protected void SendBytes(BlockBlobClient blob, byte[] msgBytes)
         {
-            blob.AppendFromByteArray(msgBytes, 0, msgBytes.Length);
+            if (!overwrite && blob.Exists())
+                return;
+
+            using (MemoryStream ms = new MemoryStream(msgBytes))
+            {
+                blob.Upload(ms, new BlobUploadOptions());
+            }
         }
 
-        protected byte[] RecieveBytes(CloudBlob blob, out int size)
+        protected void SendBytes(PageBlobClient blob, byte[] msgBytes)
         {
-            blob.FetchAttributes();
-            byte[] msgBytes = new byte[blob.Properties.Length];
-            size = blob.DownloadToByteArray(msgBytes, 0);
-            return msgBytes;
+            if (!overwrite && blob.Exists())
+                return;
+
+            using (MemoryStream ms = new MemoryStream(msgBytes))
+            {
+                blob.UploadPages(ms, 0);
+            }
+        }
+
+        protected void SendBytes(AppendBlobClient blob, byte[] msgBytes)
+        {
+            using (MemoryStream ms = new MemoryStream(msgBytes))
+            {
+                blob.AppendBlock(ms);
+            }
+        }
+
+        protected byte[] RecieveBytes(BlobClient blob, out long size)
+        {
+            size = blob.GetProperties().Value.ContentLength;
+            byte[] buffer = new byte[size];
+
+            using (MemoryStream ms = new MemoryStream(buffer))
+            {
+                blob.DownloadTo(ms);
+
+                return ms.ToArray();
+            }
         }
     }
 }

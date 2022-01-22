@@ -22,7 +22,7 @@ namespace Telegraphy.Azure
                 throw new MessageTypeWasNotAFileNameCannotDownloadBlobDataException();
 
             string blobName = (msg.Message as string);
-            var blob = container.GetBlobReference(blobName);
+            var blob = container.GetBlobClient(blobName);
             msg.ProcessingResult = base.RecieveString(blob);
             return true;
         }

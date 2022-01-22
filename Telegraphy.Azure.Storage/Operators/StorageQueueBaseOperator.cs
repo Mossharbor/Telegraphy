@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Telegraphy.Net;
-using Microsoft.Azure.Storage.Queue;
-using Microsoft.Azure.Storage;
+using Azure.Storage;
+using Azure.Storage.Queues;
 using Telegraphy.Azure.Exceptions;
 using System.Collections.Concurrent;
 using Telegraphy.Net.Exceptions;
-
+using Azure.Storage.Queues.Models;
 
 namespace Telegraphy.Azure
 {
@@ -20,11 +20,9 @@ namespace Telegraphy.Azure
         internal const int DefaultConcurrency = 3;
 
         ConcurrentDictionary<Type, Action<Exception>> _exceptionTypeToHandler = new ConcurrentDictionary<Type, Action<Exception>>();
-        CloudQueue queue = null;
-        CloudQueue deadLetterQueue = null;
+        QueueClient queue = null;
+        QueueClient deadLetterQueue = null;
         TimeSpan? retrieveVisibilityTimeout = null;
-        QueueRequestOptions retrievalRequestOptions = null;
-        Microsoft.Azure.Storage.OperationContext retrievalOperationContext = null;
         bool recieveMessagesOnly = false;
         ControlMessages.HangUp hangUp = null;
         private int maxDequeueCount = 1;
@@ -36,29 +34,23 @@ namespace Telegraphy.Azure
             bool createQueueIfItDoesNotExist,
             bool recieve, 
             int maxDequeueCount = DefaultDequeueMaxCount,
-            TimeSpan? retrieveVisibilityTimeout = null, 
-            QueueRequestOptions retrievalRequestOptions = null,
-            Microsoft.Azure.Storage.OperationContext retrievalOperationContext = null)
+            TimeSpan? retrieveVisibilityTimeout = null)
             : this (switchBoard,
                   GetQueueFrom(storageConnectionString, queueName, createQueueIfItDoesNotExist),
                   GetDeadLetterQueueFrom(storageConnectionString, queueName),
                   recieve, 
                   maxDequeueCount,
-                  retrieveVisibilityTimeout,
-                  retrievalRequestOptions,
-                  retrievalOperationContext)
+                  retrieveVisibilityTimeout)
         {
         }
 
         protected StorageQueueBaseOperator(
             ILocalSwitchboard switchboard,
-            CloudQueue queue,
-            CloudQueue deadLetterQueue,
+            QueueClient queue,
+            QueueClient deadLetterQueue,
             bool recieve,
             int maxDequeueCount = DefaultDequeueMaxCount,
-            TimeSpan? retrieveVisibilityTimeout = null,
-            QueueRequestOptions retrievalRequestOptions = null,
-            Microsoft.Azure.Storage.OperationContext retrievalOperationContext = null)
+            TimeSpan? retrieveVisibilityTimeout = null)
         {
             this.recieveMessagesOnly = recieve;
             if (null != switchboard)
@@ -70,18 +62,14 @@ namespace Telegraphy.Azure
             this.queue = queue;
             this.deadLetterQueue = deadLetterQueue;
             this.retrieveVisibilityTimeout = retrieveVisibilityTimeout;
-            this.retrievalRequestOptions = retrievalRequestOptions;
-            this.retrievalOperationContext = retrievalOperationContext;
 
             if (null == switchboard && recieve)
                 throw new SwitchBoardNeededWhenRecievingMessagesException();
         }
         
-        internal static CloudQueue GetQueueFrom(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist)
+        internal static QueueClient GetQueueFrom(string storageConnectionString, string queueName, bool createQueueIfItDoesNotExist)
         {
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageConnectionString);
-            CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
-            CloudQueue queue = queueClient.GetQueueReference(queueName.ToLower());
+            QueueClient queue = new QueueClient(storageConnectionString, queueName);
 
             if (createQueueIfItDoesNotExist)
                 queue.CreateIfNotExists();
@@ -89,11 +77,9 @@ namespace Telegraphy.Azure
             return queue;
         }
 
-        internal static CloudQueue GetDeadLetterQueueFrom(string storageConnectionString, string queueName)
+        internal static QueueClient GetDeadLetterQueueFrom(string storageConnectionString, string queueName)
         {
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageConnectionString);
-            CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
-            CloudQueue queue = queueClient.GetQueueReference(queueName+"-deadletter".ToLower());
+            QueueClient queue = new QueueClient(storageConnectionString, queueName+"-deadletter".ToLower());
 
             queue.CreateIfNotExists();
 
@@ -123,7 +109,7 @@ namespace Telegraphy.Azure
         {
             get
             {
-                return (ulong)this.queue.ApproximateMessageCount;
+                return (ulong)this.queue.GetProperties().Value.ApproximateMessagesCount;
             }
         }
 
@@ -168,45 +154,30 @@ namespace Telegraphy.Azure
             }
         }
 
-        internal static void SerializeAndSend(IActorMessage msg, CloudQueue queue, string msgString)
+        internal static void SerializeAndSend(IActorMessage msg, QueueClient queue, string msgString)
         {
-            CloudQueueMessage cloudMessage = new CloudQueueMessage(msgString);
-            AddMessageProperties(queue, cloudMessage, (msg is IStorageQueuePropertiesProvider) ? (msg as IStorageQueuePropertiesProvider) : null);
-            
+            // string encodedString = Convert.ToBase64String(Encoding.UTF8.GetBytes(msgString)); // azure portal assumes base 64
+            var reciept = queue.SendMessage(msgString, visibilityTimeout: (msg as IStorageQueuePropertiesProvider)?.InitialVisibilityDelay, timeToLive: (msg as IStorageQueuePropertiesProvider)?.TimeToLive);
+
             if (null != msg.Status)
-                msg.Status?.SetResult(new QueuedCloudMessage(cloudMessage));
+                msg.Status?.SetResult(new QueuedCloudMessage(msgString, reciept.Value));
         }
 
-        internal static CloudQueueMessage BuildMessage(IActorMessage msg)
+        internal static BinaryData BuildMessage(IActorMessage msg)
         {
-            CloudQueueMessage cloudMessage = new CloudQueueMessage((string)null);
-            
             byte[] msgBytes = TempSerialization.GetBytes<MsgType>(msg);
-            cloudMessage.SetMessageContent(msgBytes);
-            return cloudMessage;
+            return BinaryData.FromString(Convert.ToBase64String(msgBytes));
         }
 
-        internal static void SerializeAndSend(IActorMessage msg, CloudQueue queue)
+        internal static void SerializeAndSend(IActorMessage msg, QueueClient queue)
         {
             // Add the message to the azure queue
-            CloudQueueMessage cloudMessage = BuildMessage(msg);
+            BinaryData cloudMessage = BuildMessage(msg);
 
-            AddMessageProperties(queue, cloudMessage, (msg is IStorageQueuePropertiesProvider) ? (msg as IStorageQueuePropertiesProvider): null);
+            var reciept = queue.SendMessage(cloudMessage, visibilityTimeout: (msg as IStorageQueuePropertiesProvider)?.InitialVisibilityDelay, timeToLive: (msg as IStorageQueuePropertiesProvider)?.TimeToLive);
 
             if (null != msg.Status)
-                msg.Status?.SetResult(new QueuedCloudMessage(cloudMessage));
-        }
-
-        internal static void AddMessageProperties(CloudQueue queue, CloudQueueMessage cloudMessage, IStorageQueuePropertiesProvider props)
-        {
-            if (null == props)
-            {
-                queue.AddMessage(cloudMessage);
-            }
-            else
-            {
-                queue.AddMessage(cloudMessage, props.TimeToLive, props.InitialVisibilityDelay, props.Options, props.OperationContext);
-            }
+                msg.Status?.SetResult(new QueuedCloudMessage(cloudMessage, reciept.Value));
         }
 
         public IActorMessage GetMessage()
@@ -220,7 +191,7 @@ namespace Telegraphy.Azure
             try
             {
                 // Get the next message off of the azure queue
-                CloudQueueMessage next = this.queue.GetMessage(this.retrieveVisibilityTimeout, retrievalRequestOptions, retrievalOperationContext);
+                QueueMessage next = this.queue.ReceiveMessage(this.retrieveVisibilityTimeout);
 
                 if (null == next)
                     return null;
@@ -228,33 +199,37 @@ namespace Telegraphy.Azure
                 if (next.DequeueCount > maxDequeueCount)
                 {
                     if (null != this.deadLetterQueue)
-                        deadLetterQueue.AddMessage(next);
-                    try
-                    {
-                        queue.DeleteMessage(next);
-                    }
-                    catch(StorageException)
-                    {
-                    }
+                         deadLetterQueue.SendMessage(next.Body);
+
+                    var response = queue.DeleteMessage(next.MessageId, next.PopReceipt);
+                    
                     return null;
                 }
 
                 IActorMessage msg = null;
                 if (typeof(MsgType) == typeof(string))
-                    msg = next.AsString.ToActorMessage();
+                {
+                    string body = Encoding.UTF8.GetString(Convert.FromBase64String(Encoding.UTF8.GetString(next.Body.ToArray()))); // azure portal assumes base 64
+                    msg = body.ToActorMessage();
+                }
                 else if (typeof(MsgType) == typeof(byte[]))
-                     msg = next.AsBytes.ToActorMessage();
+                {
+                    var base64String = next.Body.ToString();
+                    var messageBytes = Convert.FromBase64String(base64String);
+                    msg = messageBytes.ToActorMessage();
+                }
                 else
                 {
-                    byte[] msgBytes = next.AsBytes;
-                    var t = Telegraph.Instance.Ask(new DeserializeMessage<MsgType>(msgBytes));
+                    var base64String = next.Body.ToString();
+                    var messageBytes = Convert.FromBase64String(base64String);
+                    var t = Telegraph.Instance.Ask(new DeserializeMessage<IActorMessage>(messageBytes));
                     msg = t.Result as IActorMessage;
                 }
 
                 if (null == msg.Status)
                     msg.Status = new TaskCompletionSource<IActorMessage>();
 
-                msg.Status.Task.ContinueWith(p => queue.DeleteMessage(next));
+                msg.Status.Task.ContinueWith(p => queue.DeleteMessage(next.MessageId, next.PopReceipt));
                 return msg;
             }
             catch(Exception ex)
@@ -272,11 +247,10 @@ namespace Telegraphy.Azure
         {
             // wait till the azure queue is currently empty
             DateTime start = DateTime.Now;
-            this.queue.FetchAttributes();
-            while (0 != this.queue.ApproximateMessageCount && (DateTime.Now - start) < timeout)
+            
+            while (0 != this.queue.GetProperties().Value.ApproximateMessagesCount && (DateTime.Now - start) < timeout)
             {
                 System.Threading.Thread.Sleep(1000);
-                this.queue.FetchAttributes();
             }
 
             return ((DateTime.Now - start) <= timeout);
