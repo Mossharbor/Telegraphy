@@ -147,7 +147,7 @@ namespace Telegraphy.Azure
             }
 
             if (recieveMessagesOnly)
-                throw new Telegraphy.Net.OperatorCannotSendMessagesException();
+                throw new Telegraphy.Net.OperatorCannotSendMessagesException(msg.GetType().ToString());
 
             // TODO allow the serializers to be passed in as IActors
             // Serialize the message first
@@ -229,7 +229,13 @@ namespace Telegraphy.Azure
                 {
                     if (null != this.deadLetterQueue)
                         deadLetterQueue.AddMessage(next);
-                    queue.DeleteMessage(next);
+                    try
+                    {
+                        queue.DeleteMessage(next);
+                    }
+                    catch(StorageException)
+                    {
+                    }
                     return null;
                 }
 
@@ -241,7 +247,7 @@ namespace Telegraphy.Azure
                 else
                 {
                     byte[] msgBytes = next.AsBytes;
-                    var t = Telegraph.Instance.Ask(new DeserializeMessage<IActorMessage>(msgBytes));
+                    var t = Telegraph.Instance.Ask(new DeserializeMessage<MsgType>(msgBytes));
                     msg = t.Result as IActorMessage;
                 }
 
