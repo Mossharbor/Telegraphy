@@ -10,7 +10,7 @@ using Telegraphy.Net;
 
 namespace Telegraphy.Msmq
 {
-    public class SendStringToMsMessageQueue : IActor
+    public class SendStringToMsMessageQueue<MsgType> : IActor
     {
         MessageQueue msmqQueue = null;
 

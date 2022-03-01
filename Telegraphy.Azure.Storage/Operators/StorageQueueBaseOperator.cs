@@ -222,7 +222,7 @@ namespace Telegraphy.Azure
                 {
                     var base64String = next.Body.ToString();
                     var messageBytes = Convert.FromBase64String(base64String);
-                    var t = Telegraph.Instance.Ask(new DeserializeMessage<IActorMessage>(messageBytes));
+                    var t = Telegraph.Instance.Ask(new DeserializeMessage<MsgType>(messageBytes));
                     msg = t.Result as IActorMessage;
                 }
 

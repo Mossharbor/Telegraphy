@@ -7,7 +7,7 @@ using Telegraphy.Net;
 
 namespace Telegraphy.IO
 {
-    public class SendMessageToDirectoryQueue : IActor
+    public class SendMessageToDirectoryQueue<MsgType> : IActor
     {
         DirectoryQueue queue = null;
 

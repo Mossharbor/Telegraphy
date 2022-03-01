@@ -81,7 +81,7 @@ namespace UnitTests.Azure.EventHub
                 string message = "HelloWorld";
                 PingPong.Ping aMsg = new PingPong.Ping(message);
                 IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
-                Telegraph.Instance.Register<PingPong.Ping, SendMessageToEventHub>(() => new SendMessageToEventHub(Connections.EventHubConnectionString, eventHubName, true));
+                Telegraph.Instance.Register<PingPong.Ping, SendMessageToEventHub<PingPong.Ping>>(() => new SendMessageToEventHub<PingPong.Ping>(Connections.EventHubConnectionString, eventHubName, true));
                 Telegraph.Instance.Register<SerializeMessage<IActorMessage>, IActorMessageSerializationActor>(() => serializer);
 
                 if (!Telegraph.Instance.Ask(aMsg).Wait(new TimeSpan(0, 0, 10)))

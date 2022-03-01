@@ -8,7 +8,7 @@ using Telegraphy.Net;
 
 namespace Telegraphy.Azure
 {
-    public class SendMessageToEventHub : IActor
+    public class SendMessageToEventHub<MsgType> : IActor
     {
         EventHubDataPublisher eventHubClient;
 

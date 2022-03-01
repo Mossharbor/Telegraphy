@@ -7,7 +7,7 @@ using Telegraphy.Net;
 
 namespace Telegraphy.Azure
 {
-    public class SendMessageToServiceBusTopic : DeliverToServiceBusTopic<IActorMessage>
+    public class SendMessageToServiceBusTopic<MsgType> : DeliverToServiceBusTopic<IActorMessage>
     {
         public SendMessageToServiceBusTopic(string storageConnectionString, string topicName, bool createQueueIfItDoesNotExist = true)
             : base(storageConnectionString, topicName, createQueueIfItDoesNotExist)

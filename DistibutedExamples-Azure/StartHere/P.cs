@@ -92,7 +92,7 @@ namespace StartHere
         static void SimpleSendMessageToAzureStorageQueue(string connectionString, string queueName)
         {
             // Setup send to queue
-            Telegraph.Instance.Register<PingPong.Ping, SendMessageToStorageQueue>(() => new SendMessageToStorageQueue(connectionString, queueName, true));
+            Telegraph.Instance.Register<PingPong.Ping, SendMessageToStorageQueue<PingPong.Ping>>(() => new SendMessageToStorageQueue<PingPong.Ping>(connectionString, queueName, true));
 
             // Set up serialization
             IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();

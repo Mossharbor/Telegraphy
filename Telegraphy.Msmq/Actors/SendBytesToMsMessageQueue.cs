@@ -11,7 +11,7 @@ namespace Telegraphy.Msmq
     using Telegraphy.Msmq.Exceptions;
     using Telegraphy.Net;
 
-    public class SendBytesToMsMessageQueue : IActor
+    public class SendBytesToMsMessageQueue<MsgType> : IActor
     {
         MessageQueue msmqQueue = null;
 

@@ -136,7 +136,7 @@ namespace UnitTests.Azure.ServiceBus
                 string message = "HelloWorld";
                 PingPong.Ping aMsg = new PingPong.Ping(message);
                 IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
-                Telegraph.Instance.Register<PingPong.Ping, SendMessageToServiceBusQueue>(() => new SendMessageToServiceBusQueue(Connections.ServiceBusConnectionString, queueName, true));
+                Telegraph.Instance.Register<PingPong.Ping, SendMessageToServiceBusQueue<PingPong.Ping>>(() => new SendMessageToServiceBusQueue<PingPong.Ping>(Connections.ServiceBusConnectionString, queueName, true));
                 Telegraph.Instance.Register<SerializeMessage<IActorMessage>, IActorMessageSerializationActor>(() => serializer);
 
                 if (!Telegraph.Instance.Ask(aMsg).Wait(new TimeSpan(0, 0, 10)))
@@ -358,7 +358,7 @@ namespace UnitTests.Azure.ServiceBus
                 string message = "HelloWorld";
                 PingPong.Ping aMsg = new PingPong.Ping(message);
                 IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
-                Telegraph.Instance.Register<PingPong.Ping, SendMessageToServiceBusTopic>(() => new SendMessageToServiceBusTopic(Connections.ServiceBusConnectionString, TopicName, true));
+                Telegraph.Instance.Register<PingPong.Ping, SendMessageToServiceBusTopic<PingPong.Ping>>(() => new SendMessageToServiceBusTopic<PingPong.Ping>(Connections.ServiceBusConnectionString, TopicName, true));
                 Telegraph.Instance.Register<SerializeMessage<IActorMessage>, IActorMessageSerializationActor>(() => serializer);
                 IActorMessageDeserializationActor deserializer = new IActorMessageDeserializationActor();
                 deserializer.Register<PingPong.Ping>((object msg) => (PingPong.Ping)msg);

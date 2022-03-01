@@ -444,12 +444,14 @@ namespace Telegraphy.Net
             catch (NotImplementedException ne)
             {
                 exceptions.Add(ne);
+                Console.Error.WriteLine(ne);
                 System.Diagnostics.Debug.Assert(false);
                 throw;
             }
             catch (Exception exp)
             {
                 exceptions.Add(exp);
+                Console.Error.WriteLine(exp);
                 //TODO fail hard!!!
                 System.Diagnostics.Debug.Assert(false);
             }
