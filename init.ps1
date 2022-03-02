@@ -28,7 +28,7 @@ Write-Host "";
 Write-Host "Commands:";
 Write-Host "   opensln";
 Write-Host "   runtests";
-Write-Host "   setuptestenv";
+Write-Host "   azsetuptestenv";
 Write-Host "   rerunfailedtests"; 
 Write-Host "   validate";
 Write-Host "   verifypackagereferences";
@@ -289,33 +289,90 @@ function __getcodecoveragesummary {
     }
 }
 
-function setuptestenv {
+function azsetuptestenv {
 	param(
 	    [Parameter(Mandatory = $true)]
         [String] $resourceGroup
     )
 	
 	$location = "East US"
-	$eventHubName = $env:USERNAME+$resourceGroup+"eventhub";
-	$storageAccountName = $env:USERNAME+$resourceGroup+"storage";
-	$serviceBusNamespaceName = $env:USERNAME+$resourceGroup+"servicebus";
-	$serviceBusQueueName = $env:USERNAME+$resourceGroup+"servicebusqueue";
-	$resourceGroupName =$env:USERNAME+"-"+$resourceGroup
+    $sblocation = "eastus"
+    $userName = $env:USERNAME.substring(0, [System.Math]::Min(7, $env:USERNAME.Length)).ToLower()
+	$eventHubName = ($userName+$resourceGroup+"eventhub").ToLower();
+    $eventHubName = $eventHubName.substring(0, [System.Math]::Min(24, $eventHubName.Length))
+	$storageAccountName = ($userName+$resourceGroup+"storage").ToLower();
+    $storageAccountName = $storageAccountName.substring(0, [System.Math]::Min(24, $storageAccountName.Length))
+	$serviceBusNamespaceName = ($userName+$resourceGroup+"servicebus").ToLower();
+    $serviceBusNamespaceName = $serviceBusNamespaceName.substring(0, [System.Math]::Min(24, $serviceBusNamespaceName.Length))
+	$serviceBusQueueName = ($userName+$resourceGroup+"servicebusqueue").ToLower();
+    $serviceBusQueueName = $serviceBusQueueName.substring(0, [System.Math]::Min(24, $serviceBusQueueName.Length))
+	$relayNamespaceName = ($userName+$resourceGroup+"relay").ToLower();
+    $relayNamespaceName = $relayNamespaceName.substring(0, [System.Math]::Min(24, $relayNamespaceName.Length))
+	$resourceGroupName =($userName+"-"+$resourceGroup).ToLower()
+    $resourceGroupName = $resourceGroupName.substring(0, [System.Math]::Min(24, $resourceGroupName.Length))
+    $testConfigFile = "${env:ROOT}\UnitTests\app.config"
 	
-	New-AzResourceGroup -Name $resourceGroupName -Location $location
+	New-AzResourceGroup -Name $resourceGroupName -Location $location -ErrorAction Stop
 	
-	# New-AzEventHubNamespace -ResourceGroupName $resourceGroupName -NamespaceName $eventHubName -Location $location
-	# New-AzEventHub -ResourceGroupName $resourceGroupName -NamespaceName $eventHubName -EventHubName $eventHubName -MessageRetentionInDays 3
-	# New-AzEventHub -ResourceGroupName $resourceGroupName -NamespaceName $eventHubName -EventHubName $eventHubName -MessageRetentionInDays 3
-	# Get-AzEventHubKey -ResourceGroupName $resourceGroupName -NamespaceName $eventHubName -AuthorizationRuleName RootManageSharedAccessKey
-	
+    #
+    #  Setup Storage Testing Account
+    #
 	#DefaultEndpointsProtocol=[http|https];AccountName=myAccountName;AccountKey=myAccountKey
 	Write-Host "Creating resources for azure storage testing"
-	New-AzStorageAccount -ResourceGroupName $resourceGroupName -Name $storageAccountName -Location $location -SkuName Standard_RAGRS -Kind StorageV2
-	$sa = Get-AzStorageAccountKey -ResourceGroupName $resourceGroupName -AccountName $storageAccountName
+	New-AzStorageAccount -ResourceGroupName $resourceGroupName -Name $storageAccountName -Location $location -SkuName Standard_RAGRS -Kind StorageV2 -ErrorAction Stop
+    $sa = Get-AzStorageAccountKey -ResourceGroupName $resourceGroupName -AccountName $storageAccountName
 	$saKey = (Get-AzStorageAccountKey -ResourceGroupName $resourceGroupName -Name $storageAccountName)[0].Value 
 	$storageConnectionString='DefaultEndpointsProtocol=https;AccountName=' + $storageAccountName + ';AccountKey=' + $saKey + ';EndpointSuffix=core.windows.net'
+
+    $storageContext = New-AzStorageContext -ConnectionString $storageConnectionString
+    New-AzStorageContainer -Name "telegraphytest" -Context $storageContext
+    New-AzStorageContainer -Name "telegraphytesteventhub" -Context $storageContext
+    $storageAccount = Get-AzStorageAccount -ResourceGroupName $resourceGroupName -Name $storageAccountName	
+
+    $testConfigFileContent = (Get-Content -path $testConfigFile -Raw) -replace '%StorageConnectionString%', $storageConnectionString
 	
+    #
+    #  Setup EventHub Testing Account
+    #
+	New-AzEventHubNamespace -ResourceGroupName $resourceGroupName -NamespaceName $eventHubName -Location $location -ErrorAction Stop
+	$createdEventHub = New-AzEventHub -ResourceGroupName $resourceGroupName -NamespaceName $eventHubName -EventHubName $eventHubName -MessageRetentionInDays 3
+
+    #$createdEventHub = Get-AzEventHub -ResourceGroupName $resourceGroupName -Namespace $eventHubName -Name $eventHubName
+    $createdEventHub.CaptureDescription = New-Object -TypeName Microsoft.Azure.Commands.EventHub.Models.PSCaptureDescriptionAttributes
+    $createdEventHub.CaptureDescription.Enabled = $true
+    $createdEventHub.CaptureDescription.IntervalInSeconds  = 120
+    $createdEventHub.CaptureDescription.Encoding  = "Avro"
+    $createdEventHub.CaptureDescription.SizeLimitInBytes = 10485763
+    $createdEventHub.CaptureDescription.Destination.Name = "EventHubArchive.AzureBlockBlob"
+    $createdEventHub.CaptureDescription.Destination.BlobContainer = "telegraphytesteventhub"
+    $createdEventHub.CaptureDescription.Destination.ArchiveNameFormat = "{Namespace}/{EventHub}/{PartitionId}/{Year}/{Month}/{Day}/{Hour}/{Minute}/{Second}"
+    $createdEventHub.CaptureDescription.Destination.StorageAccountResourceId = $storageAccount.Id
+    Set-AzEventHub -ResourceGroupName $resourceGroupName -Namespace $eventHubName -Name $eventHubName -InputObject $createdEventHub
+	$evKey = Get-AzEventHubKey -ResourceGroupName $resourceGroupName -NamespaceName $eventHubName -AuthorizationRuleName RootManageSharedAccessKey
+
+    $testConfigFileContent = $testConfigFileContent -replace '%EventHubConnectionString%', $evKey.PrimaryConnectionString
+
+    #
+    #  Setup ServiceHub Testing Account
+    #
+    New-AzServiceBusNamespace -ResourceGroupName $resourceGroupName -Name $serviceBusNamespaceName -Location $location
+    $sbKey = Get-AzServiceBusKey -ResourceGroupName $resourceGroupName -Namespace $serviceBusNamespaceName -Name RootManageSharedAccessKey
+
+    $testConfigFileContent = $testConfigFileContent -replace '%ServiceBusConnectionString%', $sbKey.PrimaryConnectionString
+
+    #
+    #  Setup Relay Testing Account
+    #
+    # $createdEventHub.CaptureDescription = New-Object -TypeName Microsoft.Azure.Commands.EventHub.Models.PSCaptureDescriptionAttributes
+    New-AzRelayNamespace -ResourceGroupName $resourceGroupName -Name $relayNamespaceName -Location $location
+    # New-AzRelayHybridConnection -ResourceGroupName $resourceGroupName -Namespace $relayNamespaceName -Name $relayNamespaceName
+
+    $relayKey = Get-AzRelayKey -ResourceGroupName $resourceGroupName -Namespace $relayNamespaceName -Name RootManageSharedAccessKey
+
+    $testConfigFileContent = $testConfigFileContent -replace '%RelayConnectionString%', $relayKey.PrimaryConnectionString
+
+    $testConfigFileContent
+
 	# TODO create the telegraphytest container
 	# todo create table telegraphytesttable
 	
