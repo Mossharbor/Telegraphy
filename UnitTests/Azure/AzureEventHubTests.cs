@@ -17,7 +17,7 @@ namespace UnitTests.Azure.EventHub
     [TestClass]
     public class AzureEventHubTests
     {
-        public static string StorageContainerName = "telagraphytesteventhub";
+        public static string StorageContainerName = "telegraphytesteventhub";
 
         static ConcurrentQueue<EventData> ehMsgQueue = new ConcurrentQueue<EventData>();
 
