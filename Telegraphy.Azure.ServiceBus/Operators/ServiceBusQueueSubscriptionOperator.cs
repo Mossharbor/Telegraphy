@@ -1,4 +1,4 @@
-﻿using Microsoft.Azure.ServiceBus;
+﻿using global::Azure.Messaging.ServiceBus;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,18 +15,9 @@ namespace Telegraphy.Azure
             : this(new LocalSwitchboard(concurrencyType, concurrency), ServiceBusQueuePublishOperator<T>.GetQueue(connectionString, queueName, createQueueIfItDoesNotExist), maxDequeueCount)
         { }
 
-        public ServiceBusQueueSubscriptionOperator(LocalConcurrencyType concurrencyType, QueueClient queue, string connectionString, bool createQueueIfItDoesNotExist, uint concurrency = DefaultConcurrency, int maxDequeueCount = DefaultDequeueMaxCount)
-            : this(new LocalSwitchboard(concurrencyType, concurrency), new ServiceBusQueue(connectionString, queue, createQueueIfItDoesNotExist), maxDequeueCount)
-        { }
-
         public ServiceBusQueueSubscriptionOperator(ILocalSwitchboard switchBoard, string connectionString, string queueName, bool createQueueIfItDoesNotExist, int maxDequeueCount = DefaultDequeueMaxCount)
             : this(switchBoard, ServiceBusQueuePublishOperator<T>.GetQueue(connectionString, queueName, createQueueIfItDoesNotExist), maxDequeueCount)
         { }
-
-        public ServiceBusQueueSubscriptionOperator(ILocalSwitchboard switchBoard, QueueClient queue, string connectionString, bool createQueueIfItDoesNotExist, int maxDequeueCount = DefaultDequeueMaxCount)
-           : this(switchBoard, new ServiceBusQueue(connectionString, queue, createQueueIfItDoesNotExist), maxDequeueCount)
-        {
-        }
 
         private ServiceBusQueueSubscriptionOperator(ILocalSwitchboard switchBoard, ServiceBusQueue queue, int maxDequeueCount)
             : base(switchBoard, queue, maxDequeueCount)

@@ -1,4 +1,4 @@
-﻿using Microsoft.Azure.ServiceBus;
+﻿using global::Azure.Messaging.ServiceBus;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,13 +11,9 @@ namespace Telegraphy.Azure
             : base(GetQueue(connectionString, queueName, createQueueIfItDoesNotExist))
         { }
 
-        public ServiceBusQueuePublishOperator(QueueClient queue, string connectionString, bool createQueueIfItDoesNotExist)
-            : base(new ServiceBusQueue(connectionString, queue, createQueueIfItDoesNotExist))
-        { }
-
         internal static ServiceBusQueue GetQueue(string connectionString, string queueName, bool createQueueIfItDoesNotExist)
         {
-            return new ServiceBusQueue(connectionString, queueName, createQueueIfItDoesNotExist);
+            return new ServiceBusQueue(connectionString, queueName, ServiceBusReceiveMode.PeekLock, createQueueIfItDoesNotExist);
         }
 
         public override bool WaitTillEmpty(TimeSpan timeout)

@@ -9,7 +9,7 @@ namespace Telegraphy.Azure
     using global::Azure.Messaging.EventHubs;
     using global::Azure.Messaging.EventHubs.Consumer;
     using global::Azure.Messaging.EventHubs.Primitives;
-    using Mossharbor.AzureWorkArounds.ServiceBus;
+    
 
     internal class EventHubDataSubscriber 
     {
@@ -43,14 +43,13 @@ namespace Telegraphy.Azure
             this.partition = partitionId;
         }
 
-        private static string[] partitionIds = null;
-        public static string[] GetPartitionIds(string eventHubConnectionString, string evenHubName)
+        private string[] partitionIds = null;
+        public string[] GetPartitionIds(string eventHubConnectionString, string evenHubName)
         {
             if (null != partitionIds)
                 return partitionIds;
-            NamespaceManager ns = NamespaceManager.CreateFromConnectionString(eventHubConnectionString);
-            EventHubDescription ed = ns.GetEventHub(evenHubName);
-            partitionIds = Array.ConvertAll(ed.PartitionIds, item=>item.ToString());
+            this.partitionIds = this.client.GetPartitionIdsAsync().Result;
+
             return partitionIds;
         }
 
@@ -90,7 +89,9 @@ namespace Telegraphy.Azure
         }
         public void CreateIfNotExists()
         {
-            NamespaceManager ns = NamespaceManager.CreateFromConnectionString(connectionString);
+            throw new NotImplementedException("Nedd to implment create if not exists event hub");
+
+            /*NamespaceManager ns = NamespaceManager.CreateFromConnectionString(connectionString);
             EventHubDescription qd;
             if (!ns.EventHubExists(this.eventHubName, out qd))
                 ns.CreateTopic(this.eventHubName);
@@ -106,7 +107,7 @@ namespace Telegraphy.Azure
                     if (!ns.ConsumerGroupExists(this.eventHubName, consumerGroup, out sd))
                         ns.CreateConsumerGroup(this.eventHubName, consumerGroup);
                 });
-            }
+            }*/
         }
     }
 }

@@ -9,7 +9,7 @@ namespace UnitTests.Azure.EventHub
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Telegraphy.Net;
     using Telegraphy.Azure;
-    using Mossharbor.AzureWorkArounds.ServiceBus;
+    
     using global::Azure.Messaging.EventHubs.Processor;
     using global::Azure.Messaging.EventHubs;
     using System.Collections.Concurrent;
@@ -17,6 +17,7 @@ namespace UnitTests.Azure.EventHub
     using global::Azure.Messaging.EventHubs.Consumer;
     using global::Azure.Messaging.EventHubs.Primitives;
     using global::Azure.Storage.Blobs;
+    using Mossharbor.AzureWorkArounds.ServiceBus;
 
     [TestClass]
     public class AzureEventHubTests

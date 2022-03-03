@@ -64,7 +64,7 @@ namespace PingPong
 
         public string MessageId { get; private set; }
 
-        public IDictionary<string, object> UserProperties => null;
+        public IDictionary<string, object> ApplicationProperties => null;
 
         public string PartitionKey => null;
         #endregion

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Azure.Messaging.ServiceBus;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Telegraphy.Net;
@@ -7,16 +8,25 @@ namespace Telegraphy.Azure
 {
     public class DeliverToServiceBusTopic<MsgType> : IActor where MsgType : class
     {
-        ServiceBusTopicDeliverer queue = null;
+        ServiceBusSender sender;
 
-        public DeliverToServiceBusTopic(string storageConnectionString, string topicName, bool createQueueIfItDoesNotExist = true)
+        public DeliverToServiceBusTopic(string connectionString, string topicName, bool createQueueIfItDoesNotExist = true)
         {
-            queue = ServiceBusTopicPublishOperator<MsgType>.GetSender(storageConnectionString, topicName, createQueueIfItDoesNotExist);
+            // handles create if not exists
+            var queue = ServiceBusTopicPublishOperator<MsgType>.GetTopic(connectionString, topicName, createQueueIfItDoesNotExist);
+            sender = new ServiceBusClient(connectionString).CreateSender(topicName);
+        }
+
+        public DeliverToServiceBusTopic(string connectionString, string topicName, string subscription, bool createQueueIfItDoesNotExist = true)
+        {
+            // handles create if not exists
+            var queue = ServiceBusTopicPublishOperator<MsgType>.GetTopic(connectionString, topicName, subscription, createQueueIfItDoesNotExist);
+            sender = new ServiceBusClient(connectionString).CreateSender(topicName);
         }
 
         bool IActor.OnMessageRecieved<T>(T msg)
         {
-            ServiceBusTopicBaseOperator<MsgType>.SerializeAndSend(msg, queue);
+            ServiceBusQueueBaseOperator<MsgType>.SerializeAndSend(msg, sender);
             return true;
         }
     }

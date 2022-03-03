@@ -12,13 +12,13 @@ namespace UnitTests.Azure.Storage
     using global::Azure.Storage.Blobs;
     using global::Azure.Storage.Queues;
     using global::Azure.Storage.Blobs.Specialized;
-    using Microsoft.Azure.ServiceBus;
-    using Mossharbor.AzureWorkArounds.ServiceBus;
+    using global::Azure.Messaging.ServiceBus;
+    
     using global::Azure.Messaging.EventHubs.Processor;
     using global::Azure.Messaging.EventHubs;
     using System.Threading;
     using System.Collections.Concurrent;
-    using Microsoft.Azure.ServiceBus.Core;
+    
     using System.IO;
 
     [TestClass]

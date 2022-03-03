@@ -1,4 +1,4 @@
-﻿using Microsoft.Azure.ServiceBus;
+﻿using global::Azure.Messaging.ServiceBus;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,12 +12,7 @@ namespace Telegraphy.Azure
             : base(GetQueue(connectionString, queueName))
         { }
 
-
-        public ServiceBusQueueDeadLetterPublishOperator(QueueClient queue, string connectionString)
-            : base(new ServiceBusDeadLetterQueue(connectionString, queue.QueueName))
-        { }
-
-        internal static ServiceBusDeadLetterQueue GetQueue(string connectionString, string queueName)
+        internal static ServiceBusQueue GetQueue(string connectionString, string queueName)
         {
             return new ServiceBusDeadLetterQueue(connectionString, queueName);
         }

@@ -52,10 +52,9 @@
     <ProjectReference Include="..\PingPong\PingPongLib.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.6.0" />
     <PackageReference Include="Microsoft.Azure.Amqp" Version="2.5.10" />
     <PackageReference Include="Microsoft.Azure.KeyVault.Core" Version="$(MicrosoftAzureKeyVaultCoreVersion)" />
-    <PackageReference Include="Microsoft.Azure.ServiceBus" Version="$(MicrosoftAzureServiceBusVersion)" />
-    <PackageReference Include="Mossharbor.AzureWorkArounds.ServiceBus" Version="$(MossharborAzureWorkAroundsServiceBusVersion)" />
     <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" />
     <PackageReference Include="System.Net.WebSockets" Version="$(SystemNetWebSocketsVersion)" />
     <PackageReference Include="System.Net.WebSockets.Client" Version="$(SystemNetWebSocketsClientVersion)" />
@@ -65,7 +64,6 @@
     <PackageReference Include="System.Security.Cryptography.Encoding" Version="$(SystemSecurityCryptographyEncodingVersion)" />
     <PackageReference Include="System.Security.Cryptography.Primitives" Version="$(SystemSecurityCryptographyPrimitivesVersion)" />
     <PackageReference Include="System.Security.Cryptography.X509Certificates" Version="$(SystemSecurityCryptographyX509CertificatesVersion)" />
-    <PackageReference Include="WindowsAzure.ServiceBus" Version="$(WindowsAzureServiceBusVersion)" />
     <PackageReference Include="WindowsAzure.Storage" Version="$(WindowsAzureStorageVersion)" />
   </ItemGroup>
   <ItemGroup>

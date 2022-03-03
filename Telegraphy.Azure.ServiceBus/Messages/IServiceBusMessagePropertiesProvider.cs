@@ -27,11 +27,6 @@ namespace Telegraphy.Azure
 
         //
         // Summary:
-        //     Gets or sets the application specific label.
-        string Label { get; }
-
-        //
-        // Summary:
         //     Gets the a correlation identifier.
         //
         // Remarks:
@@ -92,7 +87,7 @@ namespace Telegraphy.Azure
         //     uint, long, ulong, float, double, decimal, bool, Guid, string, Uri, DateTime,
         //     DateTimeOffset, TimeSpan, Stream, byte[], and IList / IDictionary of supported
         //     types
-        IDictionary<string, object> UserProperties { get; }
+        IDictionary<string, object> ApplicationProperties { get; }
         
         //
         // Summary:

@@ -8,14 +8,15 @@ namespace UnitTests.Azure.Relay
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Telegraphy.Net;
-    using Mossharbor.AzureWorkArounds.ServiceBus;
+    
     //using global::Azure.Messaging.EventHubs.Processor;
     //using Azure.Messaging.EventHubs;
     //using System.Collections.Concurrent;
-    using Microsoft.Azure.ServiceBus;
+    using global::Azure.Messaging.ServiceBus;
     using Microsoft.Azure.Relay;
     using System.Net;
     using System.IO;
+    using Mossharbor.AzureWorkArounds.ServiceBus;
 
     [TestClass]
     public class AzureRelayTests
@@ -177,6 +178,7 @@ namespace UnitTests.Azure.Relay
             }
             finally
             {
+                Telegraph.Instance.UnRegisterAll();
                 try { listener?.CloseAsync().Wait(); } catch (Exception) { }
                 DeleteRelay(relayName);
             }
@@ -214,6 +216,7 @@ namespace UnitTests.Azure.Relay
             }
             finally
             {
+                Telegraph.Instance.UnRegisterAll();
                 try { listener?.CloseAsync().Wait(); } catch (Exception) { }
                 DeleteRelay(relayName);
             }
@@ -274,6 +277,7 @@ namespace UnitTests.Azure.Relay
             }
             finally
             {
+                Telegraph.Instance.UnRegisterAll();
                 try { listener?.CloseAsync().Wait(); } catch (Exception) { }
                 DeleteHybridConnection(connectionName);
             }
@@ -302,6 +306,7 @@ namespace UnitTests.Azure.Relay
             }
             finally
             {
+                Telegraph.Instance.UnRegisterAll();
                 try { listener?.CloseAsync().Wait(); } catch (Exception) { }
                 DeleteHybridConnection(connectionName);
             }
@@ -336,6 +341,7 @@ namespace UnitTests.Azure.Relay
             }
             finally
             {
+                Telegraph.Instance.UnRegisterAll();
                 try { listener?.CloseAsync().Wait(); } catch (Exception) { }
                 DeleteHybridConnection(connectionName);
             }

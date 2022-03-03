@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Telegraphy.Net;
-using Microsoft.Azure.ServiceBus;
+using global::Azure.Messaging.ServiceBus;
 
 namespace Telegraphy.Azure
 {
-    internal class ServiceBusMessage : SimpleMessage<Message>
+    internal class ServiceBusMessage : SimpleMessage<global::Azure.Messaging.ServiceBus.ServiceBusMessage>
     {
-        public ServiceBusMessage(Microsoft.Azure.ServiceBus.Message message) : base(message)
+        public ServiceBusMessage(global::Azure.Messaging.ServiceBus.ServiceBusMessage message) : base(message)
         {
         }
     }

@@ -1,4 +1,4 @@
-﻿using Microsoft.Azure.ServiceBus;
+﻿using global::Azure.Messaging.ServiceBus;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,18 +15,9 @@ namespace Telegraphy.Azure
             : this(new LocalSwitchboard(concurrencyType, concurrency), ServiceBusQueueDeadLetterPublishOperator<T>.GetQueue(connectionString, queueName), maxDequeueCount)
         { }
 
-        public ServiceBusQueueDeadLetterSubscriptionOperator(LocalConcurrencyType concurrencyType, QueueClient queue, string connectionString, uint concurrency = DefaultConcurrency, int maxDequeueCount = DefaultDequeueMaxCount)
-            : this(new LocalSwitchboard(concurrencyType, concurrency), new ServiceBusDeadLetterQueue(connectionString, queue.QueueName), maxDequeueCount)
-        { }
-
         public ServiceBusQueueDeadLetterSubscriptionOperator(ILocalSwitchboard switchBoard, string connectionString, string queueName, int maxDequeueCount = DefaultDequeueMaxCount)
             : this(switchBoard, ServiceBusQueueDeadLetterPublishOperator<T>.GetQueue(connectionString, queueName), maxDequeueCount)
         { }
-
-        public ServiceBusQueueDeadLetterSubscriptionOperator(ILocalSwitchboard switchBoard, QueueClient queue, string connectionString, int maxDequeueCount = DefaultDequeueMaxCount)
-           : this(switchBoard, new ServiceBusDeadLetterQueue(connectionString, queue.QueueName), maxDequeueCount)
-        {
-        }
 
         private ServiceBusQueueDeadLetterSubscriptionOperator(ILocalSwitchboard switchBoard, ServiceBusQueue queue, int maxDequeueCount)
             : base(switchBoard, queue, maxDequeueCount)

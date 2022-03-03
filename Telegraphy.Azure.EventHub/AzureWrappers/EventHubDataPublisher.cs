@@ -34,7 +34,7 @@ namespace Telegraphy.Azure
         }
 
         public void CreateIfNotExists()
-        {
+        { 
             NamespaceManager ns = NamespaceManager.CreateFromConnectionString(connectionString);
             EventHubDescription qd;
             if (!ns.EventHubExists(this.eventHubName, out qd))
