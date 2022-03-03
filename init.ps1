@@ -10,6 +10,7 @@ $env:NUGETVERSIONPROPSPATH = $env:Root
 $env:NUGETVERSIONPROPSPATH += "\.build\dependency.version.props"
 $env:VERSIONFILE = ${env:ROOT}
 $env:VERSIONFILE +=  "\Telegraphy.Net\Package.nuspec"
+$testConfigFile = "${env:ROOT}\UnitTests\app.config"
  
 if (-not [Environment]::Is64BitProcess) {
     write-host "Please run this command window in AMD64 processor architecture.`r`n"
@@ -47,7 +48,7 @@ Write-Host "   publishnugetpackages";
 function opensln {
     Start-Process "${env:ROOT}\${env:SLN_NAME}";
 }
- 
+
 #############################################################################################
 #
 # Functionality to make running pre-checkin validation easier
@@ -289,12 +290,59 @@ function __getcodecoveragesummary {
     }
 }
 
+function setuptestconfig{
+
+	
+    $testconfigContents =@"
+    <?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <dependentAssembly>
+        <assemblyIdentity name="Microsoft.Azure.Amqp" publicKeyToken="31bf3856ad364e35" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-2.2.0.0" newVersion="2.2.0.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="Newtonsoft.Json" publicKeyToken="30ad4fe6b2a6aeed" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-10.0.0.0" newVersion="10.0.0.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.Runtime.Serialization.Primitives" publicKeyToken="b03f5f7f11d50a3a" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-4.1.2.0" newVersion="4.1.2.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="Microsoft.WindowsAzure.Storage" publicKeyToken="31bf3856ad364e35" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-9.1.1.0" newVersion="9.1.1.0" />
+      </dependentAssembly>
+    </assemblyBinding>
+  </runtime>
+  <appSettings>
+    <!-- NOTE these are set by the init script running the azsetuptestenv <resource group name> command in powershell -->
+    <add key="EventHubConnectionString" value="%EventHubConnectionString%" />
+    <add key="StorageConnectionString" value="%StorageConnectionString%" />
+    <add key="ServiceBusConnectionString" value="%ServiceBusConnectionString%" />
+    <add key="RelayConnectionString" value="%RelayConnectionString%" />
+    <add key="EmailAccount" value="%EmailAccount%" />
+    <add key="EmailAccountPassword" value="%EmailAccountPassword%" />
+  </appSettings>
+</configuration>
+"@
+
+    if (-not(Test-Path -Path $testConfigFile -PathType Leaf)) {
+        #
+        #  Setup Test Config
+        #
+        Set-Content -path $testConfigFile -Value $testconfigContents
+    }
+
+}
+
 function azsetuptestenv {
 	param(
 	    [Parameter(Mandatory = $true)]
         [String] $resourceGroup
     )
-	
+
 	$location = "East US"
     $sblocation = "eastus"
     $userName = $env:USERNAME.substring(0, [System.Math]::Min(7, $env:USERNAME.Length)).ToLower()
@@ -310,8 +358,8 @@ function azsetuptestenv {
     $relayNamespaceName = $relayNamespaceName.substring(0, [System.Math]::Min(24, $relayNamespaceName.Length))
 	$resourceGroupName =($userName+"-"+$resourceGroup).ToLower()
     $resourceGroupName = $resourceGroupName.substring(0, [System.Math]::Min(24, $resourceGroupName.Length))
-    $testConfigFile = "${env:ROOT}\UnitTests\app.config"
-	
+	 
+
 	New-AzResourceGroup -Name $resourceGroupName -Location $location -ErrorAction Stop
 	
     #
@@ -714,3 +762,5 @@ function PublishNugetPackages
 		dotnet nuget push $localPath --api-key $nugetApiKey --source https://api.nuget.org/v3/index.json
 	}
 }
+
+setuptestconfig
