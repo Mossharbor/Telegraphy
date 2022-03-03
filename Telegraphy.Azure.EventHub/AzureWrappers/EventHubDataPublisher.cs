@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure.EventHubs;
+﻿using Azure.Messaging.EventHubs;
+using Azure.Messaging.EventHubs.Producer;
 using Mossharbor.AzureWorkArounds.ServiceBus;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace Telegraphy.Azure
 {
     public class EventHubDataPublisher
     {
-        EventHubClient client;
+        EventHubProducerClient client;
         string connectionString;
         string eventHubName;
         string[] consumerGroups = null;
@@ -18,18 +19,18 @@ namespace Telegraphy.Azure
         public EventHubDataPublisher(string connectionString,string eventHubName)
         {
             this.eventHubName = eventHubName;
-            var connectionStringBuilder = new EventHubsConnectionStringBuilder(connectionString)
-            {
-                EntityPath = eventHubName
-            };
-
             this.connectionString = connectionString;
-            client = EventHubClient.CreateFromConnectionString(connectionStringBuilder.ToString());
+            client = new EventHubProducerClient(connectionString, eventHubName);
         }
         
         internal void Send(EventData data)
         {
-            this.client.SendAsync(data).Wait();
+            this.client.SendAsync(new EventData[] { data });
+            //using (var eventBatch = client.CreateBatchAsync().Result)
+            //{
+            //    eventBatch.TryAdd(data);
+            //    this.client.SendAsync(eventBatch).Wait();
+            //}
         }
 
         public void CreateIfNotExists()

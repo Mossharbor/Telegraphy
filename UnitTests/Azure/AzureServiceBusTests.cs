@@ -9,11 +9,9 @@ namespace UnitTests.Azure.ServiceBus
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Telegraphy.Net;
     using Telegraphy.Azure;
-    using Microsoft.WindowsAzure.Storage;
-    using Microsoft.WindowsAzure.Storage.Queue;
     using Microsoft.Azure.ServiceBus;
     using Mossharbor.AzureWorkArounds.ServiceBus;
-    using Microsoft.Azure.EventHubs;
+    using global::Azure.Messaging.EventHubs;
     using System.Threading;
     using System.Collections.Concurrent;
     using Microsoft.Azure.ServiceBus.Core;
@@ -306,7 +304,7 @@ namespace UnitTests.Azure.ServiceBus
                 string message = "HelloWorld";
                 byte[] messageBytes = Encoding.UTF8.GetBytes(message);
 
-                Telegraph.Instance.Register<ValueTypeMessage<byte>, SendBytesToServiceBusQueue>(() => new SendBytesToServiceBusQueue(Connections.ServiceBusConnectionString, queueName, true));
+                Telegraph.Instance.Register<ValueArrayTypeMessage<byte>, SendBytesToServiceBusQueue>(() => new SendBytesToServiceBusQueue(Connections.ServiceBusConnectionString, queueName, true));
                 Telegraph.Instance.Ask(messageBytes.ToActorMessage()).Wait();
                 Message sbMessage = null;
                 WaitForQueue(sbMsgQueue, out sbMessage);
@@ -542,7 +540,7 @@ namespace UnitTests.Azure.ServiceBus
                 string message = "HelloWorld";
                 byte[] messageBytes = Encoding.UTF8.GetBytes(message);
 
-                Telegraph.Instance.Register<ValueTypeMessage<byte>, SendBytesToServiceBusTopic>(() => new SendBytesToServiceBusTopic(Connections.ServiceBusConnectionString, TopicName, true));
+                Telegraph.Instance.Register<ValueArrayTypeMessage<byte>, SendBytesToServiceBusTopic>(() => new SendBytesToServiceBusTopic(Connections.ServiceBusConnectionString, TopicName, true));
                 Telegraph.Instance.Ask(messageBytes.ToActorMessage()).Wait();
                 Message sbMessage = null;
                 WaitForQueue(sbMsgQueue, out sbMessage);

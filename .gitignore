@@ -4,7 +4,7 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # secret files
-*/Telegraphy/UnitTests/app.config
+UnitTests/app.config
 
 # User-specific files
 *.suo

@@ -1,4 +1,4 @@
-﻿using Microsoft.Azure.EventHubs;
+﻿using Azure.Messaging.EventHubs;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,87 +9,47 @@ namespace Telegraphy.Azure
     public class EventHubSubscriptionOperator<T> : EventHubBaseOperator<T> where T:class
     {
         public EventHubSubscriptionOperator(string connectionstring, string eventHubName, bool createEventHubIfItDoesNotExist = false, uint concurrency = DefaultConcurrency)
-            : this(GetEventHubDataReciever(connectionstring, eventHubName, EventPosition.FromEnd(), createEventHubIfItDoesNotExist), concurrency)
-        {
-        }
-
-        public EventHubSubscriptionOperator(string connectionstring, string eventHubName, EventPosition position, bool createEventHubIfItDoesNotExist = false, uint concurrency = DefaultConcurrency)
-            : this(GetEventHubDataReciever(connectionstring, eventHubName, position, createEventHubIfItDoesNotExist), concurrency)
+            : this(GetEventHubDataReciever(connectionstring, eventHubName, createEventHubIfItDoesNotExist), concurrency)
         {
         }
 
         public EventHubSubscriptionOperator(string connectionstring, string eventHubName, string consumerGroup, bool createEventHubIfItDoesNotExist = false, uint concurrency = DefaultConcurrency)
-            : this(GetEventHubDataReciever(connectionstring, eventHubName, consumerGroup, EventPosition.FromEnd(), createEventHubIfItDoesNotExist), concurrency)
-        {
-        }
-
-        public EventHubSubscriptionOperator(string connectionstring, string eventHubName, string consumerGroup, EventPosition position, bool createEventHubIfItDoesNotExist = false, uint concurrency = DefaultConcurrency)
-            : this(GetEventHubDataReciever(connectionstring, eventHubName, consumerGroup, position, createEventHubIfItDoesNotExist), concurrency)
+            : this(GetEventHubDataReciever(connectionstring, eventHubName, consumerGroup, createEventHubIfItDoesNotExist), concurrency)
         {
         }
 
         public EventHubSubscriptionOperator(string connectionstring, string eventHubName, string consumerGroup, string partitionId, bool createEventHubIfItDoesNotExist = false, uint concurrency = DefaultConcurrency)
-            : this(GetEventHubDataReciever(connectionstring, eventHubName, consumerGroup, partitionId, EventPosition.FromEnd(), createEventHubIfItDoesNotExist), concurrency)
-        {
-        }
-
-        public EventHubSubscriptionOperator(string connectionstring, string eventHubName, string consumerGroup, string partitionId, EventPosition position, bool createEventHubIfItDoesNotExist = false, uint concurrency = DefaultConcurrency)
-            : this(GetEventHubDataReciever(connectionstring, eventHubName, consumerGroup, partitionId, position, createEventHubIfItDoesNotExist), concurrency)
+            : this(GetEventHubDataReciever(connectionstring, eventHubName, consumerGroup, partitionId, createEventHubIfItDoesNotExist), concurrency)
         {
         }
 
         public EventHubSubscriptionOperator(ILocalSwitchboard switchboard, string connectionstring, string eventHubName, bool createEventHubIfItDoesNotExist = false)
-            : this(switchboard, GetEventHubDataReciever(connectionstring, eventHubName, EventPosition.FromEnd(), createEventHubIfItDoesNotExist))
-        {
-        }
-
-        public EventHubSubscriptionOperator(ILocalSwitchboard switchboard, string connectionstring, string eventHubName, EventPosition position, bool createEventHubIfItDoesNotExist = false)
-            : this(switchboard, GetEventHubDataReciever(connectionstring, eventHubName, position, createEventHubIfItDoesNotExist))
+            : this(switchboard, GetEventHubDataReciever(connectionstring, eventHubName, createEventHubIfItDoesNotExist))
         {
         }
 
         public EventHubSubscriptionOperator(ILocalSwitchboard switchboard, string connectionstring, string eventHubName, string consumerGroup, bool createEventHubIfItDoesNotExist = false)
-            : this(switchboard, GetEventHubDataReciever(connectionstring, eventHubName, consumerGroup, EventPosition.FromEnd(), createEventHubIfItDoesNotExist))
-        {
-        }
-
-        public EventHubSubscriptionOperator(ILocalSwitchboard switchboard, string connectionstring, string eventHubName, string consumerGroup, EventPosition position, bool createEventHubIfItDoesNotExist = false)
-            : this(switchboard, GetEventHubDataReciever(connectionstring, eventHubName, consumerGroup, position, createEventHubIfItDoesNotExist))
+            : this(switchboard, GetEventHubDataReciever(connectionstring, eventHubName, consumerGroup, createEventHubIfItDoesNotExist))
         {
         }
 
         public EventHubSubscriptionOperator(ILocalSwitchboard switchboard, string connectionstring, string eventHubName, string consumerGroup, string partitionId, bool createEventHubIfItDoesNotExist = false)
-            : this(switchboard, GetEventHubDataReciever(connectionstring, eventHubName, consumerGroup, partitionId, EventPosition.FromEnd(), createEventHubIfItDoesNotExist))
+            : this(switchboard, GetEventHubDataReciever(connectionstring, eventHubName, consumerGroup, partitionId, createEventHubIfItDoesNotExist))
         {
         }
 
-        public EventHubSubscriptionOperator(ILocalSwitchboard switchboard, string connectionstring, string eventHubName, string consumerGroup, string partitionId, EventPosition position, bool createEventHubIfItDoesNotExist = false)
-            : this(switchboard, GetEventHubDataReciever(connectionstring, eventHubName, consumerGroup, partitionId, position, createEventHubIfItDoesNotExist))
-        {
-        }
-
-        public EventHubSubscriptionOperator(LocalConcurrencyType concurrencyType, string connectionstring, string eventHubName, EventPosition position, bool createEventHubIfItDoesNotExist = false, uint concurrency = DefaultConcurrency)
-            : this(concurrencyType, GetEventHubDataReciever(connectionstring, eventHubName, position, createEventHubIfItDoesNotExist), concurrency)
+        public EventHubSubscriptionOperator(LocalConcurrencyType concurrencyType, string connectionstring, string eventHubName, bool createEventHubIfItDoesNotExist = false, uint concurrency = DefaultConcurrency)
+            : this(concurrencyType, GetEventHubDataReciever(connectionstring, eventHubName, createEventHubIfItDoesNotExist), concurrency)
         {
         }
 
         public EventHubSubscriptionOperator(LocalConcurrencyType concurrencyType, string connectionstring, string eventHubName, string consumerGroup, bool createEventHubIfItDoesNotExist = false, uint concurrency = DefaultConcurrency)
-            : this(concurrencyType, GetEventHubDataReciever(connectionstring, eventHubName, consumerGroup, EventPosition.FromEnd(), createEventHubIfItDoesNotExist), concurrency)
-        {
-        }
-
-        public EventHubSubscriptionOperator(LocalConcurrencyType concurrencyType, string connectionstring, string eventHubName, string consumerGroup, EventPosition position, bool createEventHubIfItDoesNotExist = false, uint concurrency = DefaultConcurrency)
-            : this(concurrencyType, GetEventHubDataReciever(connectionstring, eventHubName, consumerGroup, position, createEventHubIfItDoesNotExist), concurrency)
+            : this(concurrencyType, GetEventHubDataReciever(connectionstring, eventHubName, consumerGroup, createEventHubIfItDoesNotExist), concurrency)
         {
         }
 
         public EventHubSubscriptionOperator(LocalConcurrencyType concurrencyType, string connectionstring, string eventHubName, string consumerGroup, string partitionId, bool createEventHubIfItDoesNotExist = false, uint concurrency = DefaultConcurrency)
-            : this(concurrencyType, GetEventHubDataReciever(connectionstring, eventHubName, consumerGroup, partitionId, EventPosition.FromEnd(), createEventHubIfItDoesNotExist), concurrency)
-        {
-        }
-
-        public EventHubSubscriptionOperator(LocalConcurrencyType concurrencyType, string connectionstring, string eventHubName, string consumerGroup, string partitionId, EventPosition position, bool createEventHubIfItDoesNotExist = false, uint concurrency = DefaultConcurrency)
-            : this(concurrencyType, GetEventHubDataReciever(connectionstring, eventHubName, consumerGroup, partitionId, position, createEventHubIfItDoesNotExist), concurrency)
+            : this(concurrencyType, GetEventHubDataReciever(connectionstring, eventHubName, consumerGroup, partitionId, createEventHubIfItDoesNotExist), concurrency)
         {
         }
 
@@ -106,25 +66,25 @@ namespace Telegraphy.Azure
         { }
 
 
-        internal static EventHubDataSubscriber GetEventHubDataReciever(string connectionstring, string eventHubName, string consumerGroup, string partitionId, EventPosition position, bool createEventHubIfItDoesNotExist)
+        internal static EventHubDataSubscriber GetEventHubDataReciever(string connectionstring, string eventHubName, string consumerGroup, string partitionId, bool createEventHubIfItDoesNotExist)
         {
-            var t = new EventHubDataSubscriber(connectionstring, eventHubName, consumerGroup, partitionId, position);
+            var t = new EventHubDataSubscriber(connectionstring, eventHubName, consumerGroup, partitionId);
             if (createEventHubIfItDoesNotExist)
                 t.CreateIfNotExists();
             return t;
         }
 
-        internal static EventHubDataSubscriber GetEventHubDataReciever(string connectionstring, string eventHubName, string consumerGroup, EventPosition position, bool createEventHubIfItDoesNotExist)
+        internal static EventHubDataSubscriber GetEventHubDataReciever(string connectionstring, string eventHubName, string consumerGroup, bool createEventHubIfItDoesNotExist)
         {
-            var t = new EventHubDataSubscriber(connectionstring, eventHubName, consumerGroup, position);
+            var t = new EventHubDataSubscriber(connectionstring, eventHubName, consumerGroup);
             if (createEventHubIfItDoesNotExist)
                 t.CreateIfNotExists();
             return t;
         }
 
-        internal static EventHubDataSubscriber GetEventHubDataReciever(string connectionstring, string eventHubName, EventPosition position, bool createEventHubIfItDoesNotExist)
+        internal static EventHubDataSubscriber GetEventHubDataReciever(string connectionstring, string eventHubName, bool createEventHubIfItDoesNotExist)
         {
-            var t = new EventHubDataSubscriber(connectionstring, eventHubName, position);
+            var t = new EventHubDataSubscriber(connectionstring, eventHubName);
             if (createEventHubIfItDoesNotExist)
                 t.CreateIfNotExists();
             return t;

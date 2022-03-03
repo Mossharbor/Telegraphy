@@ -9,8 +9,8 @@ namespace UnitTests.Azure.Relay
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Telegraphy.Net;
     using Mossharbor.AzureWorkArounds.ServiceBus;
-    //using Microsoft.Azure.EventHubs.Processor;
-    //using Microsoft.Azure.EventHubs;
+    //using global::Azure.Messaging.EventHubs.Processor;
+    //using Azure.Messaging.EventHubs;
     //using System.Collections.Concurrent;
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Azure.Relay;

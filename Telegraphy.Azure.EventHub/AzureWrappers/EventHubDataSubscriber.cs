@@ -6,50 +6,37 @@ using System.Threading.Tasks;
 
 namespace Telegraphy.Azure
 {
-    using Microsoft.Azure.EventHubs;
+    using global::Azure.Messaging.EventHubs;
+    using global::Azure.Messaging.EventHubs.Consumer;
+    using global::Azure.Messaging.EventHubs.Primitives;
     using Mossharbor.AzureWorkArounds.ServiceBus;
 
     internal class EventHubDataSubscriber 
     {
-        EventHubClient client = null;
+        EventHubConsumerClient client = null;
         PartitionReceiver reciever = null;
-        long lastSequenceNumber = 0;
         string connectionString = null;
         string eventHubName, consumerGroup, partition;
         string[] consumerGroups;
 
         public EventHubDataSubscriber(string connectionstring, string eventHubName)
-            : this(connectionstring, eventHubName, PartitionReceiver.DefaultConsumerGroupName, "1", EventPosition.FromEnd())
+            : this(connectionstring, eventHubName, EventHubConsumerClient.DefaultConsumerGroupName, "1")
         { }
 
-        public EventHubDataSubscriber(string connectionstring, string eventHubName, EventPosition position)
-            : this(connectionstring, eventHubName, PartitionReceiver.DefaultConsumerGroupName, "1", position)
-        { }
-        
         public EventHubDataSubscriber(string connectionstring, string eventHubName, string consumerGroup)
-            : this(connectionstring, eventHubName, consumerGroup, "1", EventPosition.FromEnd())
-        { }
-
-        public EventHubDataSubscriber(string connectionstring, string eventHubName, string consumerGroup, EventPosition position)
-            : this(connectionstring, eventHubName, consumerGroup, "1", position)
+            : this(connectionstring, eventHubName, consumerGroup, "1")
         { }
 
         public EventHubDataSubscriber(string connectionstring, string eventHubName, string consumerGroup, string partitionId)
-            : this(connectionstring, eventHubName, consumerGroup, partitionId, EventPosition.FromEnd())
-        { }
-
-        public EventHubDataSubscriber(string connectionstring, string eventHubName, string consumerGroup, string partitionId, EventPosition position)
         {
             this.connectionString = connectionstring;
-            string connectionStringWithEntityPath = connectionstring;
-            if (!connectionStringWithEntityPath.Contains("EntityPath")) // https://github.com/Azure/azure-webjobs-sdk/commit/be47a3075076c0094a1358dadada01954ec28c79#diff-c255f38efc7c153a9ce53cecefe7b7b0R44
-            {
-                var connectionStringBuilder = new EventHubsConnectionStringBuilder(connectionstring) { EntityPath = eventHubName };
-                connectionStringWithEntityPath = connectionStringBuilder.ToString();
-            }
-            
-            client = EventHubClient.CreateFromConnectionString(connectionStringWithEntityPath);
-            reciever = client.CreateReceiver(consumerGroup, partitionId, position);
+            client = new EventHubConsumerClient(consumerGroup, connectionString, eventHubName);
+            reciever = new PartitionReceiver(
+                            consumerGroup,
+                            partitionId,
+                            EventPosition.Earliest,
+                            connectionString,
+                            eventHubName);
             this.eventHubName = eventHubName;
             this.consumerGroup = consumerGroup;
             this.consumerGroups = new string[] { consumerGroup };
@@ -68,7 +55,7 @@ namespace Telegraphy.Azure
         }
 
         /// <summary>
-        ///   yields a batch of Microsoft.Azure.EventHubs.EventData from the
+        ///   yields a batch of global::Azure.Messaging.EventHubs.EventData from the
         //     partition on which this receiver is created. Returns 'null' if no EventData is
         //     present.
         /// </summary>
@@ -79,25 +66,28 @@ namespace Telegraphy.Azure
         {
             IEnumerable<EventData> data = null;
             if (waitTime.HasValue)
-                data = reciever.ReceiveAsync(numOfMessagesToDequeue, waitTime.Value).Result;
-            else
-                data = reciever.ReceiveAsync(numOfMessagesToDequeue).Result;
+            {
+                // TODO some form of this is better if we get no partition id.
+                /*var en = client.ReadEventsAsync().GetAsyncEnumerator();
+                while (en.MoveNextAsync().Result)
+                {
+                    var cur = en.Current;
 
-            lastSequenceNumber = data.Last().SystemProperties.SequenceNumber;
+                }*/
+                data = reciever.ReceiveBatchAsync(numOfMessagesToDequeue, waitTime.Value).Result;
+            }
+            else
+            {
+                data = reciever.ReceiveBatchAsync(numOfMessagesToDequeue).Result;
+            }
+
             return data;
         }
 
         internal void Close()
         {
-            client.Close();
+            client.CloseAsync().Wait();
         }
-
-        public long ApproximateCount()
-        {
-            return client.GetPartitionRuntimeInformationAsync(this.partition).Result.LastEnqueuedSequenceNumber - lastSequenceNumber;
-        }
-
-
         public void CreateIfNotExists()
         {
             NamespaceManager ns = NamespaceManager.CreateFromConnectionString(connectionString);
@@ -109,7 +99,7 @@ namespace Telegraphy.Azure
             {
                 Parallel.ForEach(consumerGroups, consumerGroup =>
                 {
-                    if (consumerGroup.Equals(PartitionReceiver.DefaultConsumerGroupName))
+                    if (consumerGroup.Equals(EventHubConsumerClient.DefaultConsumerGroupName))
                         return;
 
                     ConsumerGroupDescription sd;

@@ -65,12 +65,12 @@
     <ProjectReference Include="..\Telegraphy.Office365\Telegraphy.Office365.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Azure.Messaging.EventHubs" Version="5.6.2" />
+    <PackageReference Include="Azure.Messaging.EventHubs.Processor" Version="5.6.2" />
     <PackageReference Include="Azure.Storage.Blobs" Version="$(AzureStorageBlobsVersion)" />
     <PackageReference Include="Azure.Storage.Queues" Version="$(AzureStorageQueuesVersion)" />
     <PackageReference Include="Exchange.WebServices.Managed.Api" Version="$(ExchangeWebServicesManagedApiVersion)" />
-    <PackageReference Include="Microsoft.Azure.Amqp" Version="$(MicrosoftAzureAmqpVersion)" />
-    <PackageReference Include="Microsoft.Azure.EventHubs" Version="$(MicrosoftAzureEventHubsVersion)" />
-    <PackageReference Include="Microsoft.Azure.EventHubs.Processor" Version="$(MicrosoftAzureEventHubsProcessorVersion)" />
+    <PackageReference Include="Microsoft.Azure.Amqp" Version="2.5.10" />
     <PackageReference Include="Microsoft.Azure.KeyVault.Core" Version="$(MicrosoftAzureKeyVaultCoreVersion)" />
     <PackageReference Include="Microsoft.Azure.Relay" Version="$(MicrosoftAzureRelayVersion)" />
     <PackageReference Include="Microsoft.Azure.ServiceBus" Version="$(MicrosoftAzureServiceBusVersion)" />

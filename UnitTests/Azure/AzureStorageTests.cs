@@ -14,8 +14,8 @@ namespace UnitTests.Azure.Storage
     using global::Azure.Storage.Blobs.Specialized;
     using Microsoft.Azure.ServiceBus;
     using Mossharbor.AzureWorkArounds.ServiceBus;
-    using Microsoft.Azure.EventHubs.Processor;
-    using Microsoft.Azure.EventHubs;
+    using global::Azure.Messaging.EventHubs.Processor;
+    using global::Azure.Messaging.EventHubs;
     using System.Threading;
     using System.Collections.Concurrent;
     using Microsoft.Azure.ServiceBus.Core;

@@ -52,7 +52,7 @@
     <ProjectReference Include="..\PingPong\PingPongLib.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Azure.Amqp" Version="$(MicrosoftAzureAmqpVersion)" />
+    <PackageReference Include="Microsoft.Azure.Amqp" Version="2.5.10" />
     <PackageReference Include="Microsoft.Azure.KeyVault.Core" Version="$(MicrosoftAzureKeyVaultCoreVersion)" />
     <PackageReference Include="Microsoft.Azure.ServiceBus" Version="$(MicrosoftAzureServiceBusVersion)" />
     <PackageReference Include="Mossharbor.AzureWorkArounds.ServiceBus" Version="$(MossharborAzureWorkAroundsServiceBusVersion)" />
