@@ -420,7 +420,7 @@ function azsetuptestenv {
     $testConfigFileContent = $testConfigFileContent -replace '%RelayConnectionString%', $relayKey.PrimaryConnectionString
 
     New-AzWcfRelay -ResourceGroupName $resourceGroupName -Namespace $relayNamespaceName -Name "TestWCFRelay" -WcfRelayType "Http"
-    $wcfRelayKey = Get-AzRelayKey -ResourceGroupName $resourceGroupName -Namespace $relayNamespaceName -Name RootManageSharedAccessKey
+    $wcfRelyKey = Get-AzRelayKey -ResourceGroupName $resourceGroupName -Namespace $relayNamespaceName -Name RootManageSharedAccessKey
 
     $testConfigFileContent = $testConfigFileContent -replace '%WcfRelayConnectionString%', $wcfRelayKey.PrimaryConnectionString
 
