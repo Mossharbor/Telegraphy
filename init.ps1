@@ -322,6 +322,7 @@ function setuptestconfig{
     <add key="StorageConnectionString" value="%StorageConnectionString%" />
     <add key="ServiceBusConnectionString" value="%ServiceBusConnectionString%" />
     <add key="RelayConnectionString" value="%RelayConnectionString%" />
+    <add key="WcfRelayConnectionString" value="%WcfRelayConnectionString%" />
     <add key="EmailAccount" value="%EmailAccount%" />
     <add key="EmailAccountPassword" value="%EmailAccountPassword%" />
   </appSettings>
@@ -356,6 +357,8 @@ function azsetuptestenv {
     $serviceBusQueueName = $serviceBusQueueName.substring(0, [System.Math]::Min(24, $serviceBusQueueName.Length))
 	$relayNamespaceName = ($userName+$resourceGroup+"relay").ToLower();
     $relayNamespaceName = $relayNamespaceName.substring(0, [System.Math]::Min(24, $relayNamespaceName.Length))
+	$wcfRelayNamespaceName = ($userName+$resourceGroup+"wcfrelay").ToLower();
+    $wcfRelayNamespaceName = $wcfRelayNamespaceName.substring(0, [System.Math]::Min(24, $wcfRelayNamespaceName.Length))
 	$resourceGroupName =($userName+"-"+$resourceGroup).ToLower()
     $resourceGroupName = $resourceGroupName.substring(0, [System.Math]::Min(24, $resourceGroupName.Length))
 	 
@@ -411,13 +414,15 @@ function azsetuptestenv {
     #
     #  Setup Relay Testing Account
     #
-    # $createdEventHub.CaptureDescription = New-Object -TypeName Microsoft.Azure.Commands.EventHub.Models.PSCaptureDescriptionAttributes
     New-AzRelayNamespace -ResourceGroupName $resourceGroupName -Name $relayNamespaceName -Location $location
-    # New-AzRelayHybridConnection -ResourceGroupName $resourceGroupName -Namespace $relayNamespaceName -Name $relayNamespaceName
-
     $relayKey = Get-AzRelayKey -ResourceGroupName $resourceGroupName -Namespace $relayNamespaceName -Name RootManageSharedAccessKey
 
     $testConfigFileContent = $testConfigFileContent -replace '%RelayConnectionString%', $relayKey.PrimaryConnectionString
+
+    New-AzWcfRelay -ResourceGroupName $resourceGroupName -Namespace $relayNamespaceName -Name "TestWCFRelay" -WcfRelayType "Http"
+    $wcfRelayKey = Get-AzRelayKey -ResourceGroupName $resourceGroupName -Namespace $relayNamespaceName -Name RootManageSharedAccessKey
+
+    $testConfigFileContent = $testConfigFileContent -replace '%WcfRelayConnectionString%', $wcfRelayKey.PrimaryConnectionString
 
     $testConfigFileContent
 

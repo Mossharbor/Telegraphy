@@ -21,9 +21,13 @@ namespace UnitTests
         {
             get { return ConfigurationManager.AppSettings["ServiceBusConnectionString"]; }
         }
-        public static string RelayConnectionString
+        public static string HybridRelayConnectionString
         {
             get { return ConfigurationManager.AppSettings["RelayConnectionString"]; }
+        }
+        public static string WcfRelayConnectionString
+        {
+            get { return ConfigurationManager.AppSettings["WcfRelayConnectionString"]; }
         }
         public static string EmailAccount
         {
