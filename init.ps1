@@ -335,7 +335,7 @@ function azsetuptestenv {
     #  Setup EventHub Testing Account
     #
 	New-AzEventHubNamespace -ResourceGroupName $resourceGroupName -NamespaceName $eventHubName -Location $location -ErrorAction Stop
-	$createdEventHub = New-AzEventHub -ResourceGroupName $resourceGroupName -NamespaceName $eventHubName -EventHubName $eventHubName -MessageRetentionInDays 3
+	$createdEventHub = New-AzEventHub -ResourceGroupName $resourceGroupName -NamespaceName $eventHubName -EventHubName $eventHubName -MessageRetentionInDays 3 -PartitionCount 1
 
     #$createdEventHub = Get-AzEventHub -ResourceGroupName $resourceGroupName -Namespace $eventHubName -Name $eventHubName
     $createdEventHub.CaptureDescription = New-Object -TypeName Microsoft.Azure.Commands.EventHub.Models.PSCaptureDescriptionAttributes
