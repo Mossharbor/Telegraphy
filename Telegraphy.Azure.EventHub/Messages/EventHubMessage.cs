@@ -7,9 +7,9 @@ using Telegraphy.Net;
 
 namespace Telegraphy.Azure
 {
-    internal class EventHubMessage : SimpleMessage<Microsoft.Azure.EventHubs.EventData>
+    internal class EventHubMessage : SimpleMessage<global::Azure.Messaging.EventHubs.EventData>
     {
-        public EventHubMessage(Microsoft.Azure.EventHubs.EventData message) : base(message)
+        public EventHubMessage(global::Azure.Messaging.EventHubs.EventData message) : base(message)
         {
         }
     }

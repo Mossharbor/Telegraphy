@@ -8,21 +8,22 @@ namespace UnitTests.Azure.Relay
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Telegraphy.Net;
-    using Mossharbor.AzureWorkArounds.ServiceBus;
-    //using Microsoft.Azure.EventHubs.Processor;
-    //using Microsoft.Azure.EventHubs;
+    
+    //using global::Azure.Messaging.EventHubs.Processor;
+    //using Azure.Messaging.EventHubs;
     //using System.Collections.Concurrent;
-    using Microsoft.Azure.ServiceBus;
+    using global::Azure.Messaging.ServiceBus;
     using Microsoft.Azure.Relay;
     using System.Net;
     using System.IO;
+    using Mossharbor.AzureWorkArounds.ServiceBus;
 
     [TestClass]
     public class AzureRelayTests
     {
         public void DeleteRelay(string relayName)
         {
-            NamespaceManager ns = NamespaceManager.CreateFromConnectionString(Connections.RelayConnectionString);
+            NamespaceManager ns = NamespaceManager.CreateFromConnectionString(Connections.HybridRelayConnectionString);
             RelayDescription rd;
             if (ns.RelayExists(relayName, out rd))
                 ns.DeleteRelay(relayName);
@@ -30,7 +31,7 @@ namespace UnitTests.Azure.Relay
 
         public void DeleteHybridConnection(string relayName)
         {
-            NamespaceManager ns = NamespaceManager.CreateFromConnectionString(Connections.RelayConnectionString);
+            NamespaceManager ns = NamespaceManager.CreateFromConnectionString(Connections.HybridRelayConnectionString);
             HybridConnectionDescription rd;
             if (ns.HybridConnectionExists(relayName, out rd))
                 ns.DeleteHybridConnection(relayName);
@@ -38,7 +39,7 @@ namespace UnitTests.Azure.Relay
 
         public void CreateRelay(string relayName)
         {
-            NamespaceManager ns = NamespaceManager.CreateFromConnectionString(Connections.RelayConnectionString);
+            NamespaceManager ns = NamespaceManager.CreateFromConnectionString(Connections.HybridRelayConnectionString);
             RelayDescription rd;
             if (!ns.RelayExists(relayName, out rd))
                 ns.CreateRelay(relayName, RelayType.NetTcp);
@@ -46,7 +47,7 @@ namespace UnitTests.Azure.Relay
 
         public void CreateHybridConnection(string hybridConnectionName)
         {
-            NamespaceManager ns = NamespaceManager.CreateFromConnectionString(Connections.RelayConnectionString);
+            NamespaceManager ns = NamespaceManager.CreateFromConnectionString(Connections.HybridRelayConnectionString);
             HybridConnectionDescription rd;
             if (!ns.HybridConnectionExists(hybridConnectionName, out rd))
                 ns.CreateHybridConnection(hybridConnectionName);
@@ -54,7 +55,7 @@ namespace UnitTests.Azure.Relay
 
         public HybridConnectionListener CreateHybridListener(string hybridConnectionName, string responseMessage)
         {
-            RelayConnectionStringBuilder connectionStringBuilder = new RelayConnectionStringBuilder(Connections.RelayConnectionString) { EntityPath = hybridConnectionName };
+            RelayConnectionStringBuilder connectionStringBuilder = new RelayConnectionStringBuilder(Connections.HybridRelayConnectionString) { EntityPath = hybridConnectionName };
             //var tokenProvider = TokenProvider.CreateSharedAccessSignatureTokenProvider(connectionStringBuilder.SharedAccessKeyName, connectionStringBuilder.SharedAccessKey);
             //var uri = new Uri(string.Format("https://{0}/{1}", connectionStringBuilder.Endpoint.Host, hybridConnectionName));
             var listener = new HybridConnectionListener(connectionStringBuilder.ToString());
@@ -86,7 +87,7 @@ namespace UnitTests.Azure.Relay
 
         public HybridConnectionListener CreateHybridListener(string hybridConnectionName, byte[] responseBytes)
         {
-            RelayConnectionStringBuilder connectionStringBuilder = new RelayConnectionStringBuilder(Connections.RelayConnectionString) { EntityPath = hybridConnectionName };
+            RelayConnectionStringBuilder connectionStringBuilder = new RelayConnectionStringBuilder(Connections.HybridRelayConnectionString) { EntityPath = hybridConnectionName };
             //var tokenProvider = TokenProvider.CreateSharedAccessSignatureTokenProvider(connectionStringBuilder.SharedAccessKeyName, connectionStringBuilder.SharedAccessKey);
             //var uri = new Uri(string.Format("https://{0}/{1}", connectionStringBuilder.Endpoint.Host, hybridConnectionName));
             var listener = new HybridConnectionListener(connectionStringBuilder.ToString());
@@ -115,7 +116,7 @@ namespace UnitTests.Azure.Relay
 
         public HybridConnectionListener CreateHybridListener(string hybridConnectionName, PingPong.Pong response)
         {
-            RelayConnectionStringBuilder connectionStringBuilder = new RelayConnectionStringBuilder(Connections.RelayConnectionString) { EntityPath = hybridConnectionName };
+            RelayConnectionStringBuilder connectionStringBuilder = new RelayConnectionStringBuilder(Connections.HybridRelayConnectionString) { EntityPath = hybridConnectionName };
             //var tokenProvider = TokenProvider.CreateSharedAccessSignatureTokenProvider(connectionStringBuilder.SharedAccessKeyName, connectionStringBuilder.SharedAccessKey);
             //var uri = new Uri(string.Format("https://{0}/{1}", connectionStringBuilder.Endpoint.Host, hybridConnectionName));
             var listener = new HybridConnectionListener(connectionStringBuilder.ToString());
@@ -165,11 +166,11 @@ namespace UnitTests.Azure.Relay
             try
             {
                 listener = CreateHybridListener(relayName, responseMessage);
-                var relayConnection = new Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRequest<string,string>(Connections.RelayConnectionString, relayName);
+                var relayConnection = new Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRequest<string,string>(Connections.HybridRelayConnectionString, relayName);
 
                 Telegraph.Instance.Register<string, Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRequest<string, string>>(() => relayConnection);
                 var result = Telegraph.Instance.Ask("Hello");
-                bool success = result.Wait(TimeSpan.FromSeconds(10));
+                bool success = result.Wait(System.Diagnostics.Debugger.IsAttached ? TimeSpan.FromMinutes(30) : TimeSpan.FromSeconds(30));
                 Assert.IsTrue(success);
 
                 if (success)
@@ -177,6 +178,7 @@ namespace UnitTests.Azure.Relay
             }
             finally
             {
+                Telegraph.Instance.UnRegisterAll();
                 try { listener?.CloseAsync().Wait(); } catch (Exception) { }
                 DeleteRelay(relayName);
             }
@@ -195,7 +197,7 @@ namespace UnitTests.Azure.Relay
             try
             {
                 listener = CreateHybridListener(relayName, actorResponseMessage);
-                var relayConnection = new Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRequest<PingPong.Ping, PingPong.Pong>(Connections.RelayConnectionString, relayName);
+                var relayConnection = new Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRequest<PingPong.Ping, PingPong.Pong>(Connections.HybridRelayConnectionString, relayName);
 
                 IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
                 IActorMessageDeserializationActor deserializer = new IActorMessageDeserializationActor();
@@ -214,6 +216,7 @@ namespace UnitTests.Azure.Relay
             }
             finally
             {
+                Telegraph.Instance.UnRegisterAll();
                 try { listener?.CloseAsync().Wait(); } catch (Exception) { }
                 DeleteRelay(relayName);
             }
@@ -232,11 +235,11 @@ namespace UnitTests.Azure.Relay
             try
             {
                 listener = CreateHybridListener(relayName, responseMessage);
-                var relayConnection = new Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRequest<byte[], byte[]>(Connections.RelayConnectionString, relayName);
+                var relayConnection = new Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRequest<byte[], byte[]>(Connections.HybridRelayConnectionString, relayName);
 
                 Telegraph.Instance.Register<byte[], Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRequest<byte[], byte[]>>(() => relayConnection);
-                var result = Telegraph.Instance.Ask(msgBytes);
-                bool success = result.Wait(TimeSpan.FromSeconds(10));
+                var result = Telegraph.Instance.Ask(msgBytes.ToActorMessage());
+                bool success = result.Wait(System.Diagnostics.Debugger.IsAttached ? TimeSpan.FromMinutes(30) : TimeSpan.FromSeconds(30));
                 Assert.IsTrue(success);
 
                 if (success)
@@ -260,7 +263,7 @@ namespace UnitTests.Azure.Relay
             try
             {
                 listener = CreateHybridListener(connectionName, responseBytes);
-                ILocalSwitchboard switchBoard = new Telegraphy.Azure.Relay.Hybrid.HybridConnectionSwitchboard(3, Connections.RelayConnectionString, connectionName);
+                ILocalSwitchboard switchBoard = new Telegraphy.Azure.Relay.Hybrid.HybridConnectionSwitchboard(3, Connections.HybridRelayConnectionString, connectionName);
                 IOperator localOP = new LocalQueueOperator(switchBoard);
                 Telegraph.Instance.Register(localOP);
                 Telegraph.Instance.Register(typeof(Exception), FailOnException);
@@ -274,6 +277,7 @@ namespace UnitTests.Azure.Relay
             }
             finally
             {
+                Telegraph.Instance.UnRegisterAll();
                 try { listener?.CloseAsync().Wait(); } catch (Exception) { }
                 DeleteHybridConnection(connectionName);
             }
@@ -289,7 +293,7 @@ namespace UnitTests.Azure.Relay
             try
             {
                 listener = CreateHybridListener(connectionName, responseMessage);
-                ILocalSwitchboard switchBoard = new Telegraphy.Azure.Relay.Hybrid.HybridConnectionSwitchboard(3, Connections.RelayConnectionString, connectionName);
+                ILocalSwitchboard switchBoard = new Telegraphy.Azure.Relay.Hybrid.HybridConnectionSwitchboard(3, Connections.HybridRelayConnectionString, connectionName);
                 IOperator localOP = new LocalQueueOperator(switchBoard);
                 Telegraph.Instance.Register(localOP);
                 Telegraph.Instance.Register(typeof(Exception), FailOnException);
@@ -302,6 +306,7 @@ namespace UnitTests.Azure.Relay
             }
             finally
             {
+                Telegraph.Instance.UnRegisterAll();
                 try { listener?.CloseAsync().Wait(); } catch (Exception) { }
                 DeleteHybridConnection(connectionName);
             }
@@ -317,7 +322,7 @@ namespace UnitTests.Azure.Relay
             try
             {
                 //listener = CreateHybridListener(connectionName, responseMessage);
-                IOperator localOP = new Telegraphy.Azure.Relay.Hybrid.HybridConnectionSubscriptionOperator<string>(Connections.RelayConnectionString, connectionName);
+                IOperator localOP = new Telegraphy.Azure.Relay.Hybrid.HybridConnectionSubscriptionOperator<string>(Connections.HybridRelayConnectionString, connectionName);
 
                 bool recieved = false;
                 Telegraph.Instance.Register<string>(localOP, (msgString) =>
@@ -328,7 +333,7 @@ namespace UnitTests.Azure.Relay
                 });
                 Telegraph.Instance.Register(typeof(Exception), FailOnException);
 
-                var client = new Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRequest<string,string>(Connections.RelayConnectionString, connectionName);
+                var client = new Telegraphy.Azure.Relay.Hybrid.RecieveResponseFromRequest<string,string>(Connections.HybridRelayConnectionString, connectionName);
                 (client as IActor).OnMessageRecieved(responseMessage.ToActorMessage());
 
                 System.Threading.Thread.Sleep(3000);
@@ -336,19 +341,21 @@ namespace UnitTests.Azure.Relay
             }
             finally
             {
+                Telegraph.Instance.UnRegisterAll();
                 try { listener?.CloseAsync().Wait(); } catch (Exception) { }
                 DeleteHybridConnection(connectionName);
             }
         }
 
         [TestMethod]
+        [Ignore("this has never really been well supported at this time")]
         public void TestSendingStringToWcfRelay()
         {
-            string relayName = "TestRelay";
+            string relayName = "TestWCFRelay";
             CreateRelay(relayName);
             try
             {
-                var relayConnection = new Telegraphy.Azure.Relay.Wcf.RecieveResponseFromRequest(Connections.RelayConnectionString, relayName);
+                var relayConnection = new Telegraphy.Azure.Relay.Wcf.RecieveResponseFromRequest(Connections.WcfRelayConnectionString, relayName);
 
                 Telegraph.Instance.Register<string, Telegraphy.Azure.Relay.Wcf.RecieveResponseFromRequest>(() => relayConnection);
                 bool success = Telegraph.Instance.Ask("Hello").Wait(TimeSpan.FromSeconds(10));

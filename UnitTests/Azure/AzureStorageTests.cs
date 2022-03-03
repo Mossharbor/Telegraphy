@@ -12,13 +12,13 @@ namespace UnitTests.Azure.Storage
     using global::Azure.Storage.Blobs;
     using global::Azure.Storage.Queues;
     using global::Azure.Storage.Blobs.Specialized;
-    using Microsoft.Azure.ServiceBus;
-    using Mossharbor.AzureWorkArounds.ServiceBus;
-    using Microsoft.Azure.EventHubs.Processor;
-    using Microsoft.Azure.EventHubs;
+    using global::Azure.Messaging.ServiceBus;
+    
+    using global::Azure.Messaging.EventHubs.Processor;
+    using global::Azure.Messaging.EventHubs;
     using System.Threading;
     using System.Collections.Concurrent;
-    using Microsoft.Azure.ServiceBus.Core;
+    
     using System.IO;
 
     [TestClass]
@@ -46,7 +46,7 @@ namespace UnitTests.Azure.Storage
                 string message = "HelloWorld";
                 PingPong.Ping aMsg = new PingPong.Ping(message);
                 IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
-                Telegraph.Instance.Register<PingPong.Ping, SendMessageToStorageQueue>(() => new SendMessageToStorageQueue(Connections.StorageConnectionString, queueName, true));
+                Telegraph.Instance.Register<PingPong.Ping, SendMessageToStorageQueue<PingPong.Ping>>(() => new SendMessageToStorageQueue<PingPong.Ping>(Connections.StorageConnectionString, queueName, true));
                 Telegraph.Instance.Register<SerializeMessage<IActorMessage>, IActorMessageSerializationActor>(() => serializer);
 
                 if (!Telegraph.Instance.Ask(aMsg).Wait(new TimeSpan(0, 10, 0)))

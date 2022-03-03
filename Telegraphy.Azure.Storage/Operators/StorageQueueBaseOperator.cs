@@ -133,7 +133,7 @@ namespace Telegraphy.Azure
             }
 
             if (recieveMessagesOnly)
-                throw new Telegraphy.Net.OperatorCannotSendMessagesException();
+                throw new Telegraphy.Net.OperatorCannotSendMessagesException(msg.GetType().ToString());
 
             // TODO allow the serializers to be passed in as IActors
             // Serialize the message first
@@ -199,10 +199,10 @@ namespace Telegraphy.Azure
                 if (next.DequeueCount > maxDequeueCount)
                 {
                     if (null != this.deadLetterQueue)
-                    {
-                        deadLetterQueue.SendMessage(next.Body);
-                    }
-                    queue.DeleteMessage(next.MessageId, next.PopReceipt);
+                         deadLetterQueue.SendMessage(next.Body);
+
+                    var response = queue.DeleteMessage(next.MessageId, next.PopReceipt);
+                    
                     return null;
                 }
 
@@ -222,7 +222,7 @@ namespace Telegraphy.Azure
                 {
                     var base64String = next.Body.ToString();
                     var messageBytes = Convert.FromBase64String(base64String);
-                    var t = Telegraph.Instance.Ask(new DeserializeMessage<IActorMessage>(messageBytes));
+                    var t = Telegraph.Instance.Ask(new DeserializeMessage<MsgType>(messageBytes));
                     msg = t.Result as IActorMessage;
                 }
 

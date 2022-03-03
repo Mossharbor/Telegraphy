@@ -1,14 +1,14 @@
 <Project ToolsVersion="15.0">
   <PropertyGroup>
-    <AzureStorageBlobsVersion>12.8.0</AzureStorageBlobsVersion>
-    <AzureStorageQueuesVersion>12.6.0</AzureStorageQueuesVersion>
+    <AzureStorageBlobsVersion>12.10.0</AzureStorageBlobsVersion>
+    <AzureStorageQueuesVersion>12.8.0</AzureStorageQueuesVersion>
     <ExchangeWebServicesManagedApiVersion>2.2.1.2</ExchangeWebServicesManagedApiVersion>
     <MicrosoftAzureAmqpVersion>2.4.5</MicrosoftAzureAmqpVersion>
     <MicrosoftAzureCosmosDbTableVersion>2.1.2</MicrosoftAzureCosmosDbTableVersion>
-    <MicrosoftAzureCosmosTableVersion>1.0.7</MicrosoftAzureCosmosTableVersion>
+    <MicrosoftAzureCosmosTableVersion>1.0.8</MicrosoftAzureCosmosTableVersion>
     <MicrosoftAzureEventHubsProcessorVersion>2.0.1</MicrosoftAzureEventHubsProcessorVersion>
     <MicrosoftAzureEventHubsVersion>4.2.0</MicrosoftAzureEventHubsVersion>
-    <MicrosoftAzureKeyVaultCoreVersion>2.0.4</MicrosoftAzureKeyVaultCoreVersion>
+    <MicrosoftAzureKeyVaultCoreVersion>3.0.5</MicrosoftAzureKeyVaultCoreVersion>
     <MicrosoftAzureRelayVersion>2.0.1</MicrosoftAzureRelayVersion>
     <MicrosoftAzureServiceBusVersion>4.1.4</MicrosoftAzureServiceBusVersion>
     <MicrosoftIdentityModelClientsActiveDirectoryVersion>5.2.4</MicrosoftIdentityModelClientsActiveDirectoryVersion>

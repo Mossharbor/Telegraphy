@@ -4,24 +4,24 @@ using System.Text;
 
 namespace Telegraphy.Azure
 {
-    public class ServiceBusTopicDeadLetterPublishOperator<T> : ServiceBusTopicBaseOperator<T> where T:class
+    public class ServiceBusTopicDeadLetterPublishOperator<T> : ServiceBusQueueBaseOperator<T> where T:class
     {
-        public ServiceBusTopicDeadLetterPublishOperator(string connectionString, string topicName, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
-               : base(GetSender(connectionString, topicName, null, policy))
+        public ServiceBusTopicDeadLetterPublishOperator(string connectionString, string topicName)
+               : base(GetSender(connectionString, topicName, null))
         {
         }
 
-        public ServiceBusTopicDeadLetterPublishOperator(string connectionString, string topicName, string subscriptionName, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
-               : base(GetSender(connectionString, topicName, subscriptionName, policy))
+        public ServiceBusTopicDeadLetterPublishOperator(string connectionString, string topicName, string subscriptionName)
+               : base(GetSender(connectionString, topicName, subscriptionName))
         {
         }
 
-        internal static ServiceBusTopicDeadLetterDeliverer GetSender(string connectionString, string topicName, string subscriptionName, Microsoft.Azure.ServiceBus.RetryPolicy policy = null)
+        internal static ServiceBusDeadLetterQueue GetSender(string connectionString, string topicName, string subscriptionName)
         {
             if (!String.IsNullOrWhiteSpace(subscriptionName))
-                return new ServiceBusTopicDeadLetterDeliverer(connectionString, topicName, subscriptionName, policy);
+                return new ServiceBusDeadLetterQueue(connectionString, topicName, subscriptionName);
             else
-                return new ServiceBusTopicDeadLetterDeliverer(connectionString, topicName, policy);
+                return new ServiceBusDeadLetterQueue(connectionString, topicName);
         }
 
         public override bool WaitTillEmpty(TimeSpan timeout)

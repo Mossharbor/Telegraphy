@@ -35,8 +35,8 @@ namespace UnitTests.IO
                     string message = "HelloWorld";
                     PingPong.Ping aMsg = new PingPong.Ping(message);
                     IActorMessageSerializationActor serializer = new IActorMessageSerializationActor();
-                    var sendMessageQueue = new SendMessageToDirectoryQueue(queueRootPath, queueName, true);
-                    Telegraph.Instance.Register<PingPong.Ping, SendMessageToDirectoryQueue>(() => sendMessageQueue);
+                    var sendMessageQueue = new SendMessageToDirectoryQueue<PingPong.Ping>(queueRootPath, queueName, true);
+                    Telegraph.Instance.Register<PingPong.Ping, SendMessageToDirectoryQueue<PingPong.Ping>>(() => sendMessageQueue);
                     Telegraph.Instance.Register<SerializeMessage<IActorMessage>, IActorMessageSerializationActor>(() => serializer);
 
                     if (!Telegraph.Instance.Ask(aMsg).Wait(new TimeSpan(0, 0, 10)))

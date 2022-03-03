@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure.EventHubs;
+﻿using Azure.Messaging.EventHubs;
+using Azure.Messaging.EventHubs;
 using System;
 using System.Collections.Generic;
 using System.Linq;

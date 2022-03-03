@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegraphy.Azure.Exceptions;
 using Telegraphy.Net.Exceptions;
+using System.Security.Cryptography;
 
 namespace Telegraphy.Azure
 {
@@ -75,7 +76,27 @@ namespace Telegraphy.Azure
             byte[] msgBytes = RecieveBytes(blob, out size);
             return encoding.GetString(msgBytes);
         }
-        
+
+        protected void SendFile(BlobClient blob,string fileNameAndPath)
+        {
+            if (!File.Exists(fileNameAndPath))
+                throw new CantSendFileDataWhenFileDoesNotExistException(fileNameAndPath);
+
+            if (!overwrite && blob.ExistsAsync().Result)
+                return;
+
+            using (StreamReader sr = new StreamReader(fileNameAndPath))
+            {
+                var uploadOptions = new BlobUploadOptions()
+                { 
+                    HttpHeaders = new BlobHttpHeaders(){ContentHash = ComputeHash(fileNameAndPath)},
+                    TransferOptions = new global::Azure.Storage.StorageTransferOptions(){InitialTransferSize=50000000 }
+                };
+				
+                blob.Upload(sr.BaseStream, uploadOptions);
+            }
+        }
+
         protected void SendFile(BlockBlobClient blob,string fileNameAndPath)
         {
             if (!File.Exists(fileNameAndPath))
@@ -86,7 +107,25 @@ namespace Telegraphy.Azure
 
             using (StreamReader sr = new StreamReader(fileNameAndPath))
             {
-                blob.Upload(sr.BaseStream, new BlobUploadOptions());
+                var uploadOptions = new BlobUploadOptions()
+                { 
+                    HttpHeaders = new BlobHttpHeaders(){ContentHash = ComputeHash(fileNameAndPath)},
+                    TransferOptions = new global::Azure.Storage.StorageTransferOptions(){InitialTransferSize=50000000 }
+                };
+
+                blob.Upload(sr.BaseStream, uploadOptions);
+            }
+        }
+
+        private static byte[] ComputeHash(string file)
+        {
+            using (var fileStream = File.OpenRead(file))
+            {
+                using (var md5 = MD5.Create())
+                {
+                    var md5hash = md5.ComputeHash(fileStream);
+                    return md5hash;
+                }
             }
         }
 

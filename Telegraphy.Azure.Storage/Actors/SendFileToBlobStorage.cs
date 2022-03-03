@@ -30,7 +30,7 @@ namespace Telegraphy.Azure
 
             string fileName = (string)msg.Message;
             string blobFileName = blobTransformNameFcn(fileName);
-            var blob = container.GetBlockBlobClient(blobTransformNameFcn(fileName));
+            var blob = container.GetBlockBlobClient(blobFileName);
             SendFile(blob, fileName);
             msg.ProcessingResult = blobFileName;
             return true;

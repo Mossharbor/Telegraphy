@@ -5,9 +5,9 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Telegraphy.Net;
-using Mossharbor.AzureWorkArounds.ServiceBus;
+
 using System.Collections.Concurrent;
-using Microsoft.Azure.EventHubs;
+using Azure.Messaging.EventHubs;
 
 namespace Telegraphy.Azure
 {
@@ -97,7 +97,7 @@ namespace Telegraphy.Azure
                         return null;
 
                     byte[] msgBytes = null;
-                    msgBytes = recievedSingle.First().Body.Array;
+                    msgBytes = recievedSingle.First().Body.ToArray();
                     return ConvertToActorMessage(msgBytes);
                 }
 
@@ -114,12 +114,12 @@ namespace Telegraphy.Azure
 
                 for (int i = 1; i < recievedList.Count(); ++i)
                 {
-                    byte[] msgBytes = recievedList.ElementAt(i).Body.Array;
+                    byte[] msgBytes = recievedList.ElementAt(i).Body.ToArray();
                     msgQueue.Enqueue(ConvertToActorMessage(msgBytes));
                 }
 
                 // save the first one to return
-                return ConvertToActorMessage(recievedList.ElementAt(0).Body.Array);
+                return ConvertToActorMessage(recievedList.ElementAt(0).Body.ToArray());
             }
             catch (Exception ex)
             {
@@ -152,7 +152,7 @@ namespace Telegraphy.Azure
         public bool WaitTillEmpty(TimeSpan timeout)
         {
             DateTime start = DateTime.Now;
-            while ((DateTime.Now - start) < timeout && (0 != this.msgQueue.Count || 0 != this.EventHubMsgReciever.ApproximateCount()))
+            while ((DateTime.Now - start) < timeout && (0 != this.msgQueue.Count))
             {
                 System.Threading.Thread.Sleep(1000);
             }
